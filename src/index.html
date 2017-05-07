@@ -3,25 +3,9 @@
 <head>
   <meta charset="UTF-8">
   <title>Title</title>
-  <script src="./playkit.js" type="text/javascript"></script>
-  <script src="./youbora-plugin.js" type="text/javascript"></script>
+  <script src="./main.js"></script>
 </head>
 <body>
-  <script>
-    setTimeout(function() {
-      window.player = Playkit.playkit({
-        'sources': [{
-            "mimetype": "video/mp4",
-            "url": "./assets/mov_bbb.mp4",
-            "id": "12345"
-          }],
-        'plugins': {
-          'youbora': {
-            accountCode: 'powerdev'
-          }
-        }
-      })
-    }, 2000)
-  </script>
+
 </body>
 </html>

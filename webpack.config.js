@@ -5,7 +5,7 @@ const path = require("path");
 
 module.exports = {
   context: __dirname + "/src",
-  entry: "youbora-plugin.js",
+  entry: "youbora.js",
   output: {
     path: __dirname + "/dist",
     filename: '[name].js'

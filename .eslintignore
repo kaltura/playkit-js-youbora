@@ -3,4 +3,7 @@
 /dist
 karma.conf.js
 webpack.config.js
-/src/playkit.js
+
+
+/src/youbora/youboralib.min.js
+/src/youbora/plugin.js

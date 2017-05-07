@@ -1,11 +1,10 @@
 //@flow
-
+import * as Playkit from 'playkit-js'
 // Import the plugin framework from Playkit system
 import YouboraPlugin from './youbora/plugin'
 
 // Define the plugin name
 const pluginName = "youbora";
-
 // Define the plugin class
 // Important: plugin must derived from BasePlugin
 class Youbora extends Playkit.BasePlugin {
@@ -68,5 +67,4 @@ class Youbora extends Playkit.BasePlugin {
 // Register the plugin in Playkit system
 Playkit.registerPlugin(pluginName, Youbora);
 
-// For demo purposes
 window.Playkit = Playkit;
