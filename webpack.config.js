@@ -2,13 +2,14 @@
 
 const webpack = require("webpack");
 const path = require("path");
+const pluginName = "youbora";
 
 module.exports = {
   context: __dirname + "/src",
-  entry: "youbora-plugin.js",
+  entry: pluginName + ".js",
   output: {
     path: __dirname + "/dist",
-    filename: '[name].js'
+    filename: pluginName + ".js"
   },
   devtool: 'source-map',
   module: {

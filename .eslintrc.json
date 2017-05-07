@@ -23,6 +23,9 @@
   "rules": {
     "mocha-no-only/mocha-no-only": [
       "error"
+    ],
+    "require-jsdoc": [
+      "error"
     ]
   }
 }
