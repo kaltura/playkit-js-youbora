@@ -1,7 +1,7 @@
 //@flow
 
 // Import the plugin framework from Playkit system
-// var Playkit = require('./playkit.js');
+import YouboraPlugin from './youbora/plugin'
 
 // Define the plugin name
 const pluginName = "youbora";
@@ -46,7 +46,7 @@ class Youbora extends Playkit.BasePlugin {
 
   _configure() {
     // The config already holds the runtime configuration which is merging between the default config and the user config
-
+    this.youbora = new YouboraPlugin(this.player, this.config)
   }
 
   _setup() {
@@ -55,7 +55,7 @@ class Youbora extends Playkit.BasePlugin {
 
   _addBindings() {
     // Register to the play event
-
+    this.youbora.registerListeners()
   }
 
   // Your plugin must implement destroy method
