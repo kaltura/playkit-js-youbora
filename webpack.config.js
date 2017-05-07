@@ -2,13 +2,14 @@
 
 const webpack = require("webpack");
 const path = require("path");
+const pluginName = "youbora";
 
 module.exports = {
   context: __dirname + "/src",
-  entry: "youbora.js",
+  entry: pluginName + ".js",
   output: {
     path: __dirname + "/dist",
-    filename: '[name].js'
+    filename: pluginName + ".js"
   },
   devtool: 'source-map',
   module: {
@@ -22,7 +23,7 @@ module.exports = {
       test: /\.js$/,
       exclude: /node_modules/,
       enforce: 'pre',
-      use: [{ loader: 'eslint-loader', options: { rules: { semi: 0 } } }]
+      use: [{loader: 'eslint-loader', options: {rules: {semi: 0}}}]
     }]
   },
   devServer: {

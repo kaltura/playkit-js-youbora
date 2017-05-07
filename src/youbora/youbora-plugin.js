@@ -4,8 +4,8 @@
  * Copyright NicePopleAtWork & Kaltura
  * @author Jordi Aguilar & Dan Ziv
  */
-
-var $YB = require('./youboralib.min')
+import $YB from './youbora.lib.min'
+import {VERSION} from 'playkit-js'
 
 $YB.plugins.KalturaV3 = function (player, options) {
   try {
@@ -17,7 +17,6 @@ $YB.plugins.KalturaV3 = function (player, options) {
 
     /* Initialize YouboraJS */
     this.startMonitoring(player, options);
-
     this.startingPlayhead = 0;
   } catch (err) {
     $YB.error(err);
@@ -28,13 +27,14 @@ $YB.plugins.KalturaV3 = function (player, options) {
 $YB.plugins.KalturaV3.prototype = new $YB.plugins.Generic;
 
 $YB.plugins.KalturaV3.bindLogger = function (logger) {
-  $YB.error = logger.error.bind(logger)
-  $YB.notice = logger.info.bind(logger)
-  $YB.noticeRequest = logger.info.bind(logger)
-  $YB.warn = logger.warn.bind(logger)
-  $YB.debug = logger.debug.bind(logger)
-  $YB.verbose = function () { }
-}
+  $YB.error = logger.error.bind(logger);
+  $YB.notice = logger.info.bind(logger);
+  $YB.noticeRequest = logger.info.bind(logger);
+  $YB.warn = logger.warn.bind(logger);
+  $YB.debug = logger.debug.bind(logger);
+  $YB.verbose = function () {
+  };
+};
 
 /** Returns the current playhead of the video or 0. */
 $YB.plugins.KalturaV3.prototype.getPlayhead = function () {
@@ -48,11 +48,11 @@ $YB.plugins.KalturaV3.prototype.getMediaDuration = function () {
 
 /** Returns the src of the resource or an empty string. */
 $YB.plugins.KalturaV3.prototype.getResource = function () {
-  return this.player.currentSrc;
+  return this.player.src;
 };
 
 $YB.plugins.KalturaV3.prototype.getPlayerVersion = function () {
-  return "KalturaV3";
+  return VERSION;
 };
 
 /** Register Listeners */
@@ -67,39 +67,41 @@ $YB.plugins.KalturaV3.prototype.registerListeners = function () {
   var context = this;
 
   // Play is clicked (/start)
-  this.player.addEventListener("play", function (e) {
+  this.player.addEventListener("play", function () {
     context.playHandler();
   });
 
   // video ends (stop)
-  this.player.addEventListener("ended", function (e) {
+  this.player.addEventListener("ended", function () {
     context.endedHandler();
   });
 
-  this.player.addEventListener("playing", function (e) {
+  this.player.addEventListener("playing", function () {
     context.playingHandler();
   });
 
   // Video pauses (pause)
-  this.player.addEventListener("pause", function (e) {
+  this.player.addEventListener("pause", function () {
     context.pauseHandler();
   });
 
   // video error (error)
-  this.player.addEventListener("error", function (e) {
+  this.player.addEventListener("error", function () {
     context.errorHandler("PLAY_FAILURE");
   });
 
   // video seek start
-  this.player.addEventListener("seeking", function (e) {
+  this.player.addEventListener("seeking", function () {
     context.seekingHandler();
   });
 
   this.player.addEventListener("playerStateChanged", function (e) {
-    if (e.payload.oldState === "playing" && e.payload.newState === "buffering") {
+    var oldState = e.payload.oldState.type;
+    var newState = e.payload.newState.type;
+    if (oldState === "playing" && newState === "buffering") {
       context.bufferingHandler();
     }
   });
 };
 
-module.exports = $YB.plugins.KalturaV3
+module.exports = $YB.plugins.KalturaV3;
