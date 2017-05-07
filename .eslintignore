@@ -1,6 +1,6 @@
+/src/youbora/youbora.lib.min.js
 /flow-typed/**/*.js
 /coverage
 /dist
 karma.conf.js
 webpack.config.js
-/src/playkit.js

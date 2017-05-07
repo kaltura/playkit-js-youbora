@@ -258,7 +258,7 @@ babel-code-frame@^6.16.0, babel-code-frame@^6.22.0:
     esutils "^2.0.2"
     js-tokens "^3.0.0"
 
-babel-core@^6.18.2, babel-core@^6.24.1:
+babel-core@^6.24.1:
   version "6.24.1"
   resolved "https://registry.yarnpkg.com/babel-core/-/babel-core-6.24.1.tgz#8c428564dce1e1f41fb337ec34f4c3b022b5ad83"
   dependencies:
@@ -379,7 +379,7 @@ babel-helpers@^6.24.1:
     babel-runtime "^6.22.0"
     babel-template "^6.24.1"
 
-babel-loader@^6.2.7:
+babel-loader@^6.4.1:
   version "6.4.1"
   resolved "https://registry.yarnpkg.com/babel-loader/-/babel-loader-6.4.1.tgz#0b34112d5b0748a8dcdbf51acf6f9bd42d50b8ca"
   dependencies:
@@ -3693,7 +3693,7 @@ pkg-up@^1.0.0:
 
 "playkit-js@https://github.com/kaltura/playkit-js.git#develop":
   version "0.0.1"
-  resolved "https://github.com/kaltura/playkit-js.git#b0056d0d58349a6182ba60afb6e9d4db3fe3aa61"
+  resolved "https://github.com/kaltura/playkit-js.git#e81ca72d52448baad191e17db82e45293e6b5e67"
   dependencies:
     js-logger "^1.3.0"
 
