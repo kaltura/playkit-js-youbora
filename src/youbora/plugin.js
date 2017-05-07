@@ -7,13 +7,13 @@
 
 var $YB = require('./youboralib.min')
 
-$YB.plugins.Kaltura3 = function (player, options) {
+$YB.plugins.KalturaV3 = function (player, options) {
   try {
     /** Name and platform of the plugin.*/
-    this.pluginName = 'kaltura3';
+    this.pluginName = 'kalturav3';
 
     /** Version of the plugin. ie: 5.1.0-name */
-    this.pluginVersion = '5.3.0-kaltura3';
+    this.pluginVersion = '5.3.0-1.0.0-kalturav3';
 
     /* Initialize YouboraJS */
     this.startMonitoring(player, options);
@@ -25,29 +25,38 @@ $YB.plugins.Kaltura3 = function (player, options) {
 };
 
 /** Inherit from generic plugin */
-$YB.plugins.Kaltura3.prototype = new $YB.plugins.Generic;
+$YB.plugins.KalturaV3.prototype = new $YB.plugins.Generic;
+
+$YB.plugins.KalturaV3.bindLogger = function (logger) {
+  $YB.error = logger.error.bind(logger)
+  $YB.notice = logger.info.bind(logger)
+  $YB.noticeRequest = logger.info.bind(logger)
+  $YB.warn = logger.warn.bind(logger)
+  $YB.debug = logger.debug.bind(logger)
+  $YB.verbose = function () { }
+}
 
 /** Returns the current playhead of the video or 0. */
-$YB.plugins.Kaltura3.prototype.getPlayhead = function () {
+$YB.plugins.KalturaV3.prototype.getPlayhead = function () {
   return this.player.currentTime;
 };
 
 /** Returns the media duration of the video or 0. */
-$YB.plugins.Kaltura3.prototype.getMediaDuration = function () {
+$YB.plugins.KalturaV3.prototype.getMediaDuration = function () {
   return this.player.duration;
 };
 
 /** Returns the src of the resource or an empty string. */
-$YB.plugins.Kaltura3.prototype.getResource = function () {
+$YB.plugins.KalturaV3.prototype.getResource = function () {
   return this.player.currentSrc;
 };
 
-$YB.plugins.Kaltura3.prototype.getPlayerVersion = function () {
-  return "Kaltura3";
+$YB.plugins.KalturaV3.prototype.getPlayerVersion = function () {
+  return "KalturaV3";
 };
 
 /** Register Listeners */
-$YB.plugins.Kaltura3.prototype.registerListeners = function () {
+$YB.plugins.KalturaV3.prototype.registerListeners = function () {
   // Report events as Debug messages
   $YB.utils.listenAllEvents(this.player);
 
@@ -67,24 +76,8 @@ $YB.plugins.Kaltura3.prototype.registerListeners = function () {
     context.endedHandler();
   });
 
-  // Video starts (/joinTime)
-  this.player.addEventListener("timeupdate", function (e) {
-    if (!context.viewManager.isJoinSent) {
-      if (
-        context.startingPlayhead &&
-        context.getPlayhead() != context.startingPlayhead &&
-        context.getPlayhead() > 0.1
-      ) {
-        context.joinHandler();
-      }
-      context.startingPlayhead = context.getPlayhead();
-    }
-  });
-
   this.player.addEventListener("playing", function (e) {
-    if (context.viewManager.isJoinSent) {
-      context.playingHandler();
-    }
+    context.playingHandler();
   });
 
   // Video pauses (pause)
@@ -101,6 +94,12 @@ $YB.plugins.Kaltura3.prototype.registerListeners = function () {
   this.player.addEventListener("seeking", function (e) {
     context.seekingHandler();
   });
+
+  this.player.addEventListener("playerStateChanged", function (e) {
+    if (e.payload.oldState === "playing" && e.payload.newState === "buffering") {
+      context.bufferingHandler();
+    }
+  });
 };
 
-module.exports = $YB.plugins.Kaltura3
+module.exports = $YB.plugins.KalturaV3

@@ -45,8 +45,10 @@ class Youbora extends Playkit.BasePlugin {
 
   _configure() {
     // The config already holds the runtime configuration which is merging between the default config and the user config
+    YouboraPlugin.bindLogger(this.logger)
     this.youbora = new YouboraPlugin(this.player, this.config)
   }
+
 
   _setup() {
 

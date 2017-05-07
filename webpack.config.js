@@ -22,7 +22,7 @@ module.exports = {
       test: /\.js$/,
       exclude: /node_modules/,
       enforce: 'pre',
-      use: [{loader: 'eslint-loader', options: {rules: {semi: 0}}}]
+      use: [{ loader: 'eslint-loader', options: { rules: { semi: 0 } } }]
     }]
   },
   devServer: {
