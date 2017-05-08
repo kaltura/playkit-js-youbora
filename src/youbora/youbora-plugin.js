@@ -5,7 +5,7 @@
  * @author Jordi Aguilar & Dan Ziv
  */
 import $YB from './youbora.lib.min'
-import {VERSION} from 'playkit-js'
+import { VERSION } from 'playkit-js'
 
 $YB.plugins.KalturaV3 = function (player, options) {
   try {
@@ -52,7 +52,7 @@ $YB.plugins.KalturaV3.prototype.getResource = function () {
 };
 
 $YB.plugins.KalturaV3.prototype.getPlayerVersion = function () {
-  return VERSION;
+  return 'KalturaV3 ' + VERSION;
 };
 
 /** Register Listeners */
