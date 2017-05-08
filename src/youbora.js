@@ -5,37 +5,41 @@ import YouboraPlugin from './youbora/youbora-plugin'
 import sample from '../samples/index.js'
 
 /**
- *
+ * The plugin name.
  * @type {string}
+ * @const
  */
 const pluginName = "youbora";
 
 /**
- *
+ * Youbora plugin for analytics.
+ * @classdesc
  */
 class Youbora extends BasePlugin {
 
   /**
-   *
+   * The default configuration of the plugin.
    * @type {Object}
+   * @static
    */
   static defaultConfig: Object = {
     accountCode: 'powerdev'
   };
 
   /**
-   *
-   * @returns {boolean}
+   * Define under what conditions the youbora plugin is valid.
+   * @returns {boolean} - Whether the plugin is valid or not.
+   * @static
    */
   static isValid(): boolean {
     return true;
   }
 
   /**
-   *
-   * @param name
-   * @param player
-   * @param config
+   * @constructor
+   * @param {string} name - The name of the plugin.
+   * @param {Player} player - Access to the player reference.
+   * @param {Object} config - The plugin configuration.
    */
   constructor(name, player, config) {
     super(name, player, config);
@@ -45,23 +49,31 @@ class Youbora extends BasePlugin {
   }
 
   /**
-   *
+   * Add the necessary bindings.
+   * @function
    * @private
+   * @returns {void}
    */
   _addBindings(): void {
+    // Bind the plugin logger to the youbora sdk logger
     YouboraPlugin.bindLogger(this.logger);
   }
 
   /**
-   *
+   * Plugin setup operations.
+   * @function
    * @private
+   * @returns {void}
    */
   _setup(): void {
     this._youbora.registerListeners();
   }
 
   /**
-   *
+   * Plugin destroy operations.
+   * @function
+   * @public
+   * @returns {void}
    */
   destroy(): void {
     if (this._youbora) {
@@ -71,6 +83,6 @@ class Youbora extends BasePlugin {
 }
 
 /**
- *
+ * Register the plugin in player's registry.
  */
 registerPlugin(pluginName, Youbora);
