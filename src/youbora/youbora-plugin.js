@@ -6,18 +6,18 @@
  */
 import $YB from './youbora.lib.min'
 import { VERSION } from 'playkit-js'
+import * as pkg from '../../package.json'
 
 $YB.plugins.KalturaV3 = function (player, options) {
   try {
     /** Name and platform of the plugin.*/
-    this.pluginName = 'kalturav3';
+    this.pluginName = 'kalturaplaykit-js';
 
     /** Version of the plugin. ie: 5.1.0-name */
-    this.pluginVersion = '5.3.0-1.0.0-kalturav3';
+    this.pluginVersion = '5.3.0-' + pkg.version + '-kalturaplaykit-js';
 
     /* Initialize YouboraJS */
     this.startMonitoring(player, options);
-    this.startingPlayhead = 0;
   } catch (err) {
     $YB.error(err);
   }
@@ -52,53 +52,50 @@ $YB.plugins.KalturaV3.prototype.getResource = function () {
 };
 
 $YB.plugins.KalturaV3.prototype.getPlayerVersion = function () {
-  return 'KalturaV3 ' + VERSION;
+  return 'KalturaPlaykitJS ' + VERSION;
 };
 
 /** Register Listeners */
 $YB.plugins.KalturaV3.prototype.registerListeners = function () {
-  // Report events as Debug messages
-  $YB.utils.listenAllEvents(this.player);
-
-  // Start buffer watcher. Requires data.enableNiceBuffer to be true.
-  this.enableBufferMonitor();
-
   // save context
   var context = this;
+  var Event = this.player.Event;
+  var State = this.player.State;
 
   // Play is clicked (/start)
-  this.player.addEventListener("play", function () {
+  this.player.addEventListener(Event.PLAY, function () {
     context.playHandler();
   });
 
   // video ends (stop)
-  this.player.addEventListener("ended", function () {
+  this.player.addEventListener(Event.ENDED, function () {
     context.endedHandler();
   });
 
-  this.player.addEventListener("playing", function () {
+  this.player.addEventListener(Event.PLAYING, function () {
     context.playingHandler();
   });
 
   // Video pauses (pause)
-  this.player.addEventListener("pause", function () {
+  this.player.addEventListener(Event.PAUSE, function () {
     context.pauseHandler();
   });
 
   // video error (error)
-  this.player.addEventListener("error", function () {
+  this.player.addEventListener(Event.ERROR, function () {
+    // TO-DO: Rework this after errors are done
     context.errorHandler("PLAY_FAILURE");
   });
 
   // video seek start
-  this.player.addEventListener("seeking", function () {
+  this.player.addEventListener(Event.SEEKING, function () {
     context.seekingHandler();
   });
 
-  this.player.addEventListener("playerStateChanged", function (e) {
+  this.player.addEventListener(Event.PLAYER_STATE_CHANGED, function (e) {
     var oldState = e.payload.oldState.type;
     var newState = e.payload.newState.type;
-    if (oldState === "playing" && newState === "buffering") {
+    if (oldState === State.PLAYING && newState === State.BUFFERING) {
       context.bufferingHandler();
     }
   });

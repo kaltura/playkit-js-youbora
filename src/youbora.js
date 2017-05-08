@@ -64,3 +64,5 @@ class Youbora extends Playkit.BasePlugin {
  *
  */
 Playkit.registerPlugin(pluginName, Youbora);
+
+window.Playkit = Playkit
