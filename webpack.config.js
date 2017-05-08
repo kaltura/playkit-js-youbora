@@ -3,6 +3,7 @@
 const webpack = require("webpack");
 const path = require("path");
 const pluginName = "youbora";
+const CopyPlugin = require('copy-webpack-plugin');
 
 module.exports = {
   context: __dirname + "/src",
@@ -23,9 +24,14 @@ module.exports = {
       test: /\.js$/,
       exclude: /node_modules/,
       enforce: 'pre',
-      use: [{loader: 'eslint-loader', options: {rules: {semi: 0}}}]
+      use: [{ loader: 'eslint-loader', options: { rules: { semi: 0 } } }]
     }]
   },
+  plugins: [
+    new CopyPlugin([
+      { from: '../samples/index.html', to: '.' }
+    ])
+  ],
   devServer: {
     contentBase: __dirname + "/src"
   },

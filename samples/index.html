@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Title</title>
+  <script src="./youbora.js"></script>
+</head>
+<body>
+  <script>
+    setTimeout(function() {
+      window.player = Playkit.playkit({
+        'sources': [{
+            "mimetype": "video/mp4",
+            "url": "http://dgfgfd",
+            "id": "12345"
+          }],
+        'plugins': {
+          'youbora': {
+            accountCode: 'powerdev'
+          }
+        }
+      })
+    }, 2000)
+  </script>
+</body>
+</html>
