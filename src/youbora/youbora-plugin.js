@@ -5,7 +5,7 @@
  * @author Jordi Aguilar & Dan Ziv
  */
 import $YB from './youbora.lib.min'
-import { VERSION } from 'playkit-js'
+import {VERSION} from 'playkit-js'
 import * as pkg from '../../package.json'
 
 $YB.plugins.KalturaV3 = function (player, options) {
@@ -36,26 +36,38 @@ $YB.plugins.KalturaV3.bindLogger = function (logger) {
   };
 };
 
-/** Returns the current playhead of the video or 0. */
+/**
+ * @returns {Number} - The current playhead of the video or 0.
+ */
 $YB.plugins.KalturaV3.prototype.getPlayhead = function () {
   return this.player.currentTime;
 };
 
-/** Returns the media duration of the video or 0. */
+/**
+ * @returns {Number} - The media duration of the video or 0.
+ */
 $YB.plugins.KalturaV3.prototype.getMediaDuration = function () {
   return this.player.duration;
 };
 
-/** Returns the src of the resource or an empty string. */
+/**
+ * @returns {string} - The src of the resource or an empty string.
+ */
 $YB.plugins.KalturaV3.prototype.getResource = function () {
   return this.player.src;
 };
 
+/**
+ * @returns {string} - The current player version.
+ */
 $YB.plugins.KalturaV3.prototype.getPlayerVersion = function () {
   return 'KalturaPlaykitJS ' + VERSION;
 };
 
-/** Register Listeners */
+/**
+ * Register Listeners.
+ * @returns {void}
+ */
 $YB.plugins.KalturaV3.prototype.registerListeners = function () {
   // save context
   var context = this;
