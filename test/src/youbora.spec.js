@@ -1,6 +1,6 @@
 //eslint-disable-next-line no-unused-vars
-import youbora from '../../src/youbora.js';
-import playkit from 'playkit-js';
+import youbora from '../../src/youbora.js'
+import playkit from 'playkit-js'
 
 describe('YouboraPlugin', function () {
   this.timeout(4000);
