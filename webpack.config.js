@@ -3,6 +3,19 @@
 const webpack = require("webpack");
 const path = require("path");
 const CopyPlugin = require('copy-webpack-plugin');
+const PROD = (process.env.NODE_ENV === 'production');
+
+let plugins = [
+  new CopyPlugin([{
+    from: '../samples/index.html', to: '.'
+  }])
+];
+
+if (PROD) {
+  plugins.push(new webpack.optimize.UglifyJsPlugin({
+    sourceMap: true
+  }));
+}
 
 module.exports = {
   context: __dirname + "/src",
@@ -14,6 +27,7 @@ module.exports = {
     filename: '[name].js'
   },
   devtool: 'source-map',
+  plugins: plugins,
   module: {
     rules: [{
       test: /\.js$/,
@@ -37,11 +51,6 @@ module.exports = {
       }]
     }]
   },
-  plugins: [
-    new CopyPlugin([{
-      from: '../samples/index.html', to: '.'
-    }])
-  ],
   devServer: {
     contentBase: __dirname + "/src"
   },
