@@ -2,15 +2,16 @@
 
 const webpack = require("webpack");
 const path = require("path");
-const pluginName = "youbora";
 const CopyPlugin = require('copy-webpack-plugin');
 
 module.exports = {
   context: __dirname + "/src",
-  entry: pluginName + ".js",
+  entry: {
+    "playkit-js-youbora": "youbora.js"
+  },
   output: {
     path: __dirname + "/dist",
-    filename: pluginName + ".js"
+    filename: '[name].js'
   },
   devtool: 'source-map',
   module: {
@@ -19,23 +20,35 @@ module.exports = {
       use: [{
         loader: "babel-loader"
       }],
-      exclude: [/node_modules/]
+      exclude: [
+        /node_modules/
+      ]
     }, {
       test: /\.js$/,
       exclude: /node_modules/,
       enforce: 'pre',
-      use: [{ loader: 'eslint-loader', options: { rules: { semi: 0 } } }]
+      use: [{
+        loader: 'eslint-loader',
+        options: {
+          rules: {
+            semi: 0
+          }
+        }
+      }]
     }]
   },
   plugins: [
-    new CopyPlugin([
-      { from: '../samples/index.html', to: '.' }
-    ])
+    new CopyPlugin([{
+      from: '../samples/index.html', to: '.'
+    }])
   ],
   devServer: {
     contentBase: __dirname + "/src"
   },
   resolve: {
-    modules: [path.resolve(__dirname, "src"), "node_modules"]
+    modules: [
+      path.resolve(__dirname, "src"),
+      "node_modules"
+    ]
   }
 };
