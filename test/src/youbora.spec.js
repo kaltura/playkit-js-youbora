@@ -1,6 +1,6 @@
 //eslint-disable-next-line no-unused-vars
 import youbora from '../../src/youbora.js'
-import {loadPlayer, VERSION} from 'playkit-js'
+import {loadPlayer, VERSION, PLAYER_NAME} from 'playkit-js'
 import * as TestUtils from 'playkit-js/test/src/utils/test-utils'
 import * as pkg from '../../package.json'
 
@@ -9,6 +9,11 @@ const targetId = 'player-placeholder_youbora.spec';
 describe('YouboraAdapter', function () {
   let player, sandbox, sendSpy, config;
 
+  /**
+   * @function getJsonFromUrl
+   * @param {string} url - url
+   * @returns {Object} - params
+   */
   function getJsonFromUrl(url) {
     let result = {};
     url.replace('?', '&').split('&').forEach(function (part) {
@@ -24,13 +29,13 @@ describe('YouboraAdapter', function () {
    */
   function verifyProperties(analyticsParams) {
     analyticsParams.system.should.equal('powerdev');
-    analyticsParams.player.should.equal('kalturaplaykit-js');
+    analyticsParams.player.should.equal(PLAYER_NAME);
     analyticsParams.user.should.equal('user-id');
     analyticsParams.transcode.should.equal('Free');
     analyticsParams.hashTitle.should.equal('true');
     analyticsParams.referer.should.equal(document.referrer);
-    analyticsParams.pluginVersion.should.equal('5.3.0-' + pkg.version + '-kalturaplaykit-js');
-    analyticsParams.playerVersion.should.equal('KalturaPlaykitJS ' + VERSION);
+    analyticsParams.pluginVersion.should.equal('5.3.0-' + pkg.version + '-' + PLAYER_NAME);
+    analyticsParams.playerVersion.should.equal(PLAYER_NAME + "-" + VERSION);
     analyticsParams.resource.should.equal('https://www.w3schools.com/tags/movie.mp4');
     analyticsParams.duration.should.equal('13');
     analyticsParams.live.should.equal('false');

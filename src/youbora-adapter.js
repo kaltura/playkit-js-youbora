@@ -61,7 +61,7 @@ $YB.plugins.KalturaV3.prototype.getResource = function () {
  * @returns {string} - The current player version.
  */
 $YB.plugins.KalturaV3.prototype.getPlayerVersion = function () {
-  return 'KalturaPlaykitJS ' + VERSION;
+  return PLAYER_NAME + "-" + VERSION;
 };
 
 $YB.plugins.KalturaV3.prototype.getBitrate = function () {

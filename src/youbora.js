@@ -13,7 +13,7 @@ const pluginName = "youbora";
  * Youbora plugin for analytics.
  * @classdesc
  */
-class Youbora extends BasePlugin {
+export default class Youbora extends BasePlugin {
 
   /**
    * The default configuration of the plugin.
@@ -41,7 +41,7 @@ class Youbora extends BasePlugin {
    * @param {Player} player - Access to the player reference.
    * @param {Object} config - The plugin configuration.
    */
-  constructor(name, player, config) {
+  constructor(name: string, player: Player, config: Object) {
     super(name, player, config);
     this.config.username = this.config.username || this.config.userId;
     this.config.extraParams = this._getCustomParams();
