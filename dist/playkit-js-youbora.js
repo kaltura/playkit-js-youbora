@@ -8229,21 +8229,35 @@ var Youbora = function (_BasePlugin) {
 
     var _this = _possibleConstructorReturn(this, (Youbora.__proto__ || Object.getPrototypeOf(Youbora)).call(this, name, player, config));
 
+    _this.config.username = _this.config.username || _this.config.userId;
+    _this.config.extraParams = _this._getCustomParams();
     _this._youbora = new _youboraPlugin2.default(_this.player, _this.config);
     _this._addBindings();
     _this._setup();
     return _this;
   }
 
-  /**
-   * Add the necessary bindings.
-   * @function
-   * @private
-   * @returns {void}
-   */
-
-
   _createClass(Youbora, [{
+    key: '_getCustomParams',
+    value: function _getCustomParams() {
+      var paramObj = {};
+      for (var i = 1; i < 10; i++) {
+        var param = this.config['param' + i];
+        if (param) {
+          paramObj["param" + i] = param;
+        }
+      }
+      return paramObj;
+    }
+
+    /**
+     * Add the necessary bindings.
+     * @function
+     * @private
+     * @returns {void}
+     */
+
+  }, {
     key: '_addBindings',
     value: function _addBindings() {
       // Bind the plugin logger to the youbora sdk logger
