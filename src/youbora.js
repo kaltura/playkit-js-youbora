@@ -87,5 +87,3 @@ class Youbora extends BasePlugin {
  * Register the plugin in player's registry.
  */
 registerPlugin(pluginName, Youbora);
-
-window.Playkit = Playkit;
