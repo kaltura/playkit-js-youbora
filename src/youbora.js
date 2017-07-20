@@ -1,6 +1,6 @@
 //@flow
 import {registerPlugin, BasePlugin} from 'playkit-js'
-import YouboraPlugin from './youbora/youbora-plugin'
+import YouboraAdapter from './youbora-adapter'
 
 /**
  * The plugin name.
@@ -43,7 +43,7 @@ class Youbora extends BasePlugin {
    */
   constructor(name, player, config) {
     super(name, player, config);
-    this._youbora = new YouboraPlugin(this.player, this.config);
+    this._youbora = new YouboraAdapter(this.player, this.config);
     this._addBindings();
     this._setup();
   }
@@ -56,7 +56,7 @@ class Youbora extends BasePlugin {
    */
   _addBindings(): void {
     // Bind the plugin logger to the youbora sdk logger
-    YouboraPlugin.bindLogger(this.logger);
+    YouboraAdapter.bindLogger(this.logger);
   }
 
   /**
