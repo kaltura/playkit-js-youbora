@@ -5,16 +5,16 @@
  * @author Jordi Aguilar & Dan Ziv
  */
 import $YB from './youbora.lib.min'
-import {VERSION} from 'playkit-js'
-import * as pkg from '../../package.json'
+import {VERSION, PLAYER_NAME} from 'playkit-js'
+import * as pkg from '../package.json'
 
 $YB.plugins.KalturaV3 = function (player, options) {
   try {
     /** Name and platform of the plugin.*/
-    this.pluginName = 'kalturaplaykit-js';
+    this.pluginName = PLAYER_NAME;
 
     /** Version of the plugin. ie: 5.1.0-name */
-    this.pluginVersion = '5.3.0-' + pkg.version + '-kalturaplaykit-js';
+    this.pluginVersion = '5.3.0-' + pkg.version + '-' + PLAYER_NAME;
 
     /* Initialize YouboraJS */
     this.startMonitoring(player, options);

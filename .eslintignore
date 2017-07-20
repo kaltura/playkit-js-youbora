@@ -1,5 +1,5 @@
-/src/youbora/youbora.lib.min.js
-/flow-typed/**/*.js
+/src/youbora.lib.min.js
+/flow-typed/
 /coverage
 /dist
 karma.conf.js

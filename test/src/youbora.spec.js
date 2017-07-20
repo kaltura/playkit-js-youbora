@@ -6,7 +6,7 @@ import * as pkg from '../../package.json'
 
 const targetId = 'player-placeholder_youbora.spec';
 
-describe('YouboraPlugin', function () {
+describe('YouboraAdapter', function () {
   let player, sandbox, sendSpy, config;
 
   function getJsonFromUrl(url) {
@@ -98,5 +98,4 @@ describe('YouboraPlugin', function () {
     });
     player.play();
   });
-
 });
