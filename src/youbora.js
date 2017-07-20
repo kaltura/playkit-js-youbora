@@ -1,8 +1,7 @@
 //@flow
+import * as Playkit from 'playkit-js'
 import {registerPlugin, BasePlugin} from 'playkit-js'
 import YouboraPlugin from './youbora/youbora-plugin'
-//eslint-disable-next-line no-unused-vars
-import sample from '../samples/index.js'
 
 /**
  * The plugin name.
@@ -23,7 +22,9 @@ class Youbora extends BasePlugin {
    * @static
    */
   static defaultConfig: Object = {
-    accountCode: 'powerdev'
+    accountCode: 'powerdev',
+    haltOnError: false,
+    transactionCode: 'Free'
   };
 
   /**
@@ -86,3 +87,5 @@ class Youbora extends BasePlugin {
  * Register the plugin in player's registry.
  */
 registerPlugin(pluginName, Youbora);
+
+window.Playkit = Playkit;

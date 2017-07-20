@@ -44,6 +44,13 @@ $YB.plugins.KalturaV3.prototype.getPlayhead = function () {
 };
 
 /**
+ * @returns {string} - The media title.
+ */
+$YB.plugins.KalturaV3.prototype.getTitle = function () {
+
+};
+
+/**
  * @returns {Number} - The media duration of the video or 0.
  */
 $YB.plugins.KalturaV3.prototype.getMediaDuration = function () {
@@ -64,18 +71,42 @@ $YB.plugins.KalturaV3.prototype.getPlayerVersion = function () {
   return 'KalturaPlaykitJS ' + VERSION;
 };
 
+$YB.plugins.KalturaV3.prototype.getBitrate = function () {
+  let activeVideo = this.player.getActiveTracks().video;
+  if (activeVideo && activeVideo.bandwidth) {
+    return activeVideo.bandwidth / 1024;
+  }
+  return -1;
+};
+
+$YB.plugins.KalturaV3.prototype.getTitle = function () {
+  return this.player.config.name;
+};
+
+$YB.plugins.KalturaV3.prototype.getRendition = function () {
+  let activeVideo = this.player.getActiveTracks().video;
+  if (activeVideo) {
+    return $YB.utils.buildRenditionString(activeVideo.width, activeVideo.height, activeVideo.bandwidth);
+  }
+};
+
+$YB.plugins.KalturaV3.prototype.getIsLive = function () {
+  return this.player.config.type === "Live";
+};
+
 /**
  * Register Listeners.
  * @returns {void}
  */
 $YB.plugins.KalturaV3.prototype.registerListeners = function () {
   // save context
-  var context = this;
-  var Event = this.player.Event;
-  var State = this.player.State;
+  let context = this;
+  let Event = this.player.Event;
+  let State = this.player.State;
 
   // Play is clicked (/start)
   this.player.addEventListener(Event.PLAY, function () {
+    context.setMetadata();
     context.playHandler();
   });
 
@@ -96,6 +127,7 @@ $YB.plugins.KalturaV3.prototype.registerListeners = function () {
   // video error (error)
   this.player.addEventListener(Event.ERROR, function () {
     // TO-DO: Rework this after errors are done
+    context.setMetadata();
     context.errorHandler("PLAY_FAILURE");
   });
 
@@ -104,13 +136,34 @@ $YB.plugins.KalturaV3.prototype.registerListeners = function () {
     context.seekingHandler();
   });
 
+  // video seek end
+  this.player.addEventListener(Event.SEEKED, function () {
+    context.seekedHandler();
+  });
+
   this.player.addEventListener(Event.PLAYER_STATE_CHANGED, function (e) {
-    var oldState = e.payload.oldState.type;
-    var newState = e.payload.newState.type;
-    if (oldState === State.PLAYING && newState === State.BUFFERING) {
+    let newState = e.payload.newState.type;
+    let oldState = e.payload.oldState.type;
+    if (newState === State.BUFFERING) {
       context.bufferingHandler();
+    }
+    if (oldState === State.BUFFERING) {
+      context.bufferedHandler();
     }
   });
 };
+
+$YB.plugins.KalturaV3.prototype.setMetadata = function () {
+  this.setOptions({
+    properties: {
+      kalturaInfo: {
+        entryId: this.player.config.id,
+        sessionId: this.player.config.session ? this.player.config.session.id : "",
+        uiConfigId: this.player.config.session ? this.player.config.session.uiConfID : ""
+      }
+    }
+  });
+};
+
 
 module.exports = $YB.plugins.KalturaV3;

@@ -2,14 +2,7 @@
 
 const webpack = require("webpack");
 const path = require("path");
-const CopyPlugin = require('copy-webpack-plugin');
 const PROD = (process.env.NODE_ENV === 'production');
-
-let plugins = [
-  new CopyPlugin([{
-    from: '../samples/index.html', to: '.'
-  }])
-];
 
 if (PROD) {
   plugins.push(new webpack.optimize.UglifyJsPlugin({
@@ -27,7 +20,6 @@ module.exports = {
     filename: '[name].js'
   },
   devtool: 'source-map',
-  plugins: plugins,
   module: {
     rules: [{
       test: /\.js$/,
@@ -35,20 +27,21 @@ module.exports = {
         loader: "babel-loader"
       }],
       exclude: [
-        /node_modules/
+        /node_modules/,
+        '/Users/yair.ansbacher/Desktop/repos/playkit-js/dist/playkit.js'
       ]
     }, {
       test: /\.js$/,
       exclude: /node_modules/,
       enforce: 'pre',
-      use: [{
-        loader: 'eslint-loader',
-        options: {
-          rules: {
-            semi: 0
-          }
-        }
-      }]
+      // use: [{
+      //   loader: 'eslint-loader',
+      //   options: {
+      //     rules: {
+      //       semi: 0
+      //     }
+      //   }
+      // }]
     }]
   },
   devServer: {

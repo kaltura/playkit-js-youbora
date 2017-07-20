@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Title</title>
+  <script src="./playkit-js-youbora.js"></script>
+</head>
+<body>
+<div id="player-placeholder"></div>
+<script>
+  window.p = Playkit.loadPlayer('player-placeholder', {
+    sources: {
+      "progressive": [
+        {
+          "url": "http://deslasexta.antena3.com/mp_series1/2012/09/10/00001.mp4",
+          "mimetype": "video/mp4",
+          "id": "id1",
+          "width" : 200,
+          "height" : 100,
+          "bandwidth" : 100000,
+          "label": "label1"
+        }
+      ]
+    },
+    plugins: {
+      youbora: {}
+    }
+  });
+</script>
+</body>
+</html>
