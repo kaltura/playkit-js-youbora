@@ -8360,11 +8360,6 @@ _youboraLib2.default.plugins.KalturaV3.prototype.getPlayhead = function () {
 };
 
 /**
- * @returns {string} - The media title.
- */
-_youboraLib2.default.plugins.KalturaV3.prototype.getTitle = function () {};
-
-/**
  * @returns {Number} - The media duration of the video or 0.
  */
 _youboraLib2.default.plugins.KalturaV3.prototype.getMediaDuration = function () {

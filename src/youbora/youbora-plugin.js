@@ -44,13 +44,6 @@ $YB.plugins.KalturaV3.prototype.getPlayhead = function () {
 };
 
 /**
- * @returns {string} - The media title.
- */
-$YB.plugins.KalturaV3.prototype.getTitle = function () {
-
-};
-
-/**
  * @returns {Number} - The media duration of the video or 0.
  */
 $YB.plugins.KalturaV3.prototype.getMediaDuration = function () {
