@@ -1,5 +1,4 @@
 //@flow
-import * as Playkit from 'playkit-js'
 import {registerPlugin, BasePlugin} from 'playkit-js'
 import YouboraPlugin from './youbora/youbora-plugin'
 
