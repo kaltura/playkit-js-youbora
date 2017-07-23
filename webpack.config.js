@@ -38,7 +38,7 @@ module.exports = {
             semi: 0
           }
         }
-      }],
+      }]
     }]
   },
   devServer: {
