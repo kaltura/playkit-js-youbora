@@ -33,7 +33,7 @@ describe('YouboraAdapter', function () {
     analyticsParams.user.should.equal('user-id');
     analyticsParams.transcode.should.equal('Free');
     analyticsParams.hashTitle.should.equal('true');
-    analyticsParams.referer.should.equal(document.referrer);
+    (analyticsParams.referer === document.referrer || analyticsParams.referer === location.href).should.be.true;
     analyticsParams.pluginVersion.should.equal('5.3.0-' + pkg.version + '-' + PLAYER_NAME);
     analyticsParams.playerVersion.should.equal(PLAYER_NAME + "-" + VERSION);
     analyticsParams.resource.should.equal('https://www.w3schools.com/tags/movie.mp4');
