@@ -155,7 +155,6 @@ var Youbora = function (_BasePlugin) {
 
     var _this = _possibleConstructorReturn(this, (Youbora.__proto__ || Object.getPrototypeOf(Youbora)).call(this, name, player, config));
 
-    _this.config.username = _this.config.username || _this.config.userId;
     _this.config.extraParams = _this._getCustomParams();
     _this._youbora = new _youboraAdapter2.default(_this.player, _this.config);
     _this._addBindings();
@@ -228,7 +227,6 @@ var Youbora = function (_BasePlugin) {
 
 
 Youbora.defaultConfig = {
-  accountCode: 'powerdev',
   haltOnError: false,
   transactionCode: 'Free'
 };
