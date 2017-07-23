@@ -68,9 +68,10 @@ describe('YouboraAdapter', function () {
       },
       plugins: {
         youbora: {
+          'accountCode': 'powerdev',
           'param1': 'param-1',
           'param3': 'param-3',
-          'userId': "user-id"
+          'username': 'user-id'
         }
       }
     };

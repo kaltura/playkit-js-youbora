@@ -21,7 +21,6 @@ export default class Youbora extends BasePlugin {
    * @static
    */
   static defaultConfig: Object = {
-    accountCode: 'powerdev',
     haltOnError: false,
     transactionCode: 'Free'
   };
@@ -43,7 +42,6 @@ export default class Youbora extends BasePlugin {
    */
   constructor(name: string, player: Player, config: Object) {
     super(name, player, config);
-    this.config.username = this.config.username || this.config.userId;
     this.config.extraParams = this._getCustomParams();
     this._youbora = new YouboraAdapter(this.player, this.config);
     this._addBindings();
