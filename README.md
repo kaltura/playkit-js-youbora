@@ -1,4 +1,4 @@
-# PlayKit JS Youbora - Youbora plugin for the PlayKit JS Player
+# PlayKit JS Youbora - [Youbora analytics SDK] plugin for the [PlayKit JS Player]
 
 [![Build Status](https://travis-ci.com/kaltura/playkit-js-youbora.svg?token=s2ZQw18ukx9Q6ePzDX3F&branch=master)](https://travis-ci.com/kaltura/playkit-js-youbora)
 
