@@ -48,14 +48,16 @@ Finally, add the bundle as a script tag in your page, and initialize the player
 ```html
 <script type="text/javascript" src="/PATH/TO/FILE/playkit.js"></script>
 <script type="text/javascript" src="/PATH/TO/FILE/playkit-youbora.js"></script>
-<div id="videoContainer" style="height:360px;width:640px">
+<div id="videoContainer" style="height:360px; width:640px">
 <script type="text/javascript">
 var config = {
+ ...
  plugins: {
    youbora: {
-     adTagUrl: 'https://pubads.g.doubleclick.net/gampad/ads?sz=640x480&iu=/124319096/external/ad_rule_samples&ciu_szs=300x250&ad_rule=1&impl=s&gdfp_req=1&env=vp&output=vmap&unviewed_position_start=1&cust_params=deployment%3Ddevsite%26sample_ar%3Dpremidpost&cmsid=496&vid=short_onecue&correlator='
+     accountCode: "YOUR_ACCOUNT_CODE"
    }
  }
+ ...
 };
 var player = playkit.loadPlayer("videoContainer", config);
 player.play();
@@ -68,7 +70,7 @@ player.play();
 
 ## Running the tests
 
-Tests can be run localy via [Karma], which will run on Chrome, Firefox and Safari
+Tests can be run locally via [Karma], which will run on Chrome, Firefox and Safari
 
 [Karma]: https://karma-runner.github.io/1.0/index.html
 ```
