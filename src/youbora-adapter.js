@@ -98,7 +98,6 @@ $YB.plugins.KalturaV3.prototype.registerListeners = function () {
 
   // Play is clicked (/start)
   this.player.addEventListener(Event.PLAY, function () {
-    context.setMetadata();
     context.playHandler();
   });
 
@@ -119,7 +118,6 @@ $YB.plugins.KalturaV3.prototype.registerListeners = function () {
   // video error (error)
   this.player.addEventListener(Event.ERROR, function () {
     // TO-DO: Rework this after errors are done
-    context.setMetadata();
     context.errorHandler("PLAY_FAILURE");
   });
 
@@ -144,18 +142,5 @@ $YB.plugins.KalturaV3.prototype.registerListeners = function () {
     }
   });
 };
-
-$YB.plugins.KalturaV3.prototype.setMetadata = function () {
-  this.setOptions({
-    properties: {
-      kalturaInfo: {
-        entryId: this.player.config.id,
-        sessionId: this.player.config.session ? this.player.config.session.id : "",
-        uiConfId: this.player.config.session ? this.player.config.session.uiConfID : ""
-      }
-    }
-  });
-};
-
 
 module.exports = $YB.plugins.KalturaV3;

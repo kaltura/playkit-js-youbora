@@ -21,8 +21,7 @@ export default class Youbora extends BasePlugin {
    * @static
    */
   static defaultConfig: Object = {
-    haltOnError: false,
-    transactionCode: 'Free'
+    haltOnError: false
   };
 
   /**
@@ -42,9 +41,28 @@ export default class Youbora extends BasePlugin {
    */
   constructor(name: string, player: Player, config: Object) {
     super(name, player, config);
+    this._addPlayerMetadata();
     this._youbora = new YouboraAdapter(this.player, this.config);
     this._addBindings();
     this._setup();
+  }
+
+  /**
+   * Add the player metadata to the plugin config.
+   * @function
+   * @private
+   * @returns {void}
+   */
+  _addPlayerMetadata(): void {
+    this.updateConfig({
+      properties: {
+        kalturaInfo: {
+          entryId: this.player.config.id,
+          sessionId: this.player.config.session ? this.player.config.session.id : "",
+          uiConfId: this.player.config.session ? this.player.config.session.uiConfID : ""
+        }
+      }
+    });
   }
 
   /**

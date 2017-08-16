@@ -32,7 +32,6 @@ describe('YouboraAdapter', function () {
     analyticsParams.system.should.equal('powerdev');
     analyticsParams.player.should.equal(PLAYER_NAME);
     analyticsParams.user.should.equal('user-id');
-    analyticsParams.transcode.should.equal('Free');
     analyticsParams.hashTitle.should.equal('true');
     (analyticsParams.referer === document.referrer || analyticsParams.referer === location.href).should.be.true;
     analyticsParams.pluginVersion.should.equal($YB.version + '-' + pkg.version + '-' + PLAYER_NAME);
