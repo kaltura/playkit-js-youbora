@@ -22,7 +22,10 @@ module.exports = function (config) {
       'mocha'
     ],
     files: [
-      'test/setup/karma.js'
+      'test/setup/karma.js', {
+        pattern: 'src/assets/audios.mp4',
+        included: false
+      }
     ],
     preprocessors: {
       'src/**/*.js': [

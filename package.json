@@ -1,11 +1,10 @@
 {
   "name": "playkit-js-youbora",
-  "version": "0.0.1",
-  "main": "dist/playkit-youbora.js",
+  "version": "1.0.0",
+  "description": "",
   "scripts": {
     "clean": "rm -rf ./dist",
     "prebuild": "npm run clean",
-    "build:prod": "NODE_ENV=production webpack",
     "build": "webpack",
     "dev": "webpack --progress --colors --watch",
     "test": "NODE_ENV=test karma start --color",
@@ -15,25 +14,11 @@
     "test:safari": "NODE_ENV=test karma start --color --browsers Safari",
     "test:watch": "NODE_ENV=test karma start --color --auto-watch",
     "start": "webpack-dev-server",
-    "release": "npm run build:prod && npm run commit:dist && standard-version",
-    "publish": "git push --follow-tags --no-verify origin develop",
+    "release": "NODE_ENV=production npm run build -- -p && git add --all dist && git commit -m 'update dist' && standard-version",
     "eslint": "eslint . --color",
     "flow": "flow check",
-    "eslint:flow:test": "npm run eslint && npm run flow && npm run test",
-    "commit:dist": "git add --all dist && (git commit -m 'chore: update dist' || exit 0)",
-    "prepush-msg:build": "echo '\nRunning build before push...\n' && exit 0",
-    "prepush-msg:dist": "echo '\nAdding dist files to a seperate commit...\n' && exit 0",
-    "prepush-msg:done": "echo '\nPre push tasks are done.\n' && exit 0"
+    "prepush": "npm run eslint && npm run test && npm run flow"
   },
-  "pre-push": [
-    "prepush-msg:build",
-    "prebuild",
-    "build",
-    "build:prod",
-    "prepush-msg:dist",
-    "commit:dist",
-    "prepush-msg:done"
-  ],
   "devDependencies": {
     "babel-cli": "^6.18.0",
     "babel-core": "^6.18.2",
@@ -46,7 +31,6 @@
     "babel-register": "^6.23.0",
     "chai": "^3.5.0",
     "cross-env": "^3.1.4",
-    "css-loader": "^0.28.4",
     "eslint": "^3.10.0",
     "eslint-loader": "^1.6.1",
     "eslint-plugin-flowtype": "^2.30.0",
@@ -67,21 +51,19 @@
     "karma-webpack": "^2.0.2",
     "mocha": "^3.2.0",
     "mocha-cli": "^1.0.1",
-    "playkit-js": "https://github.com/kaltura/playkit-js.git#develop",
-    "pre-push": "^0.1.1",
+    "nyc": "^10.1.2",
     "sinon": "^2.0.0",
     "sinon-chai": "^2.8.0",
     "standard-version": "^4.0.0",
-    "style-loader": "^0.18.2",
     "uglifyjs-webpack-plugin": "^0.4.3",
     "webpack": "latest",
     "webpack-dev-server": "latest"
   },
-  "peerDependencies": {
-    "playkit-js": "https://github.com/kaltura/playkit-js.git#develop"
-  },
   "keywords": [],
   "license": "AGPL-3.0",
+  "dependencies": {
+    "playkit-js": "https://github.com/kaltura/playkit-js.git#develop"
+  },
   "repository": {
     "type": "git",
     "url": "git+https://github.com/kaltura/playkit-js-youbora.git"
