@@ -1,10 +1,11 @@
 {
   "name": "playkit-js-youbora",
-  "version": "1.0.0",
-  "description": "",
+  "version": "0.0.1",
+  "main": "dist/playkit-youbora.js",
   "scripts": {
     "clean": "rm -rf ./dist",
     "prebuild": "npm run clean",
+    "build:prod": "NODE_ENV=production webpack",
     "build": "webpack",
     "dev": "webpack --progress --colors --watch",
     "test": "NODE_ENV=test karma start --color",
@@ -14,10 +15,17 @@
     "test:safari": "NODE_ENV=test karma start --color --browsers Safari",
     "test:watch": "NODE_ENV=test karma start --color --auto-watch",
     "start": "webpack-dev-server",
-    "release": "NODE_ENV=production npm run build -- -p && git add --all dist && git commit -m 'update dist' && standard-version",
+    "release": "standard-version",
+    "publish": "git push --follow-tags --no-verify origin master",
     "eslint": "eslint . --color",
     "flow": "flow check",
-    "prepush": "npm run eslint && npm run test && npm run flow"
+    "eslint:flow:test": "npm run eslint && npm run flow && npm run test",
+    "commit:dist": "git add --force --all dist && (git commit -m 'chore: update dist' || exit 0)"
+  },
+  "standard-version": {
+    "scripts": {
+      "postbump": "yarn run build && yarn run build:prod && npm run commit:dist"
+    }
   },
   "devDependencies": {
     "babel-cli": "^6.18.0",
@@ -31,6 +39,7 @@
     "babel-register": "^6.23.0",
     "chai": "^3.5.0",
     "cross-env": "^3.1.4",
+    "css-loader": "^0.28.4",
     "eslint": "^3.10.0",
     "eslint-loader": "^1.6.1",
     "eslint-plugin-flowtype": "^2.30.0",
@@ -51,19 +60,21 @@
     "karma-webpack": "^2.0.2",
     "mocha": "^3.2.0",
     "mocha-cli": "^1.0.1",
-    "nyc": "^10.1.2",
+    "playkit-js": "https://github.com/kaltura/playkit-js.git#v0.3.0",
+    "pre-push": "^0.1.1",
     "sinon": "^2.0.0",
     "sinon-chai": "^2.8.0",
     "standard-version": "^4.0.0",
+    "style-loader": "^0.18.2",
     "uglifyjs-webpack-plugin": "^0.4.3",
     "webpack": "latest",
     "webpack-dev-server": "latest"
   },
+  "peerDependencies": {
+    "playkit-js": "https://github.com/kaltura/playkit-js.git#v0.3.0"
+  },
   "keywords": [],
   "license": "AGPL-3.0",
-  "dependencies": {
-    "playkit-js": "https://github.com/kaltura/playkit-js.git#develop"
-  },
   "repository": {
     "type": "git",
     "url": "git+https://github.com/kaltura/playkit-js-youbora.git"

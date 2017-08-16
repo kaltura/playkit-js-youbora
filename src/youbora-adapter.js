@@ -13,8 +13,7 @@ $YB.plugins.KalturaV3 = function (player, options) {
     /** Name and platform of the plugin.*/
     this.pluginName = PLAYER_NAME;
 
-    /** Version of the plugin. ie: 5.1.0-name */
-    this.pluginVersion = '5.3.0-' + pkg.version + '-' + PLAYER_NAME;
+    this.pluginVersion = $YB.version + '-' + pkg.version + '-' + PLAYER_NAME;
 
     /* Initialize YouboraJS */
     this.startMonitoring(player, options);
@@ -152,7 +151,7 @@ $YB.plugins.KalturaV3.prototype.setMetadata = function () {
       kalturaInfo: {
         entryId: this.player.config.id,
         sessionId: this.player.config.session ? this.player.config.session.id : "",
-        uiConfigId: this.player.config.session ? this.player.config.session.uiConfID : ""
+        uiConfId: this.player.config.session ? this.player.config.session.uiConfID : ""
       }
     }
   });

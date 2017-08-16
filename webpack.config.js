@@ -2,14 +2,9 @@
 
 const webpack = require("webpack");
 const path = require("path");
-const CopyPlugin = require('copy-webpack-plugin');
 const PROD = (process.env.NODE_ENV === 'production');
 
-let plugins = [
-  new CopyPlugin([{
-    from: '../samples/index.html', to: '.'
-  }])
-];
+let plugins = [];
 
 if (PROD) {
   plugins.push(new webpack.optimize.UglifyJsPlugin({

@@ -42,21 +42,9 @@ export default class Youbora extends BasePlugin {
    */
   constructor(name: string, player: Player, config: Object) {
     super(name, player, config);
-    this.config.extraParams = this._getCustomParams();
     this._youbora = new YouboraAdapter(this.player, this.config);
     this._addBindings();
     this._setup();
-  }
-
-  _getCustomParams(): Object {
-    let paramObj = {};
-    for (let i = 1; i < 10; i++) {
-      let param = this.config['param' + i];
-      if (param) {
-        paramObj["param" + i] = param;
-      }
-    }
-    return paramObj;
   }
 
   /**

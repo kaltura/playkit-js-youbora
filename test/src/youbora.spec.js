@@ -1,5 +1,6 @@
 //eslint-disable-next-line no-unused-vars
 import youbora from '../../src/youbora.js'
+import $YB from '../../src/youbora.lib.min'
 import {loadPlayer, VERSION, PLAYER_NAME} from 'playkit-js'
 import * as TestUtils from 'playkit-js/test/src/utils/test-utils'
 import * as pkg from '../../package.json'
@@ -34,13 +35,13 @@ describe('YouboraAdapter', function () {
     analyticsParams.transcode.should.equal('Free');
     analyticsParams.hashTitle.should.equal('true');
     (analyticsParams.referer === document.referrer || analyticsParams.referer === location.href).should.be.true;
-    analyticsParams.pluginVersion.should.equal('5.3.0-' + pkg.version + '-' + PLAYER_NAME);
+    analyticsParams.pluginVersion.should.equal($YB.version + '-' + pkg.version + '-' + PLAYER_NAME);
     analyticsParams.playerVersion.should.equal(PLAYER_NAME + "-" + VERSION);
     analyticsParams.resource.should.equal('https://www.w3schools.com/tags/movie.mp4');
     analyticsParams.duration.should.equal('13');
     analyticsParams.live.should.equal('false');
     analyticsParams.rendition.should.equal('200x100@10Kbps');
-    analyticsParams.properties.should.equal('{"kalturaInfo":{"entryId":"1_rwbj3j0a","sessionId":"7296b4fd-3fcb-666d-51fc-34065579334c","uiConfigId":123456}}');
+    analyticsParams.properties.should.equal('{"kalturaInfo":{"entryId":"1_rwbj3j0a","sessionId":"7296b4fd-3fcb-666d-51fc-34065579334c","uiConfId":123456}}');
     analyticsParams.param1.should.equal('param-1');
     analyticsParams.param3.should.equal('param-3');
     analyticsParams.adsExpected.should.equal('false');
@@ -69,9 +70,12 @@ describe('YouboraAdapter', function () {
       plugins: {
         youbora: {
           'accountCode': 'powerdev',
-          'param1': 'param-1',
-          'param3': 'param-3',
-          'username': 'user-id'
+          'username': 'user-id',
+          'extraParams' : {
+            'param1': 'param-1',
+            'param3': 'param-3'
+          }
+
         }
       }
     };
