@@ -8,6 +8,7 @@ import * as pkg from '../../package.json'
 const targetId = 'player-placeholder_youbora.spec';
 
 describe('YouboraAdapter', function () {
+  this.timeout(10000);
   let player, sandbox, sendSpy, config;
 
   /**
@@ -28,7 +29,7 @@ describe('YouboraAdapter', function () {
    * @param {Object} analyticsParams - params
    * @return {void}
    */
-  function verifyProperties(analyticsParams) {
+  function verifyStartProperties(analyticsParams) {
     analyticsParams.system.should.equal('powerdev');
     analyticsParams.player.should.equal(PLAYER_NAME);
     analyticsParams.user.should.equal('user-id');
@@ -40,11 +41,19 @@ describe('YouboraAdapter', function () {
     analyticsParams.duration.should.equal('13');
     analyticsParams.live.should.equal('false');
     analyticsParams.rendition.should.equal('200x100@10Kbps');
-    analyticsParams.properties.should.equal('{"kalturaInfo":{"entryId":"1_rwbj3j0a","sessionId":"7296b4fd-3fcb-666d-51fc-34065579334c","uiConfId":123456}}');
+    analyticsParams.properties.should.equal('{"test":"test","kalturaInfo":{"entryId":"1_rwbj3j0a","sessionId":"7296b4fd-3fcb-666d-51fc-34065579334c","uiConfId":123456}}');
     analyticsParams.param1.should.equal('param-1');
     analyticsParams.param3.should.equal('param-3');
     analyticsParams.adsExpected.should.equal('false');
     analyticsParams.pingTime.should.equal('5');
+  }
+
+  /**
+   * @param {Object} analyticsParams - params
+   * @return {void}
+   */
+  function verifyPingProperties(analyticsParams) {
+    analyticsParams.bitrate.should.equal('10000');
   }
 
   before(function () {
@@ -70,6 +79,9 @@ describe('YouboraAdapter', function () {
         youbora: {
           'accountCode': 'powerdev',
           'username': 'user-id',
+          'properties': {
+            test: 'test'
+          },
           'extraParams' : {
             'param1': 'param-1',
             'param3': 'param-3'
@@ -100,10 +112,12 @@ describe('YouboraAdapter', function () {
   it('should send start', (done) => {
     player.addEventListener(player.Event.FIRST_PLAY, () => {
       setTimeout(() => {
-        let analyticsParams = getJsonFromUrl(sendSpy.firstCall.thisValue.responseURL);
-        verifyProperties(analyticsParams);
+        let startParams = getJsonFromUrl(sendSpy.firstCall.thisValue.responseURL);
+        verifyStartProperties(startParams);
+        let pingParams = getJsonFromUrl(sendSpy.thirdCall.thisValue.responseURL);
+        verifyPingProperties(pingParams);
         done();
-      }, 500);
+      }, 7000);
     });
     player.play();
   });

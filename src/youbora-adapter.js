@@ -66,7 +66,7 @@ $YB.plugins.KalturaV3.prototype.getPlayerVersion = function () {
 $YB.plugins.KalturaV3.prototype.getBitrate = function () {
   let activeVideo = this.player.getActiveTracks().video;
   if (activeVideo && activeVideo.bandwidth) {
-    return activeVideo.bandwidth / 1024;
+    return activeVideo.bandwidth;
   }
   return -1;
 };

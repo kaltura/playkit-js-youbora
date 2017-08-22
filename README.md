@@ -66,7 +66,8 @@ player.play();
 
 ## Configuration
 
-//TODO
+This plugin configuration reflects Youbora options,
+For full Youbora options see: http://developer.nicepeopleatwork.com/apidocs/js/$YB.data.Options.html
 
 ## Running the tests
 
