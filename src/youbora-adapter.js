@@ -5,16 +5,15 @@
  * @author Jordi Aguilar & Dan Ziv
  */
 import $YB from './youbora.lib.min'
-import {VERSION} from 'playkit-js'
-import * as pkg from '../../package.json'
+import {VERSION, PLAYER_NAME} from 'playkit-js'
+import * as pkg from '../package.json'
 
 $YB.plugins.KalturaV3 = function (player, options) {
   try {
     /** Name and platform of the plugin.*/
-    this.pluginName = 'kalturaplaykit-js';
+    this.pluginName = PLAYER_NAME;
 
-    /** Version of the plugin. ie: 5.1.0-name */
-    this.pluginVersion = '5.3.0-' + pkg.version + '-kalturaplaykit-js';
+    this.pluginVersion = $YB.version + '-' + pkg.version + '-' + PLAYER_NAME;
 
     /* Initialize YouboraJS */
     this.startMonitoring(player, options);
@@ -61,7 +60,30 @@ $YB.plugins.KalturaV3.prototype.getResource = function () {
  * @returns {string} - The current player version.
  */
 $YB.plugins.KalturaV3.prototype.getPlayerVersion = function () {
-  return 'KalturaPlaykitJS ' + VERSION;
+  return PLAYER_NAME + "-" + VERSION;
+};
+
+$YB.plugins.KalturaV3.prototype.getBitrate = function () {
+  let activeVideo = this.player.getActiveTracks().video;
+  if (activeVideo && activeVideo.bandwidth) {
+    return activeVideo.bandwidth;
+  }
+  return -1;
+};
+
+$YB.plugins.KalturaV3.prototype.getTitle = function () {
+  return this.player.config.name;
+};
+
+$YB.plugins.KalturaV3.prototype.getRendition = function () {
+  let activeVideo = this.player.getActiveTracks().video;
+  if (activeVideo) {
+    return $YB.utils.buildRenditionString(activeVideo.width, activeVideo.height, activeVideo.bandwidth);
+  }
+};
+
+$YB.plugins.KalturaV3.prototype.getIsLive = function () {
+  return this.player.config.type === "Live";
 };
 
 /**
@@ -70,9 +92,9 @@ $YB.plugins.KalturaV3.prototype.getPlayerVersion = function () {
  */
 $YB.plugins.KalturaV3.prototype.registerListeners = function () {
   // save context
-  var context = this;
-  var Event = this.player.Event;
-  var State = this.player.State;
+  let context = this;
+  let Event = this.player.Event;
+  let State = this.player.State;
 
   // Play is clicked (/start)
   this.player.addEventListener(Event.PLAY, function () {
@@ -104,11 +126,19 @@ $YB.plugins.KalturaV3.prototype.registerListeners = function () {
     context.seekingHandler();
   });
 
+  // video seek end
+  this.player.addEventListener(Event.SEEKED, function () {
+    context.seekedHandler();
+  });
+
   this.player.addEventListener(Event.PLAYER_STATE_CHANGED, function (e) {
-    var oldState = e.payload.oldState.type;
-    var newState = e.payload.newState.type;
-    if (oldState === State.PLAYING && newState === State.BUFFERING) {
+    let newState = e.payload.newState.type;
+    let oldState = e.payload.oldState.type;
+    if (newState === State.BUFFERING) {
       context.bufferingHandler();
+    }
+    if (oldState === State.BUFFERING) {
+      context.bufferedHandler();
     }
   });
 };

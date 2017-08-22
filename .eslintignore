@@ -1,4 +1,4 @@
-/src/youbora/youbora.lib.min.js
+/src/youbora.lib.min.js
 /flow-typed/**/*.js
 /coverage
 /dist

@@ -1,8 +1,6 @@
 //@flow
 import {registerPlugin, BasePlugin} from 'playkit-js'
-import YouboraPlugin from './youbora/youbora-plugin'
-//eslint-disable-next-line no-unused-vars
-import sample from '../samples/index.js'
+import YouboraAdapter from './youbora-adapter'
 
 /**
  * The plugin name.
@@ -15,7 +13,7 @@ const pluginName = "youbora";
  * Youbora plugin for analytics.
  * @classdesc
  */
-class Youbora extends BasePlugin {
+export default class Youbora extends BasePlugin {
 
   /**
    * The default configuration of the plugin.
@@ -23,7 +21,7 @@ class Youbora extends BasePlugin {
    * @static
    */
   static defaultConfig: Object = {
-    accountCode: 'powerdev'
+    haltOnError: false
   };
 
   /**
@@ -41,11 +39,30 @@ class Youbora extends BasePlugin {
    * @param {Player} player - Access to the player reference.
    * @param {Object} config - The plugin configuration.
    */
-  constructor(name, player, config) {
+  constructor(name: string, player: Player, config: Object) {
     super(name, player, config);
-    this._youbora = new YouboraPlugin(this.player, this.config);
+    this._addPlayerMetadata();
+    this._youbora = new YouboraAdapter(this.player, this.config);
     this._addBindings();
     this._setup();
+  }
+
+  /**
+   * Add the player metadata to the plugin config.
+   * @function
+   * @private
+   * @returns {void}
+   */
+  _addPlayerMetadata(): void {
+    this.updateConfig({
+      properties: {
+        kalturaInfo: {
+          entryId: this.player.config.id,
+          sessionId: this.player.config.session ? this.player.config.session.id : "",
+          uiConfId: this.player.config.session ? this.player.config.session.uiConfID : ""
+        }
+      }
+    });
   }
 
   /**
@@ -56,7 +73,7 @@ class Youbora extends BasePlugin {
    */
   _addBindings(): void {
     // Bind the plugin logger to the youbora sdk logger
-    YouboraPlugin.bindLogger(this.logger);
+    YouboraAdapter.bindLogger(this.logger);
   }
 
   /**
