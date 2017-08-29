@@ -8,7 +8,6 @@ import * as pkg from '../../package.json'
 const targetId = 'player-placeholder_youbora.spec';
 
 describe('YouboraAdapter', function () {
-  this.timeout(10000);
   let player, sandbox, sendSpy, config;
 
   /**
