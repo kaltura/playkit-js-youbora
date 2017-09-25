@@ -12,7 +12,7 @@ module.exports = {
     filename: '[name].js',
     library: "PlaykitJsYoubora",
     libraryTarget: "umd",
-    devtoolModuleFilenameTemplate: "webpack:///youbora/[resource-path]",
+    devtoolModuleFilenameTemplate: "./youbora/[resource-path]",
   },
   devtool: 'source-map',
   plugins: PROD ? [new webpack.optimize.UglifyJsPlugin({sourceMap: true})] : [],
