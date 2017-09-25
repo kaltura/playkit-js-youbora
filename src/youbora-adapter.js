@@ -5,18 +5,18 @@
  * @author Jordi Aguilar & Dan Ziv
  */
 import $YB from './youbora.lib.min'
-import {VERSION, PLAYER_NAME} from 'playkit-js'
 import * as pkg from '../package.json'
 
 $YB.plugins.KalturaV3 = function (player, options) {
   try {
+    this.config = options;
     /** Name and platform of the plugin.*/
-    this.pluginName = PLAYER_NAME;
+    this.pluginName = this.config.playerName;
 
-    this.pluginVersion = $YB.version + '-' + pkg.version + '-' + PLAYER_NAME;
+    this.pluginVersion = $YB.version + '-' + pkg.version + '-' + this.pluginName;
 
     /* Initialize YouboraJS */
-    this.startMonitoring(player, options);
+    this.startMonitoring(player, this.config.options);
   } catch (err) {
     $YB.error(err);
   }
@@ -60,7 +60,7 @@ $YB.plugins.KalturaV3.prototype.getResource = function () {
  * @returns {string} - The current player version.
  */
 $YB.plugins.KalturaV3.prototype.getPlayerVersion = function () {
-  return PLAYER_NAME + "-" + VERSION;
+  return this.config.playerName + "-" + this.config.playerVersion;
 };
 
 $YB.plugins.KalturaV3.prototype.getBitrate = function () {
@@ -72,7 +72,7 @@ $YB.plugins.KalturaV3.prototype.getBitrate = function () {
 };
 
 $YB.plugins.KalturaV3.prototype.getTitle = function () {
-  return this.player.config.name;
+  return this.config.entryName;
 };
 
 $YB.plugins.KalturaV3.prototype.getRendition = function () {
@@ -83,7 +83,7 @@ $YB.plugins.KalturaV3.prototype.getRendition = function () {
 };
 
 $YB.plugins.KalturaV3.prototype.getIsLive = function () {
-  return this.player.config.type === "Live";
+  return this.config.entryType === "Live";
 };
 
 /**
