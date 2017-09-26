@@ -1,14 +1,16 @@
 //eslint-disable-next-line no-unused-vars
 import youbora from '../../src/youbora.js'
 import $YB from '../../src/youbora.lib.min'
-import {loadPlayer, VERSION, PLAYER_NAME} from 'playkit-js'
+import {loadPlayer} from 'playkit-js'
 import * as TestUtils from 'playkit-js/test/src/utils/test-utils'
 import * as pkg from '../../package.json'
 
-const targetId = 'player-placeholder_youbora.spec';
 
 describe('YouboraAdapter', function () {
   let player, sandbox, sendSpy, config;
+
+  const playerName = 'player test';
+  const playerVersion = '1.2.3';
 
   /**
    * @function getJsonFromUrl
@@ -30,12 +32,12 @@ describe('YouboraAdapter', function () {
    */
   function verifyStartProperties(analyticsParams) {
     analyticsParams.system.should.equal('powerdev');
-    analyticsParams.player.should.equal(PLAYER_NAME);
+    analyticsParams.player.should.equal(playerName);
     analyticsParams.user.should.equal('user-id');
     analyticsParams.hashTitle.should.equal('true');
     (analyticsParams.referer === document.referrer || analyticsParams.referer === location.href).should.be.true;
-    analyticsParams.pluginVersion.should.equal($YB.version + '-' + pkg.version + '-' + PLAYER_NAME);
-    analyticsParams.playerVersion.should.equal(PLAYER_NAME + "-" + VERSION);
+    analyticsParams.pluginVersion.should.equal($YB.version + '-' + pkg.version + '-' + playerName);
+    analyticsParams.playerVersion.should.equal(playerName + '-' + playerVersion);
     analyticsParams.resource.should.equal('https://www.w3schools.com/tags/movie.mp4');
     analyticsParams.duration.should.equal('13');
     analyticsParams.live.should.equal('false');
@@ -76,24 +78,37 @@ describe('YouboraAdapter', function () {
       },
       plugins: {
         youbora: {
-          'accountCode': 'powerdev',
-          'username': 'user-id',
-          'properties': {
-            test: 'test'
-          },
-          'extraParams' : {
-            'param1': 'param-1',
-            'param3': 'param-3'
+          playerVersion: "1.2.3",
+          playerName: "player test",
+          options: {
+            'accountCode': 'powerdev',
+            'username': 'user-id',
+            'properties': {
+              test: 'test'
+            },
+            'extraParams' : {
+              'param1': 'param-1',
+              'param3': 'param-3'
+            }
           }
-
         }
       }
     };
-    TestUtils.createElement('DIV', targetId);
   });
 
   beforeEach(function () {
-    player = loadPlayer(targetId, config);
+    player = loadPlayer(config);
+    player.configure({
+      plugins: {
+        youbora: {
+          entryId: "1_rwbj3j0a",
+          entryName: "entry name",
+          entryType: "vod",
+          sessionId: "7296b4fd-3fcb-666d-51fc-34065579334c",
+          uiConfId: 123456
+        }
+      }
+    });
     sandbox = sinon.sandbox.create();
     sendSpy = sandbox.spy(XMLHttpRequest.prototype, 'send');
   });
@@ -102,10 +117,6 @@ describe('YouboraAdapter', function () {
     sandbox.restore();
     player.destroy();
     TestUtils.removeVideoElementsFromTestPage();
-  });
-
-  after(function () {
-    TestUtils.removeElement(targetId);
   });
 
   it('should send start', (done) => {

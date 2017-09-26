@@ -21,7 +21,9 @@ export default class Youbora extends BasePlugin {
    * @static
    */
   static defaultConfig: Object = {
-    haltOnError: false
+    options : {
+      haltOnError: false
+    }
   };
 
   /**
@@ -41,10 +43,21 @@ export default class Youbora extends BasePlugin {
    */
   constructor(name: string, player: Player, config: Object) {
     super(name, player, config);
-    this._addPlayerMetadata();
     this._youbora = new YouboraAdapter(this.player, this.config);
     this._addBindings();
     this._setup();
+  }
+
+  /**
+   * Updates the configuration of the plugin.
+   * @param {Object} update - The updated configuration.
+   * @override
+   * @returns {void}
+   */
+  updateConfig(update: Object): void {
+    super.updateConfig(update);
+    this._youbora.setOptions(update.options);
+    this._addPlayerMetadata();
   }
 
   /**
@@ -54,12 +67,12 @@ export default class Youbora extends BasePlugin {
    * @returns {void}
    */
   _addPlayerMetadata(): void {
-    this.updateConfig({
+    this._youbora.setOptions({
       properties: {
         kalturaInfo: {
-          entryId: this.player.config.id,
-          sessionId: this.player.config.session ? this.player.config.session.id : "",
-          uiConfId: this.player.config.session ? this.player.config.session.uiConfID : ""
+          entryId: this.config.entryId,
+          sessionId: this.config.sessionId,
+          uiConfId: this.config.uiConfId
         }
       }
     });
