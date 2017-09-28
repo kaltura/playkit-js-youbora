@@ -5,6 +5,9 @@ All notable changes to this project will be documented in this file. See [standa
 <a name="0.1.2"></a>
 ## [0.1.2](https://github.com/kaltura/playkit-js-youbora/compare/v0.1.1...v0.1.2) (2017-09-26)
 
+### Features
+
+* get player data from own config ([#10](https://github.com/kaltura/playkit-js-youbora/issues/10)) ([e1c57f2](https://github.com/kaltura/playkit-js-youbora/commit/e1c57f2))
 
 
 <a name="0.1.1"></a>
