@@ -21,7 +21,7 @@ export default class Youbora extends BasePlugin {
    * @static
    */
   static defaultConfig: Object = {
-    options : {
+    options: {
       haltOnError: false
     }
   };
@@ -58,6 +58,16 @@ export default class Youbora extends BasePlugin {
     super.updateConfig(update);
     this._youbora.setOptions(update.options);
     this._addPlayerMetadata();
+  }
+
+  /**
+   * Reset the plugin
+   * @return {void}
+   */
+  reset(): void {
+    if (this._youbora) {
+      this._youbora.reset();
+    }
   }
 
   /**

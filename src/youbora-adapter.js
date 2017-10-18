@@ -36,6 +36,14 @@ $YB.plugins.KalturaV3.bindLogger = function (logger) {
 };
 
 /**
+ * @returns {void}
+ */
+$YB.plugins.KalturaV3.prototype.reset = function () {
+    this.endedHandler();
+    this.viewManager.comm.view++;
+};
+
+/**
  * @returns {Number} - The current playhead of the video or 0.
  */
 $YB.plugins.KalturaV3.prototype.getPlayhead = function () {
