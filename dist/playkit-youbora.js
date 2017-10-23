@@ -174,6 +174,19 @@ var Youbora = function (_BasePlugin) {
     }
 
     /**
+     * Reset the plugin
+     * @return {void}
+     */
+
+  }, {
+    key: 'reset',
+    value: function reset() {
+      if (this._youbora) {
+        this._youbora.reset();
+      }
+    }
+
+    /**
      * Add the player metadata to the plugin config.
      * @function
      * @private
@@ -309,6 +322,14 @@ _youboraLib2.default.plugins.KalturaV3.bindLogger = function (logger) {
   _youboraLib2.default.warn = logger.warn.bind(logger);
   _youboraLib2.default.debug = logger.debug.bind(logger);
   _youboraLib2.default.verbose = function () {};
+};
+
+/**
+ * @returns {void}
+ */
+_youboraLib2.default.plugins.KalturaV3.prototype.reset = function () {
+  this.endedHandler();
+  this.viewManager.comm.view++;
 };
 
 /**
@@ -1462,7 +1483,7 @@ var $YB = $YB || { version: "5.4.6", plugins: {}, adnalyzers: {}, utils: {}, man
 /* 4 */
 /***/ (function(module, exports) {
 
-module.exports = {"name":"playkit-js-youbora","version":"0.1.2","main":"dist/playkit-youbora.js","scripts":{"clean":"rm -rf ./dist","prebuild":"npm run clean","build:prod":"NODE_ENV=production webpack","build":"webpack","dev":"webpack --progress --colors --watch","test":"NODE_ENV=test karma start --color","test:chrome":"NODE_ENV=test karma start --color --browsers Chrome","test:chrome:dots":"NODE_ENV=test karma start --color --browsers Chrome --reporters dots","test:firefox":"NODE_ENV=test karma start --color --browsers Firefox","test:safari":"NODE_ENV=test karma start --color --browsers Safari","test:watch":"NODE_ENV=test karma start --color --auto-watch","start":"webpack-dev-server","release":"standard-version","publish":"git push --follow-tags --no-verify origin master","eslint":"eslint . --color","flow":"flow check","eslint:flow:test":"npm run eslint && npm run flow && npm run test","commit:dist":"git add --force --all dist && (git commit -m 'chore: update dist' || exit 0)"},"standard-version":{"scripts":{"postbump":"yarn run build && yarn run build:prod && npm run commit:dist"}},"devDependencies":{"babel-cli":"^6.18.0","babel-core":"^6.18.2","babel-eslint":"^7.1.1","babel-loader":"^6.2.7","babel-plugin-istanbul":"^4.0.0","babel-plugin-transform-class-properties":"^6.22.0","babel-plugin-transform-flow-strip-types":"^6.22.0","babel-preset-es2015":"^6.18.0","babel-register":"^6.23.0","chai":"^3.5.0","cross-env":"^3.1.4","css-loader":"^0.28.4","eslint":"^3.10.0","eslint-loader":"^1.6.1","eslint-plugin-flowtype":"^2.30.0","eslint-plugin-import":"^2.2.0","eslint-plugin-mocha-no-only":"^0.0.5","flow-bin":"latest","istanbul":"^0.4.5","karma":"^1.5.0","karma-chai":"^0.1.0","karma-chrome-launcher":"^2.0.0","karma-cli":"^1.0.1","karma-coverage":"^1.1.1","karma-firefox-launcher":"^1.0.1","karma-ie-launcher":"^1.0.0","karma-mocha":"^1.3.0","karma-safari-launcher":"^1.0.0","karma-sourcemap-loader":"^0.3.7","karma-webpack":"^2.0.2","mocha":"^3.2.0","mocha-cli":"^1.0.1","playkit-js":"git+https://github.com/kaltura/playkit-js.git#v0.9.0","pre-push":"^0.1.1","sinon":"^2.0.0","sinon-chai":"^2.8.0","standard-version":"^4.2.0","style-loader":"^0.18.2","uglifyjs-webpack-plugin":"^0.4.3","webpack":"latest","webpack-dev-server":"latest"},"peerDependencies":{"playkit-js":"git+https://github.com/kaltura/playkit-js.git#v0.9.0"},"keywords":[],"license":"AGPL-3.0","repository":{"type":"git","url":"git+https://github.com/kaltura/playkit-js-youbora.git"},"bugs":{"url":"https://github.com/kaltura/playkit-js-youbora/issues"},"homepage":"https://github.com/kaltura/playkit-js-youbora#readme"}
+module.exports = {"name":"playkit-js-youbora","version":"0.2.0","main":"dist/playkit-youbora.js","scripts":{"clean":"rm -rf ./dist","prebuild":"npm run clean","build:prod":"NODE_ENV=production webpack","build":"webpack","dev":"webpack --progress --colors --watch","test":"NODE_ENV=test karma start --color","test:chrome":"NODE_ENV=test karma start --color --browsers Chrome","test:chrome:dots":"NODE_ENV=test karma start --color --browsers Chrome --reporters dots","test:firefox":"NODE_ENV=test karma start --color --browsers Firefox","test:safari":"NODE_ENV=test karma start --color --browsers Safari","test:watch":"NODE_ENV=test karma start --color --auto-watch","start":"webpack-dev-server","release":"standard-version","publish":"git push --follow-tags --no-verify origin master","eslint":"eslint . --color","flow":"flow check","eslint:flow:test":"npm run eslint && npm run flow && npm run test","commit:dist":"git add --force --all dist && (git commit -m 'chore: update dist' || exit 0)"},"standard-version":{"scripts":{"postbump":"yarn run build && yarn run build:prod && npm run commit:dist"}},"devDependencies":{"babel-cli":"^6.18.0","babel-core":"^6.18.2","babel-eslint":"^7.1.1","babel-loader":"^6.2.7","babel-plugin-istanbul":"^4.0.0","babel-plugin-transform-class-properties":"^6.22.0","babel-plugin-transform-flow-strip-types":"^6.22.0","babel-preset-es2015":"^6.18.0","babel-register":"^6.23.0","chai":"^3.5.0","cross-env":"^3.1.4","css-loader":"^0.28.4","eslint":"^3.10.0","eslint-loader":"^1.6.1","eslint-plugin-flowtype":"^2.30.0","eslint-plugin-import":"^2.2.0","eslint-plugin-mocha-no-only":"^0.0.5","flow-bin":"latest","istanbul":"^0.4.5","karma":"^1.5.0","karma-chai":"^0.1.0","karma-chrome-launcher":"^2.0.0","karma-cli":"^1.0.1","karma-coverage":"^1.1.1","karma-firefox-launcher":"^1.0.1","karma-ie-launcher":"^1.0.0","karma-mocha":"^1.3.0","karma-safari-launcher":"^1.0.0","karma-sourcemap-loader":"^0.3.7","karma-webpack":"^2.0.2","mocha":"^3.2.0","mocha-cli":"^1.0.1","playkit-js":"git+https://github.com/kaltura/playkit-js.git#v0.12.0","pre-push":"^0.1.1","sinon":"^2.0.0","sinon-chai":"^2.8.0","standard-version":"^4.2.0","style-loader":"^0.18.2","uglifyjs-webpack-plugin":"^0.4.3","webpack":"latest","webpack-dev-server":"latest"},"peerDependencies":{"playkit-js":"git+https://github.com/kaltura/playkit-js.git#v0.12.0"},"keywords":[],"license":"AGPL-3.0","repository":{"type":"git","url":"git+https://github.com/kaltura/playkit-js-youbora.git"},"bugs":{"url":"https://github.com/kaltura/playkit-js-youbora/issues"},"homepage":"https://github.com/kaltura/playkit-js-youbora#readme"}
 
 /***/ })
 /******/ ]);
