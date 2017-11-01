@@ -54,7 +54,9 @@ var config = {
  ...
  plugins: {
    youbora: {
-     accountCode: "YOUR_ACCOUNT_CODE"
+     options: {
+       accountCode: "YOUR_ACCOUNT_CODE"
+     }
    }
  }
  ...
