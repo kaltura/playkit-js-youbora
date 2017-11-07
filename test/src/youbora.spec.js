@@ -1,5 +1,5 @@
 //eslint-disable-next-line no-unused-vars
-import youbora from '../../src/youbora.js'
+import youbora from '../../src'
 import $YB from '../../src/youbora.lib.min'
 import {loadPlayer} from 'playkit-js'
 import * as TestUtils from 'playkit-js/test/src/utils/test-utils'
