@@ -1,13 +1,6 @@
 //@flow
-import {registerPlugin, BasePlugin} from 'playkit-js'
+import {BasePlugin} from 'playkit-js'
 import YouboraAdapter from './youbora-adapter'
-
-/**
- * The plugin name.
- * @type {string}
- * @const
- */
-const pluginName = "youbora";
 
 /**
  * Youbora plugin for analytics.
@@ -121,8 +114,3 @@ export default class Youbora extends BasePlugin {
     }
   }
 }
-
-/**
- * Register the plugin in player's registry.
- */
-registerPlugin(pluginName, Youbora);
