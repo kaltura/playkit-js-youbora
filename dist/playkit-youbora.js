@@ -7,7 +7,7 @@
 		exports["PlaykitJsYoubora"] = factory(require("playkit-js"));
 	else
 		root["PlaykitJsYoubora"] = factory(root["Playkit"]);
-})(this, function(__WEBPACK_EXTERNAL_MODULE_1__) {
+})(this, function(__WEBPACK_EXTERNAL_MODULE_0__) {
 return /******/ (function(modules) { // webpackBootstrap
 /******/ 	// The module cache
 /******/ 	var installedModules = {};
@@ -70,11 +70,53 @@ return /******/ (function(modules) { // webpackBootstrap
 /******/ 	__webpack_require__.p = "";
 /******/
 /******/ 	// Load entry module and return exports
-/******/ 	return __webpack_require__(__webpack_require__.s = 0);
+/******/ 	return __webpack_require__(__webpack_require__.s = 1);
 /******/ })
 /************************************************************************/
 /******/ ([
 /* 0 */
+/***/ (function(module, exports) {
+
+module.exports = __WEBPACK_EXTERNAL_MODULE_0__;
+
+/***/ }),
+/* 1 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.NAME = exports.VERSION = undefined;
+
+var _playkitJs = __webpack_require__(0);
+
+var _youbora = __webpack_require__(2);
+
+var _youbora2 = _interopRequireDefault(_youbora);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+exports.default = _youbora2.default;
+exports.VERSION = "0.3.0";
+exports.NAME = "playkit-js-youbora";
+
+/**
+ * The plugin name.
+ * @type {string}
+ * @const
+ */
+
+var pluginName = "youbora";
+/**
+ * Register the plugin in player's registry.
+ */
+(0, _playkitJs.registerPlugin)(pluginName, _youbora2.default);
+
+/***/ }),
+/* 2 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -88,9 +130,9 @@ var _get = function get(object, property, receiver) { if (object === null) objec
 
 var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
-var _playkitJs = __webpack_require__(1);
+var _playkitJs = __webpack_require__(0);
 
-var _youboraAdapter = __webpack_require__(2);
+var _youboraAdapter = __webpack_require__(3);
 
 var _youboraAdapter2 = _interopRequireDefault(_youboraAdapter);
 
@@ -103,17 +145,9 @@ function _possibleConstructorReturn(self, call) { if (!self) { throw new Referen
 function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
 
 /**
- * The plugin name.
- * @type {string}
- * @const
- */
-var pluginName = "youbora";
-
-/**
  * Youbora plugin for analytics.
  * @classdesc
  */
-
 var Youbora = function (_BasePlugin) {
   _inherits(Youbora, _BasePlugin);
 
@@ -253,37 +287,25 @@ var Youbora = function (_BasePlugin) {
   return Youbora;
 }(_playkitJs.BasePlugin);
 
-/**
- * Register the plugin in player's registry.
- */
-
-
 Youbora.defaultConfig = {
   options: {
     haltOnError: false
   }
 };
 exports.default = Youbora;
-(0, _playkitJs.registerPlugin)(pluginName, Youbora);
 
 /***/ }),
-/* 1 */
-/***/ (function(module, exports) {
-
-module.exports = __WEBPACK_EXTERNAL_MODULE_1__;
-
-/***/ }),
-/* 2 */
+/* 3 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
 
 
-var _youboraLib = __webpack_require__(3);
+var _youboraLib = __webpack_require__(4);
 
 var _youboraLib2 = _interopRequireDefault(_youboraLib);
 
-var _package = __webpack_require__(4);
+var _package = __webpack_require__(5);
 
 var pkg = _interopRequireWildcard(_package);
 
@@ -443,7 +465,7 @@ _youboraLib2.default.plugins.KalturaV3.prototype.registerListeners = function ()
 module.exports = _youboraLib2.default.plugins.KalturaV3;
 
 /***/ }),
-/* 3 */
+/* 4 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -1480,10 +1502,10 @@ var $YB = $YB || { version: "5.4.6", plugins: {}, adnalyzers: {}, utils: {}, man
 }, "undefined" != typeof module && module.exports ? module.exports = $YB : window.$YB = $YB;
 
 /***/ }),
-/* 4 */
+/* 5 */
 /***/ (function(module, exports) {
 
-module.exports = {"name":"playkit-js-youbora","version":"0.2.0","main":"dist/playkit-youbora.js","scripts":{"clean":"rm -rf ./dist","prebuild":"npm run clean","build:prod":"NODE_ENV=production webpack","build":"webpack","dev":"webpack --progress --colors --watch","test":"NODE_ENV=test karma start --color","test:chrome":"NODE_ENV=test karma start --color --browsers Chrome","test:chrome:dots":"NODE_ENV=test karma start --color --browsers Chrome --reporters dots","test:firefox":"NODE_ENV=test karma start --color --browsers Firefox","test:safari":"NODE_ENV=test karma start --color --browsers Safari","test:watch":"NODE_ENV=test karma start --color --auto-watch","start":"webpack-dev-server","release":"standard-version","publish":"git push --follow-tags --no-verify origin master","eslint":"eslint . --color","flow":"flow check","eslint:flow:test":"npm run eslint && npm run flow && npm run test","commit:dist":"git add --force --all dist && (git commit -m 'chore: update dist' || exit 0)"},"standard-version":{"scripts":{"postbump":"yarn run build && yarn run build:prod && npm run commit:dist"}},"devDependencies":{"babel-cli":"^6.18.0","babel-core":"^6.18.2","babel-eslint":"^7.1.1","babel-loader":"^6.2.7","babel-plugin-istanbul":"^4.0.0","babel-plugin-transform-class-properties":"^6.22.0","babel-plugin-transform-flow-strip-types":"^6.22.0","babel-preset-es2015":"^6.18.0","babel-register":"^6.23.0","chai":"^3.5.0","cross-env":"^3.1.4","css-loader":"^0.28.4","eslint":"^3.10.0","eslint-loader":"^1.6.1","eslint-plugin-flowtype":"^2.30.0","eslint-plugin-import":"^2.2.0","eslint-plugin-mocha-no-only":"^0.0.5","flow-bin":"latest","istanbul":"^0.4.5","karma":"^1.5.0","karma-chai":"^0.1.0","karma-chrome-launcher":"^2.0.0","karma-cli":"^1.0.1","karma-coverage":"^1.1.1","karma-firefox-launcher":"^1.0.1","karma-ie-launcher":"^1.0.0","karma-mocha":"^1.3.0","karma-safari-launcher":"^1.0.0","karma-sourcemap-loader":"^0.3.7","karma-webpack":"^2.0.2","mocha":"^3.2.0","mocha-cli":"^1.0.1","playkit-js":"git+https://github.com/kaltura/playkit-js.git#v0.12.0","pre-push":"^0.1.1","sinon":"^2.0.0","sinon-chai":"^2.8.0","standard-version":"^4.2.0","style-loader":"^0.18.2","uglifyjs-webpack-plugin":"^0.4.3","webpack":"latest","webpack-dev-server":"latest"},"peerDependencies":{"playkit-js":"git+https://github.com/kaltura/playkit-js.git#v0.12.0"},"keywords":[],"license":"AGPL-3.0","repository":{"type":"git","url":"git+https://github.com/kaltura/playkit-js-youbora.git"},"bugs":{"url":"https://github.com/kaltura/playkit-js-youbora/issues"},"homepage":"https://github.com/kaltura/playkit-js-youbora#readme"}
+module.exports = {"name":"playkit-js-youbora","version":"0.3.0","main":"dist/playkit-youbora.js","scripts":{"clean":"rm -rf ./dist","prebuild":"npm run clean","build:prod":"NODE_ENV=production webpack","build":"webpack","dev":"webpack --progress --colors --watch","test":"NODE_ENV=test karma start --color","test:chrome":"NODE_ENV=test karma start --color --browsers Chrome","test:chrome:dots":"NODE_ENV=test karma start --color --browsers Chrome --reporters dots","test:firefox":"NODE_ENV=test karma start --color --browsers Firefox","test:safari":"NODE_ENV=test karma start --color --browsers Safari","test:watch":"NODE_ENV=test karma start --color --auto-watch","start":"webpack-dev-server","release:dry-run":"standard-version --dry-run","release":"standard-version","publish":"git push --follow-tags --no-verify origin master","eslint":"eslint . --color","flow":"flow check","eslint:flow:test":"npm run eslint && npm run flow && npm run test","commit:dist":"git add --force --all dist && (git commit -m 'chore: update dist' || exit 0)"},"standard-version":{"scripts":{"postbump":"yarn run build && yarn run build:prod && npm run commit:dist"}},"devDependencies":{"babel-cli":"^6.18.0","babel-core":"^6.18.2","babel-eslint":"^7.1.1","babel-loader":"^6.2.7","babel-plugin-istanbul":"^4.0.0","babel-plugin-transform-class-properties":"^6.22.0","babel-plugin-transform-flow-strip-types":"^6.22.0","babel-preset-es2015":"^6.18.0","babel-register":"^6.23.0","chai":"^3.5.0","cross-env":"^3.1.4","css-loader":"^0.28.4","eslint":"^3.10.0","eslint-loader":"^1.6.1","eslint-plugin-flowtype":"^2.30.0","eslint-plugin-import":"^2.2.0","eslint-plugin-mocha-no-only":"^0.0.5","flow-bin":"latest","istanbul":"^0.4.5","karma":"^1.5.0","karma-chai":"^0.1.0","karma-chrome-launcher":"^2.0.0","karma-cli":"^1.0.1","karma-coverage":"^1.1.1","karma-firefox-launcher":"^1.0.1","karma-ie-launcher":"^1.0.0","karma-mocha":"^1.3.0","karma-safari-launcher":"^1.0.0","karma-sourcemap-loader":"^0.3.7","karma-webpack":"^2.0.2","mocha":"^3.2.0","mocha-cli":"^1.0.1","playkit-js":"https://github.com/kaltura/playkit-js.git#v0.17.0","pre-push":"^0.1.1","sinon":"^2.0.0","sinon-chai":"^2.8.0","standard-version":"^4.2.0","style-loader":"^0.18.2","uglifyjs-webpack-plugin":"^0.4.3","webpack":"latest","webpack-dev-server":"latest"},"peerDependencies":{"playkit-js":"https://github.com/kaltura/playkit-js.git#v0.17.0"},"keywords":[],"license":"AGPL-3.0","repository":{"type":"git","url":"git+https://github.com/kaltura/playkit-js-youbora.git"},"bugs":{"url":"https://github.com/kaltura/playkit-js-youbora/issues"},"homepage":"https://github.com/kaltura/playkit-js-youbora#readme"}
 
 /***/ })
 /******/ ]);
