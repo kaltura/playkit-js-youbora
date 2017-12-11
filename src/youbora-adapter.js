@@ -131,7 +131,9 @@ $YB.plugins.KalturaV3.prototype.registerListeners = function () {
 
   // video seek start
   this.player.addEventListener(Event.SEEKING, function () {
-    context.seekingHandler();
+    if (!context.viewManager.isBuffering) {
+      context.seekingHandler();
+    }
   });
 
   // video seek end
