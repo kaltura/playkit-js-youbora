@@ -48,8 +48,9 @@ Finally, add the bundle as a script tag in your page, and initialize the player
 ```html
 <script type="text/javascript" src="/PATH/TO/FILE/playkit.js"></script>
 <script type="text/javascript" src="/PATH/TO/FILE/playkit-youbora.js"></script>
-<div id="videoContainer" style="height:360px; width:640px">
+<div id="player-placeholder" style="height:360px; width:640px">
 <script type="text/javascript">
+var playerContainer = document.querySelector("#player-placeholder");
 var config = {
  ...
  plugins: {
@@ -61,7 +62,8 @@ var config = {
  }
  ...
 };
-var player = playkit.loadPlayer("videoContainer", config);
+var player = playkit.core.loadPlayer(config);
+playerContainer.appendChild(player.getView());
 player.play();
 </script>
 ```

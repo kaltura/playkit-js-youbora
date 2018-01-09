@@ -22,7 +22,7 @@ module.exports = {
   output: {
     path: __dirname + "/dist",
     filename: '[name].js',
-    library: "PlaykitJsYoubora",
+    library: ["playkit", "youbora"],
     libraryTarget: "umd",
     devtoolModuleFilenameTemplate: "./youbora/[resource-path]",
   },
