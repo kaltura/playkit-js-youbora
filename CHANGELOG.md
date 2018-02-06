@@ -2,6 +2,17 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+<a name="0.3.3"></a>
+## [0.3.3](https://github.com/kaltura/playkit-js-youbora/compare/v0.3.1...v0.3.3) (2018-02-06)
+
+
+### Bug Fixes
+
+* update env (docs and namespace) ([45a111c](https://github.com/kaltura/playkit-js-youbora/commit/45a111c))
+* **webpack:** playkit core externals root value ([#18](https://github.com/kaltura/playkit-js-youbora/issues/18)) ([a7fb0bd](https://github.com/kaltura/playkit-js-youbora/commit/a7fb0bd))
+
+
+
 <a name="0.3.2"></a>
 ## [0.3.2](https://github.com/kaltura/playkit-js-youbora/compare/v0.3.1...v0.3.2) (2018-01-10)
 

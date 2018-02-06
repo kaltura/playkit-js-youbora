@@ -1,6 +1,6 @@
 {
   "name": "playkit-js-youbora",
-  "version": "0.3.2",
+  "version": "0.3.3",
   "main": "dist/playkit-youbora.js",
   "scripts": {
     "clean": "rm -rf ./dist",
