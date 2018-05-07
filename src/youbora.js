@@ -37,6 +37,9 @@ export default class Youbora extends BasePlugin {
     super(name, player, config);
     this._youbora = new youbora.Plugin(this.config.options);
     this._youbora.setAdapter(new YouboraAdapter(player, config))
+    if (player.config.plugins.ima) {
+      this._youbora.setAdsAdapter(new YouboraAdapter.NativeAdsAdapter(player))
+    }
     this._addBindings();
     this._setup();
   }

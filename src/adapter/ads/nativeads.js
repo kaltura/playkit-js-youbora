@@ -13,11 +13,26 @@ var NativeAdsAdapter = youbora.Adapter.extend({
 
   /**  @returns {Number} - video duration */
   getDuration: function () {
-    return this.duration
+    return this.adObject.duration
+  },
+
+  getTitle: function () {
+    return this.adObject.title
   },
 
   /**  @returns {String} - current ad position (only ads) */
   getPosition: function () {
+    if (this.adPosition) {
+      if (this.adPosition === "preroll") {
+        return 'pre'
+      }
+      if (this.adPosition === "midroll") {
+        return 'mid'
+      }
+      if (this.adPosition === "postroll") {
+        return 'post'
+      }
+    }
     if (!this.plugin.getAdapter().flags.isJoined) {
       return 'pre'
     } else if (!this.plugin.getAdapter().isLive() && this.plugin.getAdapter().getPlayhead() > this.plugin.getAdapter().getDuration() - 1) {
@@ -63,14 +78,18 @@ var NativeAdsAdapter = youbora.Adapter.extend({
     }
   },
 
-  startAdListener: function () {
+  startAdListener: function (e) {
+    this.plugin.getAdapter().fireStart()
+    this.plugin.getAdapter().stopBlockedByAds = true
+    this.adObject = e.payload.extraAdData
+    this.adPosition = e.payload.adType
     this.fireStart()
   },
 
   stopAdListener: function () {
     this.fireStop()
     this.currentTime = null
-    this.duration = null
+    this.adObject = null
   },
 
   resumeAdListener: function () {
@@ -82,13 +101,13 @@ var NativeAdsAdapter = youbora.Adapter.extend({
   },
 
   clickAdListener: function () {
-    this.fireClick()
+    this.fireClick({ url: this.adObject.clickThroughUrl })
   },
 
   skipAdListener: function () {
     this.fireStop({ skipped: true })
     this.currentTime = null
-    this.duration = null
+    this.adObject = null
   },
 
   errorAdListener: function () {
@@ -103,7 +122,6 @@ var NativeAdsAdapter = youbora.Adapter.extend({
 
   progressAdListener: function (e) {
     this.currentTime = e.payload.adProgress.currentTime
-    this.duration = e.payload.adProgress.duration
     this.fireJoin()
     this.monitor.skipNextTick()
   }

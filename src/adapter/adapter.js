@@ -91,7 +91,6 @@ youbora.adapters.Kaltura = youbora.Adapter.extend({
     this.references[Event.PLAYER_STATE_CHANGED] = this.stateChangeListener.bind(this)
     this.references[Event.ENDED] = this.endedListener.bind(this)
     this.references[Event.CHANGE_SOURCE_STARTED] = this.forceEndedListener.bind(this)
-    this.references[Event.AD_LOADED] = this.adLoadedListener.bind(this)
 
     // Register listeners
     for (var key in this.references) {
@@ -198,15 +197,6 @@ youbora.adapters.Kaltura = youbora.Adapter.extend({
   forceEndedListener: function () {
     this.fireStop()
     this.reset()
-  },
-
-  /** @returns {void} - Listener for 'ad_loaded' event. */
-  adLoadedListener: function () {
-    this.playListener()
-    this.stopBlockedByAds = true
-    if (!this.plugin.getAdsAdapter()) {
-      this.plugin.setAdsAdapter(new youbora.adapters.Kaltura.NativeAdsAdapter(this.player))
-    }
   },
 
   reset: function () {
