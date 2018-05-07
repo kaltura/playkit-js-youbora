@@ -75,5 +75,8 @@
   "bugs": {
     "url": "https://github.com/kaltura/playkit-js-youbora/issues"
   },
-  "homepage": "https://github.com/kaltura/playkit-js-youbora#readme"
+  "homepage": "https://github.com/kaltura/playkit-js-youbora#readme",
+  "dependencies": {
+    "youboralib": "^6.2.3"
+  }
 }

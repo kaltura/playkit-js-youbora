@@ -1,6 +1,7 @@
 //@flow
-import {BasePlugin} from 'playkit-js'
-import YouboraAdapter from './youbora-adapter'
+import { BasePlugin } from 'playkit-js'
+import youbora from 'youboralib'
+import YouboraAdapter from './adapter/adapter'
 
 /**
  * Youbora plugin for analytics.
@@ -14,9 +15,7 @@ export default class Youbora extends BasePlugin {
    * @static
    */
   static defaultConfig: Object = {
-    options: {
-      haltOnError: false
-    }
+    options: {}
   };
 
   /**
@@ -24,7 +23,7 @@ export default class Youbora extends BasePlugin {
    * @returns {boolean} - Whether the plugin is valid or not.
    * @static
    */
-  static isValid(): boolean {
+  static isValid (): boolean {
     return true;
   }
 
@@ -36,7 +35,8 @@ export default class Youbora extends BasePlugin {
    */
   constructor(name: string, player: Player, config: Object) {
     super(name, player, config);
-    this._youbora = new YouboraAdapter(this.player, this.config);
+    this._youbora = new youbora.Plugin(this.config.options);
+    this._youbora.setAdapter(new YouboraAdapter(player, config))
     this._addBindings();
     this._setup();
   }
@@ -47,9 +47,12 @@ export default class Youbora extends BasePlugin {
    * @override
    * @returns {void}
    */
-  updateConfig(update: Object): void {
+  updateConfig (update: Object): void {
     super.updateConfig(update);
     this._youbora.setOptions(update.options);
+    if (this._youbora.getAdapter()) {
+      this._youbora.getAdapter().config = update;
+    }
     this._addPlayerMetadata();
   }
 
@@ -57,10 +60,8 @@ export default class Youbora extends BasePlugin {
    * Reset the plugin
    * @return {void}
    */
-  reset(): void {
-    if (this._youbora) {
-      this._youbora.reset();
-    }
+  reset (): void {
+
   }
 
   /**
@@ -69,7 +70,7 @@ export default class Youbora extends BasePlugin {
    * @private
    * @returns {void}
    */
-  _addPlayerMetadata(): void {
+  _addPlayerMetadata (): void {
     this._youbora.setOptions({
       properties: {
         kalturaInfo: {
@@ -87,9 +88,9 @@ export default class Youbora extends BasePlugin {
    * @private
    * @returns {void}
    */
-  _addBindings(): void {
+  _addBindings (): void {
     // Bind the plugin logger to the youbora sdk logger
-    YouboraAdapter.bindLogger(this.logger);
+    this._youbora.getAdapter().bindLogger(this.logger);
   }
 
   /**
@@ -98,8 +99,8 @@ export default class Youbora extends BasePlugin {
    * @private
    * @returns {void}
    */
-  _setup(): void {
-    this._youbora.registerListeners();
+  _setup (): void {
+
   }
 
   /**
@@ -108,9 +109,7 @@ export default class Youbora extends BasePlugin {
    * @public
    * @returns {void}
    */
-  destroy(): void {
-    if (this._youbora) {
-      this._youbora.endedHandler();
-    }
+  destroy (): void {
+
   }
 }

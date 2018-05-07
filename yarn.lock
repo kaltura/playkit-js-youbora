@@ -5765,3 +5765,7 @@ yargs@~3.10.0:
 yeast@0.1.2:
   version "0.1.2"
   resolved "https://registry.yarnpkg.com/yeast/-/yeast-0.1.2.tgz#008e06d8094320c372dbc2f8ed76a0ca6c8ac419"
+
+youboralib@^6.2.3:
+  version "6.2.3"
+  resolved "https://registry.yarnpkg.com/youboralib/-/youboralib-6.2.3.tgz#3de6b0c4ac6e0e28cf4bc775da7fda0891723304"
