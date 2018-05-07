@@ -110,8 +110,8 @@ var NativeAdsAdapter = youbora.Adapter.extend({
     this.adObject = null
   },
 
-  errorAdListener: function () {
-    this.fireError()
+  errorAdListener: function (e) {
+    this.fireError(e.payload.error.code, e.payload.error.message)
   },
 
   allAdsCompletedListener: function () {

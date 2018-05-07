@@ -3,7 +3,7 @@
 [![Build Status](https://travis-ci.org/kaltura/playkit-js-youbora.svg?branch=master)](https://travis-ci.org/kaltura/playkit-js-youbora)
 
 PlayKit JS Youbora plugin integrates [Youbora analytics SDK] with the [PlayKit JS Player].
- 
+
 PlayKit JS Youbora is written in [ECMAScript6], statically analysed using [Flow] and transpiled in ECMAScript5 using [Babel].
 
 [Youbora analytics SDK]: https://nicepeopleatwork.com/youbora/
@@ -71,7 +71,7 @@ player.play();
 ## Configuration
 
 This plugin configuration reflects Youbora options,
-For full Youbora options see: http://developer.nicepeopleatwork.com/apidocs/js/$YB.data.Options.html
+For full Youbora options see: http://developer.nicepeopleatwork.com/apidocs/js6/youbora.Options.html
 
 ## Running the tests
 
@@ -108,7 +108,7 @@ Please read [CONTRIBUTING.md](https://gist.github.com/PurpleBooth/b24679402957c6
 
 ## Versioning
 
-We use [SemVer](http://semver.org/) for versioning. For the versions available, see the [tags on this repository](https://github.com/kaltura/playkit-js-youbora/tags). 
+We use [SemVer](http://semver.org/) for versioning. For the versions available, see the [tags on this repository](https://github.com/kaltura/playkit-js-youbora/tags).
 
 ## License
 
