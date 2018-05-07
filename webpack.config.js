@@ -61,11 +61,11 @@ module.exports = {
     ]
   },
   externals: {
-    "playkit-js": {
-      commonjs: "playkit-js",
-      commonjs2: "playkit-js",
-      amd: "playkit-js",
-      root: ["playkit", "core"]
+    'playkit-js': {
+      commonjs: 'playkit-js',
+      commonjs2: 'playkit-js',
+      amd: 'playkit-js',
+      root: ['KalturaPlayer', 'core']
     }
   }
 };
