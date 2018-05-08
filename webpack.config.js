@@ -2,6 +2,7 @@
 
 const webpack = require("webpack");
 const path = require("path");
+const CopyWebpackPlugin = require('copy-webpack-plugin');
 const PROD = (process.env.NODE_ENV === 'production');
 const packageData = require("./package.json");
 
@@ -13,12 +14,17 @@ let plugins = [
 ];
 
 if (PROD) {
-  plugins.push(new webpack.optimize.UglifyJsPlugin({sourceMap: true}));
+  plugins.push(new webpack.optimize.UglifyJsPlugin({ sourceMap: true }));
+} else {
+  plugins.push(new CopyWebpackPlugin([{
+    from: '',
+    to: '.'
+  }]));
 }
 
 module.exports = {
   context: __dirname + "/src",
-  entry: {"playkit-youbora": "index.js"},
+  entry: { "playkit-youbora": "index.js" },
   output: {
     path: __dirname + "/dist",
     filename: '[name].js',
@@ -61,11 +67,11 @@ module.exports = {
     ]
   },
   externals: {
-    'playkit-js': {
-      commonjs: 'playkit-js',
-      commonjs2: 'playkit-js',
-      amd: 'playkit-js',
-      root: ['KalturaPlayer', 'core']
+    "playkit-js": {
+      commonjs: "playkit-js",
+      commonjs2: "playkit-js",
+      amd: "playkit-js",
+      root: ["playkit", "core"]
     }
   }
 };

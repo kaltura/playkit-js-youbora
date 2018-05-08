@@ -1,16 +1,18 @@
-var youbora = require('youboralib')
+// @flow
+import youbora from 'youboralib'
 import { Error } from 'playkit-js'
+import { MediaType } from 'playkit-js'
 
-youbora.adapters.Kaltura = youbora.Adapter.extend({
+let YouboraAdapter = youbora.Adapter.extend({
 
   constructor: function (player, config) {
     this.config = config
-    youbora.adapters.Kaltura.__super__.constructor.call(this, player)
+    YouboraAdapter.__super__.constructor.call(this, player)
   },
 
   /**  @returns {String} - current plugin version */
   getVersion: function () {
-    return "6.2.0-kaltura"
+    return youbora.VERSION + '-' + __VERSION__ + '-' + __NAME__
   },
 
   /**  @returns {Number} - current playhead of the video */
@@ -30,7 +32,7 @@ youbora.adapters.Kaltura = youbora.Adapter.extend({
 
   /**  @returns {Number} - current bitrate */
   getBitrate: function () {
-    var activeVideo = this.player.getActiveTracks().video
+    let activeVideo = this.player.getActiveTracks().video
     if (activeVideo && activeVideo.bandwidth) {
       return activeVideo.bandwidth
     }
@@ -39,7 +41,7 @@ youbora.adapters.Kaltura = youbora.Adapter.extend({
 
   /**  @returns {String} - rendition */
   getRendition: function () {
-    var activeVideo = this.player.getActiveTracks().video
+    let activeVideo = this.player.getActiveTracks().video
     if (activeVideo) {
       return youbora.Util.buildRenditionString(activeVideo.width, activeVideo.height, activeVideo.bandwidth)
     }
@@ -53,7 +55,7 @@ youbora.adapters.Kaltura = youbora.Adapter.extend({
 
   /**  @returns {Boolean} - true if live and false if VOD */
   getIsLive: function () {
-    return this.config.entryType === "Live"
+    return this.config.entryType === MediaType.LIVE
   },
 
   /**  @returns {String} - resource URL. */
@@ -78,7 +80,7 @@ youbora.adapters.Kaltura = youbora.Adapter.extend({
 
   /**  @returns {void} - Register listeners to this.player. */
   registerListeners: function () {
-    var Event = this.player.Event
+    const Event = this.player.Event
     // References
     this.references = []
     this.references[Event.PLAY] = this.playListener.bind(this)
@@ -93,7 +95,7 @@ youbora.adapters.Kaltura = youbora.Adapter.extend({
     this.references[Event.CHANGE_SOURCE_STARTED] = this.forceEndedListener.bind(this)
 
     // Register listeners
-    for (var key in this.references) {
+    for (let key in this.references) {
       this.player.addEventListener(key, this.references[key])
     }
   },
@@ -103,13 +105,14 @@ youbora.adapters.Kaltura = youbora.Adapter.extend({
 
     // unregister listeners
     if (this.player && this.references) {
-      for (var key in this.references) {
+      for (let key in this.references) {
         this.player.removeEventListener(key, this.references[key])
       }
       this.references = []
     }
   },
 
+  /** @returns {void} - Bind youbora logs to playkit ones */
   bindLogger: function (logger) {
     youbora.Log.error = logger.error.bind(logger)
     youbora.Log.notice = logger.info.bind(logger)
@@ -128,12 +131,6 @@ youbora.adapters.Kaltura = youbora.Adapter.extend({
     }
   },
 
-  /** @returns {void} - Listener for 'timeupdate' event. */
-  timeupdateListener: function () {
-    this.fireStart()
-    this.fireJoin()
-  },
-
   /** @returns {void} - Listener for 'pause' event. */
   pauseListener: function () {
     this.firePause()
@@ -144,7 +141,6 @@ youbora.adapters.Kaltura = youbora.Adapter.extend({
     this.fireResume()
     this.fireSeekEnd()
     this.fireBufferEnd()
-    this.fireStart()
     this.fireJoin()
   },
 
@@ -203,10 +199,7 @@ youbora.adapters.Kaltura = youbora.Adapter.extend({
     this.stopBlockedByAds = false
     this.initialPlayhead = null
   }
-},
-  {
-    NativeAdsAdapter: require('./ads/nativeads'),
-  }
+}
 )
 
-module.exports = youbora.adapters.Kaltura
+export { YouboraAdapter }

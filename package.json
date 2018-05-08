@@ -38,6 +38,7 @@
     "eslint-plugin-flowtype": "^2.30.0",
     "eslint-plugin-import": "^2.2.0",
     "eslint-plugin-mocha-no-only": "^0.0.5",
+    "copy-webpack-plugin": "^4.3.1",
     "flow-bin": "latest",
     "istanbul": "^0.4.5",
     "karma": "^1.5.0",
@@ -53,7 +54,6 @@
     "karma-webpack": "^2.0.2",
     "mocha": "^3.2.0",
     "mocha-cli": "^1.0.1",
-    "playkit-js": "https://github.com/kaltura/playkit-js.git#v0.20.1",
     "pre-push": "^0.1.1",
     "sinon": "^2.0.0",
     "sinon-chai": "^2.8.0",
@@ -61,7 +61,9 @@
     "style-loader": "^0.18.2",
     "uglifyjs-webpack-plugin": "^0.4.3",
     "webpack": "latest",
-    "webpack-dev-server": "latest"
+    "webpack-dev-server": "latest",
+    "youboralib": "6.2.4",
+    "playkit-js": "https://github.com/kaltura/playkit-js.git#v0.20.1"
   },
   "peerDependencies": {
     "playkit-js": "https://github.com/kaltura/playkit-js.git#v0.20.1"
@@ -75,8 +77,5 @@
   "bugs": {
     "url": "https://github.com/kaltura/playkit-js-youbora/issues"
   },
-  "homepage": "https://github.com/kaltura/playkit-js-youbora#readme",
-  "dependencies": {
-    "youboralib": "^6.2.3"
-  }
+  "homepage": "https://github.com/kaltura/playkit-js-youbora#readme"
 }

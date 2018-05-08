@@ -1,9 +1,11 @@
-var youbora = require('youboralib')
+// @flow
+import youbora from 'youboralib'
 
-var NativeAdsAdapter = youbora.Adapter.extend({
+let NativeAdsAdapter = youbora.Adapter.extend({
+
   /**  @returns {String} - current plugin version */
   getVersion: function () {
-    return "6.2.0-kaltura-ads"
+    return youbora.VERSION + '-' + __VERSION__ + '-' + __NAME__ + '-ads'
   },
 
   /**  @returns {Number} - current playhead of the video */
@@ -24,31 +26,31 @@ var NativeAdsAdapter = youbora.Adapter.extend({
   getPosition: function () {
     if (this.adPosition) {
       if (this.adPosition === "preroll") {
-        return 'pre'
+        return youbora.Adapter.AdPosition.PREROLL
       }
       if (this.adPosition === "midroll") {
-        return 'mid'
+        return youbora.Adapter.AdPosition.MIDROLL
       }
       if (this.adPosition === "postroll") {
-        return 'post'
+        return youbora.Adapter.AdPosition.POSTROLL
       }
     }
     if (!this.plugin.getAdapter().flags.isJoined) {
-      return 'pre'
+      return youbora.Adapter.AdPosition.PREROLL
     } else if (!this.plugin.getAdapter().isLive() && this.plugin.getAdapter().getPlayhead() > this.plugin.getAdapter().getDuration() - 1) {
-      return 'post'
+      return youbora.Adapter.AdPosition.POSTROLL
     }
-    return 'mid'
+    return youbora.Adapter.AdPosition.MIDROLL
   },
 
   /**  @returns {void} - Register listeners to this.player. */
   registerListeners: function () {
     this.monitorPlayhead(true, false) //playhead monitor for bufferunderrun
 
-    var Event = this.player.Event
+    const Event = this.player.Event
     // Register listeners
     this.references = []
-    this.references[Event.AD_LOADED] = this.startAdListener.bind(this)
+    this.references[Event.AD_LOADED] = this.loadedAdListener.bind(this)
     this.references[Event.AD_STARTED] = this.startAdListener.bind(this)
     this.references[Event.AD_RESUMED] = this.resumeAdListener.bind(this)
     this.references[Event.AD_PAUSED] = this.pauseAdListener.bind(this)
@@ -59,7 +61,7 @@ var NativeAdsAdapter = youbora.Adapter.extend({
     this.references[Event.AD_PROGRESS] = this.progressAdListener.bind(this)
     this.references[Event.ALL_ADS_COMPLETED] = this.allAdsCompletedListener.bind(this)
 
-    for (var key in this.references) {
+    for (let key in this.references) {
       this.player.addEventListener(key, this.references[key])
     }
   },
@@ -71,18 +73,21 @@ var NativeAdsAdapter = youbora.Adapter.extend({
 
     // unregister listeners
     if (this.player && this.references) {
-      for (var key in this.references) {
+      for (let key in this.references) {
         this.player.removeEventListener(key, this.references[key])
       }
       this.references = []
     }
   },
 
-  startAdListener: function (e) {
-    this.plugin.getAdapter().fireStart()
-    this.plugin.getAdapter().stopBlockedByAds = true
+  loadedAdListener: function (e) {
     this.adObject = e.payload.extraAdData
     this.adPosition = e.payload.adType
+  },
+
+  startAdListener: function () {
+    this.plugin.getAdapter().stopBlockedByAds = true
+    this.plugin.getAdapter().fireStart()
     this.fireStart()
   },
 
@@ -126,5 +131,4 @@ var NativeAdsAdapter = youbora.Adapter.extend({
     this.monitor.skipNextTick()
   }
 })
-
-module.exports = NativeAdsAdapter
+export { NativeAdsAdapter }

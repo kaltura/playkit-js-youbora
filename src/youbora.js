@@ -1,7 +1,8 @@
 //@flow
 import { BasePlugin } from 'playkit-js'
 import youbora from 'youboralib'
-import YouboraAdapter from './adapter/adapter'
+import { YouboraAdapter } from './adapter/adapter'
+import { NativeAdsAdapter } from './adapter/ads/nativeads'
 
 /**
  * Youbora plugin for analytics.
@@ -38,7 +39,7 @@ export default class Youbora extends BasePlugin {
     this._youbora = new youbora.Plugin(this.config.options);
     this._youbora.setAdapter(new YouboraAdapter(player, config))
     if (player.config.plugins.ima) {
-      this._youbora.setAdsAdapter(new YouboraAdapter.NativeAdsAdapter(player))
+      this._youbora.setAdsAdapter(new NativeAdsAdapter(player))
     }
     this._addBindings();
     this._setup();
@@ -113,6 +114,6 @@ export default class Youbora extends BasePlugin {
    * @returns {void}
    */
   destroy (): void {
-
+    this._youbora.fireStop()
   }
 }
