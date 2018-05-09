@@ -84,7 +84,7 @@ let YouboraAdapter = youbora.Adapter.extend({
     // References
     this.references = []
     this.references[Event.PLAY] = this.playListener.bind(this)
-    this.references[Event.LOAD_START] = this.playListener.bind(this)
+    this.references[Event.LOAD_START] = this.loadListener.bind(this)
     this.references[Event.PAUSE] = this.pauseListener.bind(this)
     this.references[Event.PLAYING] = this.playingListener.bind(this)
     this.references[Event.ERROR] = this.errorListener.bind(this)
@@ -121,6 +121,13 @@ let YouboraAdapter = youbora.Adapter.extend({
     youbora.Log.warn = logger.warn.bind(logger)
     youbora.Log.debug = logger.debug.bind(logger)
     youbora.Log.verbose = function () {
+    }
+  },
+
+  /** @returns {void} - Listener for 'load_start' event. */
+  loadListener: function () {
+    if (this.player.config.playback.preload !== "auto") {
+      this.playListener()
     }
   },
 

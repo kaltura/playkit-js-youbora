@@ -183,33 +183,36 @@ describe('YouboraAdapter', function () {
     setTimeout(() => {
       player.addEventListener(player.Event.CHANGE_SOURCE_ENDED, () => {
         setTimeout(() => {
-          // 0th is init
-          let startParams = getJsonFromUrl(sendSpy.getCall(1).thisValue.responseURL);
-          verifyStartProperties(startParams);
-          let joinRequest = sendSpy.getCall(2).thisValue.responseURL;
-          (joinRequest.indexOf("join") > -1).should.be.true;
-          let positionIncrease = 0
-          if (sendSpy.getCall(3).thisValue.responseURL.includes('/pause')) {
-            // 3th may be pause (before stop)
+          var positionIncrease = 0
+          if (sendSpy.getCall(0).thisValue.responseURL.includes('/init')) {
             positionIncrease += 1
           }
-          let stopRequest = sendSpy.getCall(3 + positionIncrease).thisValue.responseURL;
+          let startParams = getJsonFromUrl(sendSpy.getCall(0 + positionIncrease).thisValue.responseURL);
+          verifyStartProperties(startParams);
+          let joinRequest = sendSpy.getCall(1 + positionIncrease).thisValue.responseURL;
+          (joinRequest.indexOf("join") > -1).should.be.true;
+          if (sendSpy.getCall(2 + positionIncrease).thisValue.responseURL.includes('/pause')) {
+            positionIncrease += 1
+          }
+          let stopRequest = sendSpy.getCall(2 + positionIncrease).thisValue.responseURL;
           (stopRequest.indexOf("stop") > -1).should.be.true;
-          //4th/5th is init
-          let CMstartParams = getJsonFromUrl(sendSpy.getCall(5 + positionIncrease).thisValue.responseURL);
+          if (sendSpy.getCall(3 + positionIncrease).thisValue.responseURL.includes('/init')) {
+            positionIncrease += 1
+          }
+          let CMstartParams = getJsonFromUrl(sendSpy.getCall(3 + positionIncrease).thisValue.responseURL);
           verifyCMStartProperties(CMstartParams);
           setTimeout(() => {
             let pingParams = getJsonFromUrl(sendSpy.lastCall.thisValue.responseURL);
             verifyPingProperties(pingParams);
             done();
           }, 5000);
-        }, 1500);
+        }, 2000);
         player.ready().then(() => {
           player.play();
         });
       });
       player.configure(CMconfig);
-    }, 1500);
+    }, 2000);
     player.ready().then(() => {
       player.play();
     });
