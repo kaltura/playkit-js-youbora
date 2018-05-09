@@ -182,6 +182,9 @@ let YouboraAdapter = youbora.Adapter.extend({
   stateChangeListener: function (e) {
     if (e.payload.newState.type === this.player.State.BUFFERING) {
       if (this.initialPlayhead !== this.getPlayhead()) {
+        if (!this.player.isDvr() && this.getIsLive() && this.flags.isPaused) {
+          return null
+        }
         this.fireBufferBegin()
       }
     }

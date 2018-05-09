@@ -2298,6 +2298,13 @@ var Adapter = Emitter.extend(
       STOP: 'stop',
       CLICK: 'click',
       BLOCKED: 'blocked'
+    },
+
+    AdPosition: {
+      PRE: 'pre',
+      MID: 'mid',
+      POST: 'post',
+      UNKNOWN: 'unknown'
     }
   }
 )
@@ -4630,7 +4637,7 @@ var _youboralib2 = _interopRequireDefault(_youboralib);
 
 var _adapter = __webpack_require__(54);
 
-var _adapter2 = _interopRequireDefault(_adapter);
+var _nativeads = __webpack_require__(55);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
@@ -4682,9 +4689,9 @@ var Youbora = function (_BasePlugin) {
     var _this = _possibleConstructorReturn(this, (Youbora.__proto__ || Object.getPrototypeOf(Youbora)).call(this, name, player, config));
 
     _this._youbora = new _youboralib2.default.Plugin(_this.config.options);
-    _this._youbora.setAdapter(new _adapter2.default(player, config));
+    _this._youbora.setAdapter(new _adapter.YouboraAdapter(player, config));
     if (player.config.plugins.ima) {
-      _this._youbora.setAdsAdapter(new _adapter2.default.NativeAdsAdapter(player));
+      _this._youbora.setAdsAdapter(new _nativeads.NativeAdsAdapter(player));
     }
     _this._addBindings();
     _this._setup();
@@ -4774,7 +4781,9 @@ var Youbora = function (_BasePlugin) {
 
   }, {
     key: 'destroy',
-    value: function destroy() {}
+    value: function destroy() {
+      this._youbora.fireStop();
+    }
   }]);
 
   return Youbora;
@@ -4789,7 +4798,7 @@ exports.default = Youbora;
 /* 31 */
 /***/ (function(module, exports) {
 
-module.exports = {"name":"youboralib","type":"lib","tech":"js","author":"Jordi Aguilar","version":"6.2.3","built":"2018-05-02","repo":"https://bitbucket.org/npaw/lib-plugin-js.git"}
+module.exports = {"name":"youboralib","type":"lib","tech":"js","author":"Jordi Aguilar","version":"6.2.4","built":"2018-05-08","repo":"https://bitbucket.org/npaw/lib-plugin-js.git"}
 
 /***/ }),
 /* 32 */
@@ -5285,12 +5294,14 @@ var Plugin = Emitter.extend(
      * @param {any} options
      */
     setOptions: function (options) {
-      this.options.setOptions(options)
-      if (typeof options['background.enabled'] === "boolean") {
-        if (options['background.enabled']) {
-          this.backgroundDetector.startDetection()
-        } else {
-          this.backgroundDetector.stopDetection()
+      if (options) {
+        this.options.setOptions(options)
+        if (typeof options['background.enabled'] === "boolean") {
+          if (options['background.enabled']) {
+            this.backgroundDetector.startDetection()
+          } else {
+            this.backgroundDetector.stopDetection()
+          }
         }
       }
     },
@@ -6951,6 +6962,7 @@ var PluginAdsMixin = {
     var params = e.data.params || {}
     if (this._adapter && !this._adapter.flags.isStarted) {
       params.adNumber = this.requestBuilder.lastSent.adNumber
+      this._adapter.fireStart()
     } else {
       params.adNumber = this.requestBuilder.getNewAdNumber()
     }
@@ -7597,21 +7609,29 @@ module.exports = PluginInfinityGettersMixin
 "use strict";
 
 
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.YouboraAdapter = undefined;
+
+var _youboralib = __webpack_require__(10);
+
+var _youboralib2 = _interopRequireDefault(_youboralib);
+
 var _playkitJs = __webpack_require__(9);
 
-var youbora = __webpack_require__(10);
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
-
-youbora.adapters.Kaltura = youbora.Adapter.extend({
+var YouboraAdapter = _youboralib2.default.Adapter.extend({
 
   constructor: function constructor(player, config) {
     this.config = config;
-    youbora.adapters.Kaltura.__super__.constructor.call(this, player);
+    YouboraAdapter.__super__.constructor.call(this, player);
   },
 
   /**  @returns {String} - current plugin version */
   getVersion: function getVersion() {
-    return "6.2.0-kaltura";
+    return _youboralib2.default.VERSION + '-' + "0.3.3" + '-' + "playkit-js-youbora";
   },
 
   /**  @returns {Number} - current playhead of the video */
@@ -7642,7 +7662,7 @@ youbora.adapters.Kaltura = youbora.Adapter.extend({
   getRendition: function getRendition() {
     var activeVideo = this.player.getActiveTracks().video;
     if (activeVideo) {
-      return youbora.Util.buildRenditionString(activeVideo.width, activeVideo.height, activeVideo.bandwidth);
+      return _youboralib2.default.Util.buildRenditionString(activeVideo.width, activeVideo.height, activeVideo.bandwidth);
     }
     return null;
   },
@@ -7654,7 +7674,7 @@ youbora.adapters.Kaltura = youbora.Adapter.extend({
 
   /**  @returns {Boolean} - true if live and false if VOD */
   getIsLive: function getIsLive() {
-    return this.config.entryType === "Live";
+    return this.config.entryType === _playkitJs.MediaType.LIVE;
   },
 
   /**  @returns {String} - resource URL. */
@@ -7683,7 +7703,7 @@ youbora.adapters.Kaltura = youbora.Adapter.extend({
     // References
     this.references = [];
     this.references[Event.PLAY] = this.playListener.bind(this);
-    this.references[Event.LOAD_START] = this.playListener.bind(this);
+    this.references[Event.LOAD_START] = this.loadListener.bind(this);
     this.references[Event.PAUSE] = this.pauseListener.bind(this);
     this.references[Event.PLAYING] = this.playingListener.bind(this);
     this.references[Event.ERROR] = this.errorListener.bind(this);
@@ -7711,12 +7731,22 @@ youbora.adapters.Kaltura = youbora.Adapter.extend({
     }
   },
 
+  /** @returns {void}
+   * @param {Object} logger - playkit logger object.
+   * - Bind youbora logs to playkit ones */
   bindLogger: function bindLogger(logger) {
-    youbora.Log.error = logger.error.bind(logger);
-    youbora.Log.notice = logger.info.bind(logger);
-    youbora.Log.warn = logger.warn.bind(logger);
-    youbora.Log.debug = logger.debug.bind(logger);
-    youbora.Log.verbose = function () {};
+    _youboralib2.default.Log.error = logger.error.bind(logger);
+    _youboralib2.default.Log.notice = logger.info.bind(logger);
+    _youboralib2.default.Log.warn = logger.warn.bind(logger);
+    _youboralib2.default.Log.debug = logger.debug.bind(logger);
+    _youboralib2.default.Log.verbose = function () {};
+  },
+
+  /** @returns {void} - Listener for 'load_start' event. */
+  loadListener: function loadListener() {
+    if (this.player.config.playback.preload !== "auto") {
+      this.playListener();
+    }
   },
 
   /** @returns {void} - Listener for 'play' event. */
@@ -7726,12 +7756,6 @@ youbora.adapters.Kaltura = youbora.Adapter.extend({
       this.plugin.options['content.isLive.noSeek'] = !this.player.isDvr();
       this.initialPlayhead = this.getPlayhead();
     }
-  },
-
-  /** @returns {void} - Listener for 'timeupdate' event. */
-  timeupdateListener: function timeupdateListener() {
-    this.fireStart();
-    this.fireJoin();
   },
 
   /** @returns {void} - Listener for 'pause' event. */
@@ -7744,7 +7768,6 @@ youbora.adapters.Kaltura = youbora.Adapter.extend({
     this.fireResume();
     this.fireSeekEnd();
     this.fireBufferEnd();
-    this.fireStart();
     this.fireJoin();
   },
 
@@ -7776,6 +7799,9 @@ youbora.adapters.Kaltura = youbora.Adapter.extend({
   stateChangeListener: function stateChangeListener(e) {
     if (e.payload.newState.type === this.player.State.BUFFERING) {
       if (this.initialPlayhead !== this.getPlayhead()) {
+        if (!this.player.isDvr() && this.getIsLive() && this.flags.isPaused) {
+          return null;
+        }
         this.fireBufferBegin();
       }
     }
@@ -7798,15 +7824,13 @@ youbora.adapters.Kaltura = youbora.Adapter.extend({
     this.reset();
   },
 
+  /** @returns {void} - Restores initial values to start new views */
   reset: function reset() {
     this.stopBlockedByAds = false;
     this.initialPlayhead = null;
   }
-}, {
-  NativeAdsAdapter: __webpack_require__(55)
 });
-
-module.exports = youbora.adapters.Kaltura;
+exports.YouboraAdapter = YouboraAdapter;
 
 /***/ }),
 /* 55 */
@@ -7815,12 +7839,22 @@ module.exports = youbora.adapters.Kaltura;
 "use strict";
 
 
-var youbora = __webpack_require__(10);
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.NativeAdsAdapter = undefined;
 
-var NativeAdsAdapter = youbora.Adapter.extend({
+var _youboralib = __webpack_require__(10);
+
+var _youboralib2 = _interopRequireDefault(_youboralib);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+var NativeAdsAdapter = _youboralib2.default.Adapter.extend({
+
   /**  @returns {String} - current plugin version */
   getVersion: function getVersion() {
-    return "6.2.0-kaltura-ads";
+    return _youboralib2.default.VERSION + '-' + "0.3.3" + '-' + "playkit-js-youbora" + '-ads';
   },
 
   /**  @returns {Number} - current playhead of the video */
@@ -7839,23 +7873,27 @@ var NativeAdsAdapter = youbora.Adapter.extend({
 
   /**  @returns {String} - current ad position (only ads) */
   getPosition: function getPosition() {
-    if (this.adPosition) {
-      if (this.adPosition === "preroll") {
-        return 'pre';
-      }
-      if (this.adPosition === "midroll") {
-        return 'mid';
-      }
-      if (this.adPosition === "postroll") {
-        return 'post';
-      }
+    var PREROLL = "pre";
+    var MIDROLL = "mid";
+    var POSTROLL = "post";
+    var returnValue = MIDROLL;
+    switch (this.adPosition) {
+      case "preroll":
+        returnValue = PREROLL;
+        break;
+      case "postroll":
+        returnValue = POSTROLL;
+        break;
+      case "midroll":
+        break;
+      default:
+        if (!this.plugin.getAdapter().flags.isJoined) {
+          returnValue = PREROLL;
+        } else if (!this.plugin.getAdapter().isLive() && this.plugin.getAdapter().getPlayhead() > this.plugin.getAdapter().getDuration() - 1) {
+          returnValue = POSTROLL;
+        }
     }
-    if (!this.plugin.getAdapter().flags.isJoined) {
-      return 'pre';
-    } else if (!this.plugin.getAdapter().isLive() && this.plugin.getAdapter().getPlayhead() > this.plugin.getAdapter().getDuration() - 1) {
-      return 'post';
-    }
-    return 'mid';
+    return returnValue;
   },
 
   /**  @returns {void} - Register listeners to this.player. */
@@ -7865,7 +7903,7 @@ var NativeAdsAdapter = youbora.Adapter.extend({
     var Event = this.player.Event;
     // Register listeners
     this.references = [];
-    this.references[Event.AD_LOADED] = this.startAdListener.bind(this);
+    this.references[Event.AD_LOADED] = this.loadedAdListener.bind(this);
     this.references[Event.AD_STARTED] = this.startAdListener.bind(this);
     this.references[Event.AD_RESUMED] = this.resumeAdListener.bind(this);
     this.references[Event.AD_PAUSED] = this.pauseAdListener.bind(this);
@@ -7895,11 +7933,14 @@ var NativeAdsAdapter = youbora.Adapter.extend({
     }
   },
 
-  startAdListener: function startAdListener(e) {
-    this.plugin.getAdapter().fireStart();
-    this.plugin.getAdapter().stopBlockedByAds = true;
+  loadedAdListener: function loadedAdListener(e) {
     this.adObject = e.payload.extraAdData;
     this.adPosition = e.payload.adType;
+  },
+
+  startAdListener: function startAdListener() {
+    this.plugin.getAdapter().stopBlockedByAds = true;
+    this.plugin.getAdapter().fireStart();
     this.fireStart();
   },
 
@@ -7943,8 +7984,7 @@ var NativeAdsAdapter = youbora.Adapter.extend({
     this.monitor.skipNextTick();
   }
 });
-
-module.exports = NativeAdsAdapter;
+exports.NativeAdsAdapter = NativeAdsAdapter;
 
 /***/ })
 /******/ ]);
