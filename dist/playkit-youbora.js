@@ -4690,11 +4690,8 @@ var Youbora = function (_BasePlugin) {
 
     _this._youbora = new _youboralib2.default.Plugin(_this.config.options);
     _this._youbora.setAdapter(new _adapter.YouboraAdapter(player, config));
-    if (player.config.plugins.ima) {
-      _this._youbora.setAdsAdapter(new _nativeads.NativeAdsAdapter(player));
-    }
+    _this._youbora.setAdsAdapter(new _nativeads.NativeAdsAdapter(player));
     _this._addBindings();
-    _this._setup();
     return _this;
   }
 
@@ -4724,7 +4721,9 @@ var Youbora = function (_BasePlugin) {
 
   }, {
     key: 'reset',
-    value: function reset() {}
+    value: function reset() {
+      this._youbora.fireStop();
+    }
 
     /**
      * Add the player metadata to the plugin config.
@@ -4760,17 +4759,6 @@ var Youbora = function (_BasePlugin) {
       // Bind the plugin logger to the youbora sdk logger
       this._youbora.getAdapter().bindLogger(this.logger);
     }
-
-    /**
-     * Plugin setup operations.
-     * @function
-     * @private
-     * @returns {void}
-     */
-
-  }, {
-    key: '_setup',
-    value: function _setup() {}
 
     /**
      * Plugin destroy operations.

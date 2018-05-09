@@ -38,11 +38,8 @@ export default class Youbora extends BasePlugin {
     super(name, player, config);
     this._youbora = new youbora.Plugin(this.config.options);
     this._youbora.setAdapter(new YouboraAdapter(player, config))
-    if (player.config.plugins.ima) {
-      this._youbora.setAdsAdapter(new NativeAdsAdapter(player))
-    }
+    this._youbora.setAdsAdapter(new NativeAdsAdapter(player))
     this._addBindings();
-    this._setup();
   }
 
   /**
@@ -65,7 +62,7 @@ export default class Youbora extends BasePlugin {
    * @return {void}
    */
   reset (): void {
-
+    this._youbora.fireStop()
   }
 
   /**
@@ -95,16 +92,6 @@ export default class Youbora extends BasePlugin {
   _addBindings (): void {
     // Bind the plugin logger to the youbora sdk logger
     this._youbora.getAdapter().bindLogger(this.logger);
-  }
-
-  /**
-   * Plugin setup operations.
-   * @function
-   * @private
-   * @returns {void}
-   */
-  _setup (): void {
-
   }
 
   /**
