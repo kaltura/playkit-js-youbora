@@ -112,7 +112,9 @@ let YouboraAdapter = youbora.Adapter.extend({
     }
   },
 
-  /** @returns {void} - Bind youbora logs to playkit ones */
+  /** @returns {void}
+   * @param {Object} logger - playkit logger object.
+   * - Bind youbora logs to playkit ones */
   bindLogger: function (logger) {
     youbora.Log.error = logger.error.bind(logger)
     youbora.Log.notice = logger.info.bind(logger)
@@ -195,6 +197,7 @@ let YouboraAdapter = youbora.Adapter.extend({
     this.reset()
   },
 
+  /** @returns {void} - Restores initial values to start new views */
   reset: function () {
     this.stopBlockedByAds = false
     this.initialPlayhead = null

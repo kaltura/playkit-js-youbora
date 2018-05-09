@@ -63,10 +63,10 @@
     "webpack": "latest",
     "webpack-dev-server": "latest",
     "youboralib": "6.2.4",
-    "playkit-js": "https://github.com/kaltura/playkit-js.git#v0.20.1"
+    "playkit-js": "https://github.com/kaltura/playkit-js.git#v0.27.0"
   },
   "peerDependencies": {
-    "playkit-js": "https://github.com/kaltura/playkit-js.git#v0.20.1"
+    "playkit-js": "https://github.com/kaltura/playkit-js.git#v0.27.0"
   },
   "keywords": [],
   "license": "AGPL-3.0",

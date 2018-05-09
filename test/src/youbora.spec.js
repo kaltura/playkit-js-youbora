@@ -1,13 +1,11 @@
 //eslint-disable-next-line no-unused-vars
 import youbora from '../../src'
+//import { youbora as yblib } from 'youboralib'
 import { loadPlayer } from 'playkit-js'
 import * as TestUtils from 'playkit-js/test/src/utils/test-utils'
-import * as pkg from '../../package.json'
-
 
 describe('YouboraAdapter', function () {
   let player, sandbox, sendSpy, config, CMconfig;
-
   const playerName = 'player test';
   const playerVersion = '1.2.3';
   const system = 'powerdev';
@@ -38,7 +36,7 @@ describe('YouboraAdapter', function () {
     analyticsParams.player.should.equal(playerName);
     analyticsParams.username.should.equal(user);
     (analyticsParams.referer === document.referrer || analyticsParams.referer === location.href).should.be.true;
-    analyticsParams.pluginVersion.should.equal(youbora.VERSION + '-' + pkg.version + '-' + playerName);
+    analyticsParams.pluginVersion.should.equal('6.2.4' + '-' + __VERSION__ + '-' + __NAME__);
     analyticsParams.playerVersion.should.equal(playerVersion);
     analyticsParams.mediaResource.should.equal(resource);
     analyticsParams.mediaDuration.should.equal('13');
@@ -61,11 +59,11 @@ describe('YouboraAdapter', function () {
     analyticsParams.player.should.equal(playerName);
     analyticsParams.username.should.equal(user);
     (analyticsParams.referer === document.referrer || analyticsParams.referer === location.href).should.be.true;
-    analyticsParams.pluginVersion.should.equal(youbora.VERSION + '-' + pkg.version + '-' + playerName);
+    analyticsParams.pluginVersion.should.equal('6.2.4' + '-' + __VERSION__ + '-' + __NAME__);
     analyticsParams.playerVersion.should.equal(playerVersion);
     analyticsParams.mediaResource.should.equal(resource);
     analyticsParams.mediaDuration.should.equal('13');
-    analyticsParams.live.should.equal('true');
+    analyticsParams.live.should.equal('false');
     analyticsParams.rendition.should.equal('400x200@20Kbps');
     analyticsParams.title.should.equal('change media');
     analyticsParams.properties.should.equal('{"test":"test change media"}');
@@ -79,7 +77,9 @@ describe('YouboraAdapter', function () {
    * @return {void}
    */
   function verifyPingProperties (analyticsParams) {
-    analyticsParams.bitrate.should.equal('20000');
+    analyticsParams.playrate.should.equal('1');
+    analyticsParams.pingTime.should.equal('5');
+    // no bitrate, safari limitation
   }
 
   before(function () {
@@ -95,7 +95,8 @@ describe('YouboraAdapter', function () {
         }]
       },
       playback: {
-        "preload": "auto"
+        "preload": "auto",
+        "autoplay": true
       },
       plugins: {
         youbora: {
@@ -132,7 +133,7 @@ describe('YouboraAdapter', function () {
         youbora: {
           entryId: "34584t5874",
           entryName: "change media",
-          entryType: "Live",
+          entryType: "Vod",
           sessionId: "6017d4cc-81a5-f21c-81da-f709f64ef558",
           uiConfId: 654321,
           playerVersion: playerVersion,
@@ -161,7 +162,10 @@ describe('YouboraAdapter', function () {
           entryName: "entry name",
           entryType: "vod",
           sessionId: "7296b4fd-3fcb-666d-51fc-34065579334c",
-          uiConfId: 123456
+          uiConfId: 123456,
+          playerVersion: playerVersion,
+          playerName: playerName,
+          householdId: householdId,
         }
       }
     });
@@ -179,26 +183,33 @@ describe('YouboraAdapter', function () {
     setTimeout(() => {
       player.addEventListener(player.Event.CHANGE_SOURCE_ENDED, () => {
         setTimeout(() => {
+          // 0th is init
           let startParams = getJsonFromUrl(sendSpy.getCall(1).thisValue.responseURL);
           verifyStartProperties(startParams);
           let joinRequest = sendSpy.getCall(2).thisValue.responseURL;
           (joinRequest.indexOf("join") > -1).should.be.true;
-          let stopRequest = sendSpy.getCall(3).thisValue.responseURL;
+          let positionIncrease = 0
+          if (sendSpy.getCall(3).thisValue.responseURL.includes('/pause')) {
+            // 3th may be pause (before stop)
+            positionIncrease += 1
+          }
+          let stopRequest = sendSpy.getCall(3 + positionIncrease).thisValue.responseURL;
           (stopRequest.indexOf("stop") > -1).should.be.true;
-          let CMstartParams = getJsonFromUrl(sendSpy.getCall(3).thisValue.responseURL);
+          //4th/5th is init
+          let CMstartParams = getJsonFromUrl(sendSpy.getCall(5 + positionIncrease).thisValue.responseURL);
           verifyCMStartProperties(CMstartParams);
           setTimeout(() => {
             let pingParams = getJsonFromUrl(sendSpy.lastCall.thisValue.responseURL);
             verifyPingProperties(pingParams);
             done();
           }, 5000);
-        }, 1000);
+        }, 1500);
         player.ready().then(() => {
           player.play();
         });
       });
       player.configure(CMconfig);
-    }, 1000);
+    }, 1500);
     player.ready().then(() => {
       player.play();
     });

@@ -24,23 +24,27 @@ let NativeAdsAdapter = youbora.Adapter.extend({
 
   /**  @returns {String} - current ad position (only ads) */
   getPosition: function () {
-    if (this.adPosition) {
-      if (this.adPosition === "preroll") {
-        return youbora.Adapter.AdPosition.PREROLL
-      }
-      if (this.adPosition === "midroll") {
-        return youbora.Adapter.AdPosition.MIDROLL
-      }
-      if (this.adPosition === "postroll") {
-        return youbora.Adapter.AdPosition.POSTROLL
-      }
+    const PREROLL = "pre"
+    const MIDROLL = "mid"
+    const POSTROLL = "post"
+    let returnValue = MIDROLL
+    switch (this.adPosition) {
+      case "preroll":
+        returnValue = PREROLL
+        break;
+      case "postroll":
+        returnValue = POSTROLL
+        break;
+      case "midroll":
+        break;
+      default:
+        if (!this.plugin.getAdapter().flags.isJoined) {
+          returnValue = PREROLL
+        } else if (!this.plugin.getAdapter().isLive() && this.plugin.getAdapter().getPlayhead() > this.plugin.getAdapter().getDuration() - 1) {
+          returnValue = POSTROLL
+        }
     }
-    if (!this.plugin.getAdapter().flags.isJoined) {
-      return youbora.Adapter.AdPosition.PREROLL
-    } else if (!this.plugin.getAdapter().isLive() && this.plugin.getAdapter().getPlayhead() > this.plugin.getAdapter().getDuration() - 1) {
-      return youbora.Adapter.AdPosition.POSTROLL
-    }
-    return youbora.Adapter.AdPosition.MIDROLL
+    return returnValue
   },
 
   /**  @returns {void} - Register listeners to this.player. */
