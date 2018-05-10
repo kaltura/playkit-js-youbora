@@ -22,7 +22,7 @@ module.exports = {
   output: {
     path: __dirname + "/dist",
     filename: '[name].js',
-    library: ["playkit", "youbora"],
+    library: ['KalturaPlayer', 'plugins', 'youbora'],
     libraryTarget: "umd",
     devtoolModuleFilenameTemplate: "./youbora/[resource-path]",
   },
@@ -65,7 +65,7 @@ module.exports = {
       commonjs: "playkit-js",
       commonjs2: "playkit-js",
       amd: "playkit-js",
-      root: ["playkit", "core"]
+      root: ['KalturaPlayer', 'core']
     }
   }
 };
