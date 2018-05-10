@@ -135,7 +135,7 @@ let NativeAdsAdapter = youbora.Adapter.extend({
   allAdsCompletedListener: function () {
     this.fireStop()
     this.plugin.getAdapter().stopBlockedByAds = false
-    if (this.adPosition === "post") this.plugin.getAdapter().fireStop()
+    if (this.getPosition() === "post") this.plugin.getAdapter().fireStop()
     this.adPosition = null
   },
 
@@ -147,7 +147,7 @@ let NativeAdsAdapter = youbora.Adapter.extend({
   resetFlags: function () {
     this.currentTime = null
     this.adObject = null
-    if (this.adPosition !== "postroll") {
+    if (this.getPosition() === "post") {
       this.adPosition = null
     }
   }
