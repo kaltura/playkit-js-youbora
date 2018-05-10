@@ -4786,7 +4786,7 @@ exports.default = Youbora;
 /* 31 */
 /***/ (function(module, exports) {
 
-module.exports = {"name":"youboralib","type":"lib","tech":"js","author":"Jordi Aguilar","version":"6.2.4","built":"2018-05-08","repo":"https://bitbucket.org/npaw/lib-plugin-js.git"}
+module.exports = {"name":"youboralib","type":"lib","tech":"js","author":"Jordi Aguilar","version":"6.2.4","built":"2018-05-09","repo":"https://bitbucket.org/npaw/lib-plugin-js.git"}
 
 /***/ }),
 /* 32 */
@@ -5203,7 +5203,9 @@ var Plugin = Emitter.extend(
     _reset: function () {
       this._stopPings()
       this.resourceTransform = new ResourceTransform(this)
-
+      if (this._adapter) { //The fix
+        this._adapter.flags.reset()
+      }
       this.isInitiated = false
       this.isStarted = false
       this.isPreloading = false

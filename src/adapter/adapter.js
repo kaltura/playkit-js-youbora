@@ -134,10 +134,10 @@ let YouboraAdapter = youbora.Adapter.extend({
   /** @returns {void} - Listener for 'play' event. */
   playListener: function () {
     if (!this.flags.isStarted) {
-      this.fireStart()
       this.plugin.options['content.isLive.noSeek'] = !this.player.isDvr()
       this.initialPlayhead = this.getPlayhead()
     }
+    this.fireStart()
   },
 
   /** @returns {void} - Listener for 'pause' event. */
