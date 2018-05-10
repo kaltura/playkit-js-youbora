@@ -31,16 +31,19 @@ let NativeAdsAdapter = youbora.Adapter.extend({
     switch (this.adPosition) {
       case "preroll":
         returnValue = PREROLL
-        break;
+        break
       case "postroll":
         returnValue = POSTROLL
-        break;
+        break
       case "midroll":
-        break;
+        break
+      case "overlay":
+        returnValue = "overlay"
+        break
       default:
         if (!this.plugin.getAdapter().flags.isJoined) {
           returnValue = PREROLL
-        } else if (!this.plugin.getAdapter().isLive() && this.plugin.getAdapter().getPlayhead() > this.plugin.getAdapter().getDuration() - 1) {
+        } else if (!this.plugin.getAdapter().getIsLive() && this.plugin.getAdapter().getPlayhead() > this.plugin.getAdapter().getDuration() - 1) {
           returnValue = POSTROLL
         }
     }
@@ -49,8 +52,7 @@ let NativeAdsAdapter = youbora.Adapter.extend({
 
   /**  @returns {void} - Register listeners to this.player. */
   registerListeners: function () {
-    this.monitorPlayhead(true, false) //playhead monitor for bufferunderrun
-
+    this.deltaErrorTime = 5000 // Threshold time to ignore repeated errors
     const Event = this.player.Event
     // Register listeners
     this.references = []
@@ -72,8 +74,6 @@ let NativeAdsAdapter = youbora.Adapter.extend({
 
   /**  @returns {void} - Unregister listeners to this.player. */
   unregisterListeners: function () {
-    // Disable playhead monitoring
-    this.monitor.stop()
 
     // unregister listeners
     if (this.player && this.references) {
@@ -91,14 +91,14 @@ let NativeAdsAdapter = youbora.Adapter.extend({
 
   startAdListener: function () {
     this.plugin.getAdapter().stopBlockedByAds = true
-    this.plugin.getAdapter().fireStart()
-    this.fireStart()
+    if (this.adPosition !== "overlay") {
+      this.fireStart()
+    }
   },
 
   stopAdListener: function () {
     this.fireStop()
-    this.currentTime = null
-    this.adObject = null
+    this.resetFlags()
   },
 
   resumeAdListener: function () {
@@ -115,24 +115,41 @@ let NativeAdsAdapter = youbora.Adapter.extend({
 
   skipAdListener: function () {
     this.fireStop({ skipped: true })
-    this.currentTime = null
-    this.adObject = null
+    this.resetFlags()
   },
 
   errorAdListener: function (e) {
+    let now = new Date().getTime()
+    if (this.lastErrorCode === e.payload.error.code && this.lastErrorTime + this.deltaErrorTime > now) {
+      return null
+    }
+    this.lastErrorCode = e.payload.error.code
+    this.lastErrorTime = now
     this.fireError(e.payload.error.code, e.payload.error.message)
+    if (this.getPosition() === "post") {
+      this.plugin.getAdapter().stopBlockedByAds = false
+      this.plugin.getAdapter().fireStop()
+    }
   },
 
   allAdsCompletedListener: function () {
     this.fireStop()
     this.plugin.getAdapter().stopBlockedByAds = false
-    if (this.getPosition() === "post") this.plugin.getAdapter().fireStop()
+    if (this.adPosition === "post") this.plugin.getAdapter().fireStop()
+    this.adPosition = null
   },
 
   progressAdListener: function (e) {
     this.currentTime = e.payload.adProgress.currentTime
     this.fireJoin()
-    this.monitor.skipNextTick()
+  },
+
+  resetFlags: function () {
+    this.currentTime = null
+    this.adObject = null
+    if (this.adPosition !== "post") {
+      this.adPosition = null
+    }
   }
 })
 export { NativeAdsAdapter }

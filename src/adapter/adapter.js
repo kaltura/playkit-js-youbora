@@ -80,6 +80,7 @@ let YouboraAdapter = youbora.Adapter.extend({
 
   /**  @returns {void} - Register listeners to this.player. */
   registerListeners: function () {
+    this.deltaErrorTime = 5000 // Threshold time to ignore repeated errors
     const Event = this.player.Event
     // References
     this.references = []
@@ -157,6 +158,12 @@ let YouboraAdapter = youbora.Adapter.extend({
    * @param {Object} e - object with payload including severity, code and data.
    * - The name of the plugin.- Listener for 'error' event. */
   errorListener: function (e) {
+    let now = new Date().getTime()
+    if (this.lastErrorCode === e.payload.code && this.lastErrorTime + this.deltaErrorTime > now) {
+      return null
+    }
+    this.lastErrorCode = e.payload.code
+    this.lastErrorTime = now
     if (e.payload.severity === Error.Severity.CRITICAL) {
       this.fireError(e.payload.code, e.payload.data)
       this.fireStop()

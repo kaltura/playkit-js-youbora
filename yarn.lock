@@ -6078,6 +6078,6 @@ yeast@0.1.2:
   version "0.1.2"
   resolved "https://registry.yarnpkg.com/yeast/-/yeast-0.1.2.tgz#008e06d8094320c372dbc2f8ed76a0ca6c8ac419"
 
-youboralib@6.2.4:
-  version "6.2.4"
-  resolved "https://registry.yarnpkg.com/youboralib/-/youboralib-6.2.4.tgz#31da737b4b5459d3a447f5a309a02ff2c4698449"
+youboralib@6.2.5:
+  version "6.2.5"
+  resolved "https://registry.yarnpkg.com/youboralib/-/youboralib-6.2.5.tgz#ee5f4d4af1529bb162c9a13897045c4acaf28a4e"
