@@ -147,7 +147,7 @@ let NativeAdsAdapter = youbora.Adapter.extend({
   resetFlags: function () {
     this.currentTime = null
     this.adObject = null
-    if (this.adPosition !== "post") {
+    if (this.adPosition !== "postroll") {
       this.adPosition = null
     }
   }
