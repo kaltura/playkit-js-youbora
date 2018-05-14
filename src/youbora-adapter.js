@@ -153,4 +153,5 @@ $YB.plugins.KalturaV3.prototype.registerListeners = function () {
   });
 };
 
-module.exports = $YB.plugins.KalturaV3;
+const YouboraAdapter = $YB.plugins.KalturaV3;
+export {YouboraAdapter};

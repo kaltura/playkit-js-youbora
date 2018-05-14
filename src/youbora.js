@@ -1,12 +1,12 @@
 //@flow
 import {BasePlugin} from 'playkit-js'
-import YouboraAdapter from './youbora-adapter'
+import {YouboraAdapter} from './youbora-adapter'
 
 /**
  * Youbora plugin for analytics.
  * @classdesc
  */
-export default class Youbora extends BasePlugin {
+class Youbora extends BasePlugin {
 
   /**
    * The default configuration of the plugin.
@@ -114,3 +114,5 @@ export default class Youbora extends BasePlugin {
     }
   }
 }
+
+export {Youbora as Plugin};

@@ -2,7 +2,6 @@
 
 const webpack = require("webpack");
 const path = require("path");
-const PROD = (process.env.NODE_ENV === 'production');
 const packageData = require("./package.json");
 
 let plugins = [
@@ -12,43 +11,26 @@ let plugins = [
   })
 ];
 
-if (PROD) {
-  plugins.push(new webpack.optimize.UglifyJsPlugin({sourceMap: true}));
-}
-
 module.exports = {
   context: __dirname + "/src",
   entry: {"playkit-youbora": "index.js"},
   output: {
     path: __dirname + "/dist",
     filename: '[name].js',
-    library: ["playkit", "youbora"],
+    library: ["playkit", "plugins", "youbora"],
     libraryTarget: "umd",
-    devtoolModuleFilenameTemplate: "./youbora/[resource-path]",
+    devtoolModuleFilenameTemplate: "./plugins/youbora/[resource-path]",
   },
   devtool: 'source-map',
   plugins: plugins,
   module: {
     rules: [{
       test: /\.js$/,
-      use: [{
-        loader: "babel-loader"
-      }],
-      exclude: [
-        /node_modules/
-      ]
-    }, {
-      test: /\.js$/,
       exclude: /node_modules/,
-      enforce: 'pre',
-      use: [{
-        loader: 'eslint-loader',
-        options: {
-          rules: {
-            semi: 0
-          }
-        }
-      }]
+      use: [
+        "babel-loader",
+        "eslint-loader"
+      ]
     }]
   },
   devServer: {
@@ -65,7 +47,7 @@ module.exports = {
       commonjs: "playkit-js",
       commonjs2: "playkit-js",
       amd: "playkit-js",
-      root: "Playkit"
+      root: ["playkit", "core"]
     }
   }
 };

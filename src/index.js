@@ -1,12 +1,15 @@
 // @flow
 import {registerPlugin} from 'playkit-js'
-import Youbora from './youbora'
+import {Plugin} from './youbora'
 
 declare var __VERSION__: string;
 declare var __NAME__: string;
 
-export default Youbora;
-export {__VERSION__ as VERSION, __NAME__ as NAME};
+const VERSION = __VERSION__;
+const NAME = __NAME__;
+
+export {VERSION, NAME};
+export {Plugin};
 
 /**
  * The plugin name.
@@ -17,5 +20,5 @@ const pluginName = "youbora";
 /**
  * Register the plugin in player's registry.
  */
-registerPlugin(pluginName, Youbora);
+registerPlugin(pluginName, Plugin);
 
