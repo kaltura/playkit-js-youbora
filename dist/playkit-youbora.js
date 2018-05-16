@@ -2298,13 +2298,6 @@ var Adapter = Emitter.extend(
       STOP: 'stop',
       CLICK: 'click',
       BLOCKED: 'blocked'
-    },
-
-    AdPosition: {
-      PRE: 'pre',
-      MID: 'mid',
-      POST: 'post',
-      UNKNOWN: 'unknown'
     }
   }
 )
@@ -4786,7 +4779,7 @@ exports.default = Youbora;
 /* 31 */
 /***/ (function(module, exports) {
 
-module.exports = {"name":"youboralib","type":"lib","tech":"js","author":"Jordi Aguilar","version":"6.2.4","built":"2018-05-09","repo":"https://bitbucket.org/npaw/lib-plugin-js.git"}
+module.exports = {"name":"youboralib","type":"lib","tech":"js","author":"Jordi Aguilar","version":"6.2.6","built":"2018-05-15","repo":"https://bitbucket.org/npaw/lib-plugin-js.git"}
 
 /***/ }),
 /* 32 */
@@ -5526,6 +5519,12 @@ var PluginContentMixin = {
         //chrono if had no adapter when inited
         if (this.initChrono.startTime != 0) {
           this._adapter.chronos.join.startTime = this.initChrono.startTime
+          if (this._adsAdapter) {
+            this._adapter.chronos.join.startTime = Math.min(
+              this._adapter.chronos.join.startTime + this._adsAdapter.chronos.total.getDeltaTime(),
+              new Date().getTime()
+            )
+          }
         }
         this._send(Constants.WillSendEvent.WILL_SEND_START, Constants.Service.START, params)
         Log.notice(Constants.Service.START + ' ' + (params.title || params.mediaResource))
@@ -6853,6 +6852,7 @@ var PluginAdsMixin = {
     if (this._adapter) {
       this._adapter.fireBufferEnd()
       this._adapter.fireSeekEnd()
+      if (!this._adapter.flags.isInited && !this._adapter.flags.isStarted) this._adapter.fireStart()
       if (this._adapter.flags.isPaused) this._adapter.chronos.pause.reset()
     }
 
@@ -6951,8 +6951,14 @@ var PluginAdsMixin = {
   _adErrorListener: function (e) {
     var params = e.data.params || {}
     if (this._adapter && !this._adapter.flags.isStarted) {
+      /*if (!this._adapter.flags.isInited) {
+        e.data.params.errorLevel = "instreamfailure"
+        if (!this.options['ad.ignore']) this._errorListener(e)
+        // decrease the viewcode in 1 if you want to have the error with the rest of the view
+        return null
+      }*/
       params.adNumber = this.requestBuilder.lastSent.adNumber
-      this._adapter.fireStart()
+      //this._adapter.fireStart()
     } else {
       params.adNumber = this.requestBuilder.getNewAdNumber()
     }
@@ -7689,6 +7695,7 @@ var YouboraAdapter = _youboralib2.default.Adapter.extend({
 
   /**  @returns {void} - Register listeners to this.player. */
   registerListeners: function registerListeners() {
+    this.deltaErrorTime = 5000; // Threshold time to ignore repeated errors
     var Event = this.player.Event;
     // References
     this.references = [];
@@ -7765,6 +7772,12 @@ var YouboraAdapter = _youboralib2.default.Adapter.extend({
    * @param {Object} e - object with payload including severity, code and data.
    * - The name of the plugin.- Listener for 'error' event. */
   errorListener: function errorListener(e) {
+    var now = new Date().getTime();
+    if (this.lastErrorCode === e.payload.code && this.lastErrorTime + this.deltaErrorTime > now) {
+      return null;
+    }
+    this.lastErrorCode = e.payload.code;
+    this.lastErrorTime = now;
     if (e.payload.severity === _playkitJs.Error.Severity.CRITICAL) {
       this.fireError(e.payload.code, e.payload.data);
       this.fireStop();
@@ -7876,10 +7889,13 @@ var NativeAdsAdapter = _youboralib2.default.Adapter.extend({
         break;
       case "midroll":
         break;
+      case "overlay":
+        returnValue = "overlay";
+        break;
       default:
         if (!this.plugin.getAdapter().flags.isJoined) {
           returnValue = PREROLL;
-        } else if (!this.plugin.getAdapter().isLive() && this.plugin.getAdapter().getPlayhead() > this.plugin.getAdapter().getDuration() - 1) {
+        } else if (!this.plugin.getAdapter().getIsLive() && this.plugin.getAdapter().getPlayhead() > this.plugin.getAdapter().getDuration() - 1) {
           returnValue = POSTROLL;
         }
     }
@@ -7888,8 +7904,7 @@ var NativeAdsAdapter = _youboralib2.default.Adapter.extend({
 
   /**  @returns {void} - Register listeners to this.player. */
   registerListeners: function registerListeners() {
-    this.monitorPlayhead(true, false); //playhead monitor for bufferunderrun
-
+    this.deltaErrorTime = 5000; // Threshold time to ignore repeated errors
     var Event = this.player.Event;
     // Register listeners
     this.references = [];
@@ -7911,8 +7926,6 @@ var NativeAdsAdapter = _youboralib2.default.Adapter.extend({
 
   /**  @returns {void} - Unregister listeners to this.player. */
   unregisterListeners: function unregisterListeners() {
-    // Disable playhead monitoring
-    this.monitor.stop();
 
     // unregister listeners
     if (this.player && this.references) {
@@ -7930,14 +7943,14 @@ var NativeAdsAdapter = _youboralib2.default.Adapter.extend({
 
   startAdListener: function startAdListener() {
     this.plugin.getAdapter().stopBlockedByAds = true;
-    this.plugin.getAdapter().fireStart();
-    this.fireStart();
+    if (this.adPosition !== "overlay") {
+      this.fireStart();
+    }
   },
 
   stopAdListener: function stopAdListener() {
     this.fireStop();
-    this.currentTime = null;
-    this.adObject = null;
+    this.resetFlags();
   },
 
   resumeAdListener: function resumeAdListener() {
@@ -7954,24 +7967,41 @@ var NativeAdsAdapter = _youboralib2.default.Adapter.extend({
 
   skipAdListener: function skipAdListener() {
     this.fireStop({ skipped: true });
-    this.currentTime = null;
-    this.adObject = null;
+    this.resetFlags();
   },
 
   errorAdListener: function errorAdListener(e) {
+    var now = new Date().getTime();
+    if (this.lastErrorCode === e.payload.error.code && this.lastErrorTime + this.deltaErrorTime > now) {
+      return null;
+    }
+    this.lastErrorCode = e.payload.error.code;
+    this.lastErrorTime = now;
     this.fireError(e.payload.error.code, e.payload.error.message);
+    if (this.getPosition() === "post") {
+      this.plugin.getAdapter().stopBlockedByAds = false;
+      this.plugin.getAdapter().fireStop();
+    }
   },
 
   allAdsCompletedListener: function allAdsCompletedListener() {
     this.fireStop();
     this.plugin.getAdapter().stopBlockedByAds = false;
     if (this.getPosition() === "post") this.plugin.getAdapter().fireStop();
+    this.adPosition = null;
   },
 
   progressAdListener: function progressAdListener(e) {
     this.currentTime = e.payload.adProgress.currentTime;
     this.fireJoin();
-    this.monitor.skipNextTick();
+  },
+
+  resetFlags: function resetFlags() {
+    this.currentTime = null;
+    this.adObject = null;
+    if (this.getPosition() === "post") {
+      this.adPosition = null;
+    }
   }
 });
 exports.NativeAdsAdapter = NativeAdsAdapter;

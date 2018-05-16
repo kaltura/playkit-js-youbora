@@ -62,7 +62,7 @@
     "uglifyjs-webpack-plugin": "^0.4.3",
     "webpack": "latest",
     "webpack-dev-server": "latest",
-    "youboralib": "6.2.5",
+    "youboralib": "6.2.6",
     "playkit-js": "https://github.com/kaltura/playkit-js.git#v0.27.0"
   },
   "peerDependencies": {
