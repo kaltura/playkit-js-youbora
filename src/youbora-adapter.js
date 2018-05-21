@@ -125,7 +125,7 @@ $YB.plugins.KalturaV3.prototype.registerListeners = function () {
   });
 
   // video error (error)
-  this.player.addEventListener("error", function (error) {
+  this.player.addEventListener(Event.ERROR, function (error) {
     if (error.payload.severity === Error.Severity.CRITICAL){
       context.errorHandler(error.payload.code, error.payload.data);
     }
