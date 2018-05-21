@@ -6,6 +6,7 @@
  */
 import $YB from './youbora.lib.min'
 import * as pkg from '../package.json'
+import {Error} from 'playkit-js'
 
 $YB.plugins.KalturaV3 = function (player, options) {
   try {
@@ -124,9 +125,10 @@ $YB.plugins.KalturaV3.prototype.registerListeners = function () {
   });
 
   // video error (error)
-  this.player.addEventListener(Event.ERROR, function () {
-    // TO-DO: Rework this after errors are done
-    context.errorHandler("PLAY_FAILURE");
+  this.player.addEventListener(Event.ERROR, function (error) {
+    if (error.payload.severity === Error.Severity.CRITICAL){
+      context.errorHandler(error.payload.code, error.payload.data);
+    }
   });
 
   // video seek start
