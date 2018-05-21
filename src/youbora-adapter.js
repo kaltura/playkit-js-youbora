@@ -125,9 +125,9 @@ $YB.plugins.KalturaV3.prototype.registerListeners = function () {
   });
 
   // video error (error)
-  this.player.addEventListener("error", function (e) {
-    if (e.payload.severity === Error.Severity.CRITICAL){
-      context.errorHandler("PLAY_FAILURE");
+  this.player.addEventListener("error", function (error) {
+    if (error.payload.severity === Error.Severity.CRITICAL){
+      context.errorHandler(error.payload.code, error.payload.data);
     }
   });
 
