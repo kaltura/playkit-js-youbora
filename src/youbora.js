@@ -49,7 +49,8 @@ export default class Youbora extends BasePlugin {
    */
   updateConfig(update: Object): void {
     super.updateConfig(update);
-    this._youbora.setOptions(update.options);
+    this._youbora.setOptions(this.config.options);
+    this._youbora.updateConfig(this.config);
     this._addPlayerMetadata();
   }
 

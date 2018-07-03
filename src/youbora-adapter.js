@@ -26,6 +26,10 @@ $YB.plugins.KalturaV3 = function (player, options) {
 /** Inherit from generic plugin */
 $YB.plugins.KalturaV3.prototype = new $YB.plugins.Generic;
 
+$YB.plugins.KalturaV3.prototype.updateConfig = function (config) {
+  this.config = config;
+};
+
 $YB.plugins.KalturaV3.bindLogger = function (logger) {
   $YB.error = logger.error.bind(logger);
   $YB.notice = logger.info.bind(logger);
