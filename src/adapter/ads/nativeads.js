@@ -1,7 +1,7 @@
 // @flow
 import youbora from 'youboralib'
 
-let NativeAdsAdapter = youbora.Adapter.extend({
+let NativeAdsAdapter = youbora.StandardAdapter.extend({
 
   /**  @returns {String} - current plugin version */
   getVersion: function () {
@@ -24,16 +24,13 @@ let NativeAdsAdapter = youbora.Adapter.extend({
 
   /**  @returns {String} - current ad position (only ads) */
   getPosition: function () {
-    const PREROLL = "pre"
-    const MIDROLL = "mid"
-    const POSTROLL = "post"
-    let returnValue = MIDROLL
+    let returnValue = youbora.Adapter.AdPosition.MIDROLL
     switch (this.adPosition) {
       case "preroll":
-        returnValue = PREROLL
+        returnValue = youbora.Adapter.AdPosition.PREROLL
         break
       case "postroll":
-        returnValue = POSTROLL
+        returnValue = youbora.Adapter.AdPosition.POSTROLL
         break
       case "midroll":
         break
@@ -42,46 +39,31 @@ let NativeAdsAdapter = youbora.Adapter.extend({
         break
       default:
         if (!this.plugin.getAdapter().flags.isJoined) {
-          returnValue = PREROLL
+          returnValue = youbora.Adapter.AdPosition.PREROLL
         } else if (!this.plugin.getAdapter().getIsLive() && this.plugin.getAdapter().getPlayhead() > this.plugin.getAdapter().getDuration() - 1) {
-          returnValue = POSTROLL
+          returnValue = youbora.Adapter.AdPosition.POSTROLL
         }
     }
     return returnValue
   },
 
-  /**  @returns {void} - Register listeners to this.player. */
-  registerListeners: function () {
-    this.deltaErrorTime = 5000 // Threshold time to ignore repeated errors
+  /**  @returns {void} - Return a list of events and methods to suscribe from this.player. */
+  getListenersList: function () {
     const Event = this.player.Event
-    // Register listeners
-    this.references = []
-    this.references[Event.AD_LOADED] = this.loadedAdListener.bind(this)
-    this.references[Event.AD_STARTED] = this.startAdListener.bind(this)
-    this.references[Event.AD_RESUMED] = this.resumeAdListener.bind(this)
-    this.references[Event.AD_PAUSED] = this.pauseAdListener.bind(this)
-    this.references[Event.AD_CLICKED] = this.clickAdListener.bind(this)
-    this.references[Event.AD_SKIPPED] = this.skipAdListener.bind(this)
-    this.references[Event.AD_COMPLETED] = this.stopAdListener.bind(this)
-    this.references[Event.AD_ERROR] = this.errorAdListener.bind(this)
-    this.references[Event.AD_PROGRESS] = this.progressAdListener.bind(this)
-    this.references[Event.ALL_ADS_COMPLETED] = this.allAdsCompletedListener.bind(this)
-
-    for (let key in this.references) {
-      this.player.addEventListener(key, this.references[key])
-    }
-  },
-
-  /**  @returns {void} - Unregister listeners to this.player. */
-  unregisterListeners: function () {
-
-    // unregister listeners
-    if (this.player && this.references) {
-      for (let key in this.references) {
-        this.player.removeEventListener(key, this.references[key])
+    return [{
+      events: {
+        [Event.AD_LOADED]: this.loadedAdListener,
+        [Event.AD_STARTED]: this.startAdListener,
+        [Event.AD_RESUMED]: this.resumeAdListener,
+        [Event.AD_PAUSED]: this.pauseAdListener,
+        [Event.AD_CLICKED]: this.clickAdListener,
+        [Event.AD_SKIPPED]: this.skipAdListener,
+        [Event.AD_COMPLETED]: this.stopAdListener,
+        [Event.AD_ERROR]: this.errorAdListener,
+        [Event.AD_PROGRESS]: this.progressAdListener,
+        [Event.ALL_ADS_COMPLETED]: this.allAdsCompletedListener
       }
-      this.references = []
-    }
+    }]
   },
 
   loadedAdListener: function (e) {
@@ -110,7 +92,7 @@ let NativeAdsAdapter = youbora.Adapter.extend({
   },
 
   clickAdListener: function () {
-    this.fireClick({ url: this.adObject.clickThroughUrl })
+    this.fireClick({ adUrl: this.adObject.clickThroughUrl })
   },
 
   skipAdListener: function () {
@@ -119,14 +101,8 @@ let NativeAdsAdapter = youbora.Adapter.extend({
   },
 
   errorAdListener: function (e) {
-    let now = new Date().getTime()
-    if (this.lastErrorCode === e.payload.error.code && this.lastErrorTime + this.deltaErrorTime > now) {
-      return null
-    }
-    this.lastErrorCode = e.payload.error.code
-    this.lastErrorTime = now
     this.fireError(e.payload.error.code, e.payload.error.message)
-    if (this.getPosition() === "post") {
+    if (this.getPosition() === youbora.Adapter.AdPosition.POSTROLL) {
       this.plugin.getAdapter().stopBlockedByAds = false
       this.plugin.getAdapter().fireStop()
     }
@@ -135,7 +111,7 @@ let NativeAdsAdapter = youbora.Adapter.extend({
   allAdsCompletedListener: function () {
     this.fireStop()
     this.plugin.getAdapter().stopBlockedByAds = false
-    if (this.getPosition() === "post") this.plugin.getAdapter().fireStop()
+    if (this.getPosition() === youbora.Adapter.AdPosition.POSTROLL) this.plugin.getAdapter().fireStop()
     this.adPosition = null
   },
 
@@ -147,7 +123,7 @@ let NativeAdsAdapter = youbora.Adapter.extend({
   resetFlags: function () {
     this.currentTime = null
     this.adObject = null
-    if (this.getPosition() === "post") {
+    if (this.getPosition() === youbora.Adapter.AdPosition.POSTROLL) {
       this.adPosition = null
     }
   }

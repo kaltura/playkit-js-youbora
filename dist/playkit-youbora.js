@@ -7,7 +7,7 @@
 		exports["youbora"] = factory(require("playkit-js"));
 	else
 		root["playkit"] = root["playkit"] || {}, root["playkit"]["youbora"] = factory(root["playkit"]["core"]);
-})(this, function(__WEBPACK_EXTERNAL_MODULE_9__) {
+})(this, function(__WEBPACK_EXTERNAL_MODULE_10__) {
 return /******/ (function(modules) { // webpackBootstrap
 /******/ 	// The module cache
 /******/ 	var installedModules = {};
@@ -70,7 +70,7 @@ return /******/ (function(modules) { // webpackBootstrap
 /******/ 	__webpack_require__.p = "";
 /******/
 /******/ 	// Load entry module and return exports
-/******/ 	return __webpack_require__(__webpack_require__.s = 29);
+/******/ 	return __webpack_require__(__webpack_require__.s = 30);
 /******/ })
 /************************************************************************/
 /******/ ([
@@ -78,7 +78,7 @@ return /******/ (function(modules) { // webpackBootstrap
 /***/ (function(module, exports, __webpack_require__) {
 
 var Emitter = __webpack_require__(4)
-var isArray = __webpack_require__(11)
+var isArray = __webpack_require__(12)
 
 /**
  * Static Log class for YouboraLib
@@ -319,8 +319,8 @@ module.exports = Log
 /* 1 */
 /***/ (function(module, exports, __webpack_require__) {
 
-var assign = __webpack_require__(16)
-var createObject = __webpack_require__(33)
+var assign = __webpack_require__(17)
+var createObject = __webpack_require__(34)
 
 var YouboraObject = function () { }
 
@@ -581,9 +581,9 @@ var Util = {
 
   // The following methods replace core js functionallity to ensure compatibility in old versions.
 
-  assign: __webpack_require__(16),
+  assign: __webpack_require__(17),
 
-  isArray: __webpack_require__(11)
+  isArray: __webpack_require__(12)
 }
 
 module.exports = Util
@@ -637,7 +637,10 @@ var Constants = {
     SESSION_START: '/infinity/session/start',
     SESSION_STOP: '/infinity/session/stop',
     NAV: '/infinity/session/nav',
-    BEAT: '/infinity/session/beat'
+    BEAT: '/infinity/session/beat',
+
+    // Offline
+    OFFLINE_EVENTS: '/offlineEvents'
   },
 
   /**
@@ -674,7 +677,9 @@ var Constants = {
     WILL_SEND_SESSION_STOP: 'will-send-session-stop',
     WILL_SEND_NAV: 'will-send-nav',
     WILL_SEND_BEAT: 'will-send-beat',
-    WILL_SEND_EVENT: 'will-send-event'
+    WILL_SEND_EVENT: 'will-send-event',
+
+    WILL_SEND_OFFLINE_EVENTS: 'will-send-offline-events'
   }
 }
 
@@ -686,7 +691,7 @@ module.exports = Constants
 /***/ (function(module, exports, __webpack_require__) {
 
 var YouboraObject = __webpack_require__(1)
-var isArray = __webpack_require__(11)
+var isArray = __webpack_require__(12)
 
 /**
  * This class extends YouboraObject, adding event emitting/listening functionalities.
@@ -866,8 +871,8 @@ var YBRequest = YouboraObject.extend(
      * Wraps this.getHXR.addEventListener.
      * Accepts a callback that receives (this YBRequest, event)
      */
-    on: function (event, callback) {
-      this.xhr.addEventListener(event, callback.bind(this, this))
+    on: function (event, callback, callbackParams) {
+      this.xhr.addEventListener(event, callback.bind(this, this, callbackParams))
       return this
     },
 
@@ -924,6 +929,10 @@ var YBRequest = YouboraObject.extend(
       return this
     },
 
+    setBody: function (body) {
+      this.body = body
+    },
+
     /**
      * Sends the request.
      *
@@ -975,7 +984,7 @@ var YBRequest = YouboraObject.extend(
         }
 
         // Send
-        return this.xhr.send()
+        return this.xhr.send(this.body)
       } catch (err) {
         Log.error(err)
       }
@@ -1080,6 +1089,8 @@ var Transform = Emitter.extend(
        * @private
        */
       this._isBusy = true
+      this._sendRequest = true
+      this.transformName = "Transform"
     },
 
     /**
@@ -1107,13 +1118,32 @@ var Transform = Emitter.extend(
     done: function () {
       this._isBusy = false
       this.emit(Transform.Event.DONE)
+    },
+
+    // offline
+    hasToSend: function (request) {
+      return this._sendRequest
+    },
+
+    getState: function () {
+      if (!this._sendRequest) {
+        return this.STATE_OFFLINE
+      }
+      if (this._isBusy) {
+        return this.STATE_BLOCKED
+      }
+      return this.STATE_NO_BLOCKED
     }
+
   },
 
   /** @lends youbora.Transform */
   {
     // Static members
 
+    STATE_OFFLINE: 2,
+    STATE_BLOCKED: 1,
+    STATE_NO_BLOCKED: 0,
     /**
      * List of events that could be fired from this class.
      * @enum
@@ -1231,476 +1261,21 @@ module.exports = Chrono
 /* 8 */
 /***/ (function(module, exports, __webpack_require__) {
 
-module.exports = __webpack_require__(31).version
+module.exports = __webpack_require__(32).version
 
 
 /***/ }),
 /* 9 */
-/***/ (function(module, exports) {
-
-module.exports = __WEBPACK_EXTERNAL_MODULE_9__;
-
-/***/ }),
-/* 10 */
-/***/ (function(module, exports, __webpack_require__) {
-
-// No-Conflict
-var previousYoubora = youbora
-var youbora = {}
-
-/**
- * This allows you to run multiple instances of YouboraLib on the same webapp.
- * After loading the new version, call `noConflict()` to get a reference to it.
- * At the same time the old version will be returned to Youbora.
- */
-youbora.noConflict = function () {
-  youbora = previousYoubora
-  return this
-}
-
-// Info
-youbora.VERSION = __webpack_require__(8)
-
-// Polyfills
-youbora.polyfills = __webpack_require__(32)
-
-// Base Classes
-youbora.Object = __webpack_require__(1)
-youbora.Emitter = __webpack_require__(4)
-
-// Log
-youbora.Log = __webpack_require__(0)
-youbora.Log.loadLevelFromUrl()
-
-// General classes
-youbora.Util = __webpack_require__(2)
-youbora.HybridNetwork = __webpack_require__(17)
-youbora.Chrono = __webpack_require__(7)
-youbora.Timer = __webpack_require__(12)
-youbora.Constants = __webpack_require__(3)
-
-// Comm classes
-youbora.Request = __webpack_require__(5)
-youbora.Communication = __webpack_require__(13)
-
-// Resource Transform classes
-youbora.Transform = __webpack_require__(6)
-youbora.ViewTransform = __webpack_require__(18)
-youbora.Nqs6Transform = __webpack_require__(34)
-youbora.ResourceTransform = __webpack_require__(19)
-youbora.CdnParser = __webpack_require__(21)
-youbora.HlsParser = __webpack_require__(20)
-youbora.LocationheaderParser = __webpack_require__(22)
-
-// Plugin Classes
-youbora.Options = __webpack_require__(23)
-youbora.Plugin = __webpack_require__(41)
-youbora.Storage = __webpack_require__(24)
-youbora.RequestBuilder = __webpack_require__(25)
-
-// Adapters
-youbora.PlayheadMonitor = __webpack_require__(28)
-youbora.Adapter = __webpack_require__(15)
-youbora.adapters = {}
-
-// Infinity
-youbora.Infinity = __webpack_require__(14)
-
-// Detector classes
-youbora.BackgroundDetector = __webpack_require__(26)
-youbora.DeviceDetector = __webpack_require__(27)
-
-/**
- * Register the given adapter in <youbora>.adapters.
- *
- * @param {string} key Unique adapter identifier.
- * @param {youbora.Adapter} Adapter Adapter class.
- *
- * @memberof youbora
- */
-youbora.registerAdapter = function (key, Adapter) {
-  this.adapters[key] = Adapter
-}.bind(youbora)
-
-/**
- * Remove the given adapter in <youbora>.adapters.
- *
- * @param {string} key Unique adapter identifier.
- *
- * @memberof youbora
- */
-youbora.unregisterAdapter = function (key) {
-  this.adapters[key] = null
-}.bind(youbora)
-
-module.exports = youbora
-
-
-/***/ }),
-/* 11 */
-/***/ (function(module, exports) {
-
-/**
- * See Array.isArray.
- * @memberof youbora.Util
- */
-module.exports = function (obj) {
-  return Object.prototype.toString.call(obj) === '[object Array]'
-}
-
-
-/***/ }),
-/* 12 */
-/***/ (function(module, exports, __webpack_require__) {
-
-var YouboraObject = __webpack_require__(1)
-var Chrono = __webpack_require__(7)
-
-var Timer = YouboraObject.extend(
-  /** @lends youbora.Timer.prototype */
-  {
-    /**
-     * An Utility class that provides timed events in a defined time interval.
-     *
-     * @param {function} callback The callback to call every due interval.
-     * Callback will receive lapsed ms between calls.
-     * @param {int} [interval=5000] Milliseconds between each call.
-     *
-     * @constructs Timer
-     * @extends youbora.YouboraObject
-     * @memberof youbora
-     */
-    constructor: function (callback, interval) {
-      this.callback = callback
-      this.interval = interval || 5000
-      this.isRunning = false
-      this._timer = null
-
-      this.chrono = new Chrono()
-    },
-
-    /**
-     * Starts the timer.
-     */
-    start: function () {
-      this.isRunning = true
-      this._setTick()
-    },
-
-    /**
-     * Stops the timer.
-     */
-    stop: function () {
-      this.isRunning = false
-      if (this._timer) clearTimeout(this._timer)
-    },
-
-    /**
-     * Sets the next tick execution.
-     * @private
-     */
-    _setTick: function () {
-      this.chrono.start()
-      this._timer = setTimeout(function () {
-        this.callback(this.chrono.stop())
-        this._setTick()
-      }.bind(this), this.interval)
-    }
-  }
-)
-
-module.exports = Timer
-
-
-/***/ }),
-/* 13 */
-/***/ (function(module, exports, __webpack_require__) {
-
-var YouboraObject = __webpack_require__(1)
-var Log = __webpack_require__(0)
-var YBRequest = __webpack_require__(5)
-var Transform = __webpack_require__(6)
-
-var Communication = YouboraObject.extend(
-  /** @lends youbora.Communication.prototype */
-  {
-    /**
-     * Youbora Communication implements an abstraction layer over API requests.
-     * Internally, Communication implements queues of {@link Request} objects.
-     * This queue can be blocked using {@link Transform}
-     *
-     * @constructs Communication
-     * @extends youbora.YouboraObject
-     * @memberof youbora
-     *
-     * @param {string} host The fastdata host address.
-     * @param {boolean} httpSecure True for https, false for http, undefined for //.
-     */
-    constructor: function () {
-      /** Array of {@link Transform}, only when the array is empty the request Queues will begin sending. */
-      this.transforms = []
-
-      /**
-       * Queue of {@link YBRequest}
-       * @private
-       */
-      this._requests = []
-    },
-
-    /**
-     * Enqueues the request provided.
-     *
-     * @param {YBRequest} request Request to be enqueued
-     * @param {function} [callback] The defined load callback to the Request
-     */
-    sendRequest: function (request, callback) {
-      if (request) {
-        if (typeof callback === 'function') request.on(YBRequest.Event.SUCCESS, callback)
-        this._registerRequest(request)
-      }
-    },
-
-    /**
-     * Build a generic request to the given host.
-     *
-     * @param {string} host Host of the service called.
-     * @param {string} service A string with the service to be called. ie: '/data', '/joinTime'...
-     * @param {Object} [params] Object of key:value params.
-     * @param {function} [callback] The defined load callback to the Request
-     */
-    buildRequest: function (host, service, params, callback) {
-      params = params || {}
-      var request = new YBRequest(host, service, params)
-      if (typeof callback === 'function') request.on(YBRequest.Event.SUCCESS, callback)
-      this._registerRequest(request)
-    },
-
-    /**
-     * Adds a Transform to the queue. See {@link Transform}.
-     *
-     * @param {RequestTransform} transform
-     */
-    addTransform: function (transform) {
-      if (transform.parse && transform.isBlocking) {
-        this.transforms.push(transform)
-        transform.on(Transform.Event.DONE, this._processRequests.bind(this))
-      } else {
-        Log.warn(transform + ' is not a valid RequestTransform.')
-      }
-    },
-
-    /**
-     * Removes a {@link Transform}.
-     *
-     * @param {RequestTransform} transform Transform object to remove.
-     */
-    removeTransform: function (transform) {
-      var pos = this.transforms.indexOf(transform)
-      if (pos !== -1) {
-        this.transforms.splice(pos, 1)
-      } else {
-        Log.warn('Trying to remove unexisting Transform \'' + transform + '\'.')
-      }
-    },
-
-    /**
-     * Adds an {@link YBRequest} to the queue of requests.
-     *
-     * @private
-     * @param {YBRequest} request The Request to be queued.
-     */
-    _registerRequest: function (request) {
-      this._requests.push(request)
-      this._processRequests()
-    },
-
-    /**
-     * Execute pending requests in the queue. Returns rejected ones to the queue.
-     * @private
-     */
-    _processRequests: function () {
-      var workingQueue = this._requests
-      this._requests = []
-
-      var rejected = []
-      while (workingQueue.length) {
-        var request = workingQueue.shift()
-        if (this._transform(request)) {
-          request.send()
-        } else {
-          rejected.push(request)
-        }
-      }
-
-      while (rejected.length) {
-        this._requests.push(rejected.shift())
-      }
-    },
-
-    /**
-     * Pass the given request to each transform.
-     * @private
-     * @returns {bool} True if everything is right. False if some parser rejected it.
-     */
-    _transform: function (request) {
-      var ret = true
-      this.transforms.forEach(function (transform) {
-        if (transform.isBlocking(request)) {
-          ret = false
-          return // break foreach loop
-        } else {
-          transform.parse(request)
-        }
-      })
-      return ret
-    }
-  })
-
-module.exports = Communication
-
-
-/***/ }),
-/* 14 */
-/***/ (function(module, exports, __webpack_require__) {
-
-var Emitter = __webpack_require__(4)
-var Comm = __webpack_require__(13)
-
-var YouboraInfinity = Emitter.extend(
-  /** @lends youbora.Infinity.prototype */
-  {
-
-    /**
-     * This class is the base of youbora infinity. Every plugin will have an instance.
-     *
-     * @param {youbora.Plugin} plugin Parent plugin.
-     *
-     * @constructs youbora.Infinity
-     * @extends youbora.Emitter
-     * @memberof youbora
-     */
-    constructor: function (plugin) {
-      /** Parent {@link youbora.Plugin} reference. */
-      this._plugin = plugin
-    },
-
-    /**
-     * @alias youbora.Infinity.prototype.begin.
-     */
-    andBeyond: function () {
-      YouboraInfinity.prototype.begin.apply(this, arguments)
-    },
-
-    /**
-     * This method will start infinity logic, setting storage as needed.
-     * Will call fireSessionStart the first time and fireNav for every subsequent route change.
-     *
-     * @param {Object} [params] Object of key:value params to add to the request.
-     */
-    begin: function (params) {
-      this._comm = new Comm()
-      this._comm.addTransform(this._plugin.viewTransform)
-
-      if (this._plugin.getContext()) {
-        this.fireNav(params) // returning
-      } else {
-        this.fireSessionStart(params) // first time
-      }
-    },
-
-    _generateNewContext: function () {
-      var context = btoa(new Date().getTime())
-      this._plugin.storage.setSession('context', context)
-    },
-
-    _setLastActive: function () {
-      this._plugin.storage.setSession('lastactive', new Date().getTime())
-    },
-
-    /**
-     * Returns the current {@link youbora.Communication} instance.
-     *
-     * @returns {youbora.Communication} communication instance
-     */
-    getComm: function () {
-      return this._comm
-    },
-
-    // Fire
-    /**
-     * Emits session start request.
-     *
-     * @param {Object} [params] Object of key:value params to add to the request.
-     */
-    fireSessionStart: function (params) {
-      this._generateNewContext()
-      this.emit(YouboraInfinity.Event.SESSION_START, { params: params })
-      this._setLastActive()
-    },
-
-    /**
-     * Emits session start request.
-     *
-     * @param {Object} [params] Object of key:value params to add to the request.
-     */
-    fireSessionStop: function (params) {
-      this.emit(YouboraInfinity.Event.SESSION_STOP, { params: params })
-      this._setLastActive()
-    },
-
-    /**
-     * Emits session start request.
-     *
-     * @param {Object} [params] Object of key:value params to add to the request.
-     */
-    fireNav: function (params) {
-      this.emit(YouboraInfinity.Event.NAV, { params: params })
-      this._setLastActive()
-    },
-
-    /**
-     * Emits session start request.
-     *
-     * @param {Object} [params] Object of key:value params to add to the request.
-     */
-    fireEvent: function (params) {
-      this.emit(YouboraInfinity.Event.EVENT, { params: params })
-      this._setLastActive()
-    }
-  },
-  /** @lends youbora.Plugin */
-  {
-    // Static Memebers //
-    /**
-     * List of events that could be fired
-     * @enum
-     * @event
-     */
-    Event: {
-      NAV: 'nav',
-      SESSION_START: 'sessionStart',
-      SESSION_STOP: 'sessionStop',
-      BEAT: 'beat',
-      EVENT: 'event'
-    }
-  }
-)
-
-module.exports = YouboraInfinity
-
-
-/***/ }),
-/* 15 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var Emitter = __webpack_require__(4)
 var Log = __webpack_require__(0)
 var Util = __webpack_require__(2)
-var HybridNetwork = __webpack_require__(17)
+var HybridNetwork = __webpack_require__(18)
 var version = __webpack_require__(8)
-var PlaybackChronos = __webpack_require__(44)
-var PlaybackFlags = __webpack_require__(45)
-var PlayheadMonitor = __webpack_require__(28)
+var PlaybackChronos = __webpack_require__(45)
+var PlaybackFlags = __webpack_require__(46)
+var PlayheadMonitor = __webpack_require__(29)
 
 var Adapter = Emitter.extend(
   /** @lends youbora.Adapter.prototype */
@@ -1757,10 +1332,22 @@ var Adapter = Emitter.extend(
         this.player = player
       }
 
-      if (this.player) this.registerListeners()
+      if (this.player) {
+        this.initializeAdapter()
+        this.registerListeners()
+      }
     },
 
     /**
+     * When using getListenersList, this method is called
+     * Use it to create local variables if needed, and intialize the monitorPlayhead.
+     */
+    initializeAdapter: function () {
+      // this.monitorPlayhead(false, false)
+    },
+
+    /**
+     * // Optional
      * Override to create event binders.
      * It's a good practice when implementing a new Adapter to create intermediate methods and call
      * those when player events are detected instead of just calling the `fire*` methods. This
@@ -1776,9 +1363,11 @@ var Adapter = Emitter.extend(
      *  this.emit('start')
      * }
      */
-    registerListeners: function () { },
+    registerListeners: function () {
+    },
 
     /**
+     * // Optional
      * Override to create event de-binders.
      *
      * @example
@@ -1786,7 +1375,9 @@ var Adapter = Emitter.extend(
      *  this.player.removeEventListener('start', this.onStart)
      * }
      */
-    unregisterListeners: function () { },
+    /** Unregister listeners to this.player. */
+    unregisterListeners: function () {
+    },
 
     /**
      * This function disposes the currend adapter, removes player listeners and drops references.
@@ -1848,14 +1439,6 @@ var Adapter = Emitter.extend(
 
     /** Override to return user bandwidth throughput */
     getThroughput: function () {
-      if (this.getCdnTraffic() && this.getCdnTraffic() !== 0) {
-        if (!this.lastDataValue) {
-          this.lastDataValue = 0
-        }
-        var prevDataValue = this.lastDataValue
-        this.lastDataValue = this.getCdnTraffic() + this.getP2PTraffic()
-        return Math.round((this.lastDataValue - prevDataValue) / (this.plugin._ping.interval / 1000))
-      }
       return null
     },
 
@@ -2185,7 +1768,7 @@ var Adapter = Emitter.extend(
 
         this.emit(Adapter.Event.STOP, { params: params })
 
-        if (this.plugin._adapter && this.plugin._adapter.flags.isEnded && !this.plugin._adapter.flags.isStopped) {
+        if (this.plugin && this.plugin._adapter && this.plugin._adapter.flags.isEnded && !this.plugin._adapter.flags.isStopped) {
           if (this.plugin.options['ad.afterStop'] === 0) {
             this.plugin.fireStop()
           } else {
@@ -2246,10 +1829,9 @@ var Adapter = Emitter.extend(
      * @param {String} [msg] Error Message
      * @param {Object} [metadata] Object defining error metadata
      */
-    fireFatalError: function (code, msg, metadata) {
+    fireFatalError: function (code, msg, metadata, level) {
       if (this.monitor) this.monitor.stop()
-
-      this.fireError(code, msg, metadata, 'fatal')
+      this.fireError(code, msg, metadata, level)
       this.fireStop()
     },
 
@@ -2261,6 +1843,9 @@ var Adapter = Emitter.extend(
      * @param {Object} [params] Object of key:value params to add to the request.
      */
     fireClick: function (params) {
+      if (typeof params === "string") {
+        params = { "url": params }
+      }
       this.emit(Adapter.Event.CLICK, { params: params })
     },
 
@@ -2273,6 +1858,18 @@ var Adapter = Emitter.extend(
      */
     fireBlocked: function (params) {
       this.emit(Adapter.Event.BLOCKED, { params: params })
+    },
+
+    /**
+     * ONLY ADS.
+     * Emits related event and set flags if current status is valid.
+     * ie: won't sent start if isStarted is already true.
+     *
+     * @param {Object} [params] Object of key:value params to add to the request.
+     */
+    fireSkip: function (params) {
+      params.skipped = true
+      this.fireStop(params)
     }
   },
 
@@ -2298,6 +1895,15 @@ var Adapter = Emitter.extend(
       STOP: 'stop',
       CLICK: 'click',
       BLOCKED: 'blocked'
+    },
+
+    /**
+     * List of ad positions
+     */
+    AdPosition: {
+      PREROLL: 'pre',
+      MIDROLL: 'mid',
+      POSTROLL: 'post'
     }
   }
 )
@@ -2306,7 +1912,859 @@ module.exports = Adapter
 
 
 /***/ }),
+/* 10 */
+/***/ (function(module, exports) {
+
+module.exports = __WEBPACK_EXTERNAL_MODULE_10__;
+
+/***/ }),
+/* 11 */
+/***/ (function(module, exports, __webpack_require__) {
+
+// No-Conflict
+var previousYoubora = youbora
+var youbora = {}
+
+/**
+ * This allows you to run multiple instances of YouboraLib on the same webapp.
+ * After loading the new version, call `noConflict()` to get a reference to it.
+ * At the same time the old version will be returned to Youbora.
+ */
+youbora.noConflict = function () {
+  youbora = previousYoubora
+  return this
+}
+
+// Info
+youbora.VERSION = __webpack_require__(8)
+
+// Polyfills
+youbora.polyfills = __webpack_require__(33)
+
+// Base Classes
+youbora.Object = __webpack_require__(1)
+youbora.Emitter = __webpack_require__(4)
+
+// Log
+youbora.Log = __webpack_require__(0)
+youbora.Log.loadLevelFromUrl()
+
+// General classes
+youbora.Util = __webpack_require__(2)
+youbora.HybridNetwork = __webpack_require__(18)
+youbora.Chrono = __webpack_require__(7)
+youbora.Timer = __webpack_require__(13)
+youbora.Constants = __webpack_require__(3)
+
+// Comm classes
+youbora.Request = __webpack_require__(5)
+youbora.Communication = __webpack_require__(14)
+
+// Resource Transform classes
+youbora.Transform = __webpack_require__(6)
+youbora.ViewTransform = __webpack_require__(19)
+youbora.ResourceTransform = __webpack_require__(20)
+youbora.CdnParser = __webpack_require__(22)
+youbora.HlsParser = __webpack_require__(21)
+youbora.OfflineParser = __webpack_require__(24)
+youbora.LocationheaderParser = __webpack_require__(23)
+
+// Plugin Classes
+youbora.Options = __webpack_require__(25)
+youbora.Plugin = __webpack_require__(41)
+youbora.Storage = __webpack_require__(26)
+youbora.RequestBuilder = __webpack_require__(15)
+
+// Adapters
+youbora.PlayheadMonitor = __webpack_require__(29)
+youbora.Adapter = __webpack_require__(9)
+youbora.StandardAdapter = __webpack_require__(55)
+youbora.adapters = {}
+
+// Infinity
+youbora.Infinity = __webpack_require__(16)
+
+// Detector classes
+youbora.BackgroundDetector = __webpack_require__(27)
+youbora.DeviceDetector = __webpack_require__(28)
+
+/**
+ * Register the given adapter in <youbora>.adapters.
+ *
+ * @param {string} key Unique adapter identifier.
+ * @param {youbora.Adapter} Adapter Adapter class.
+ *
+ * @memberof youbora
+ */
+youbora.registerAdapter = function (key, Adapter) {
+  this.adapters[key] = Adapter
+}.bind(youbora)
+
+/**
+ * Remove the given adapter in <youbora>.adapters.
+ *
+ * @param {string} key Unique adapter identifier.
+ *
+ * @memberof youbora
+ */
+youbora.unregisterAdapter = function (key) {
+  this.adapters[key] = null
+}.bind(youbora)
+
+module.exports = youbora
+
+
+/***/ }),
+/* 12 */
+/***/ (function(module, exports) {
+
+/**
+ * See Array.isArray.
+ * @memberof youbora.Util
+ */
+module.exports = function (obj) {
+  return Object.prototype.toString.call(obj) === '[object Array]'
+}
+
+
+/***/ }),
+/* 13 */
+/***/ (function(module, exports, __webpack_require__) {
+
+var YouboraObject = __webpack_require__(1)
+var Chrono = __webpack_require__(7)
+
+var Timer = YouboraObject.extend(
+  /** @lends youbora.Timer.prototype */
+  {
+    /**
+     * An Utility class that provides timed events in a defined time interval.
+     *
+     * @param {function} callback The callback to call every due interval.
+     * Callback will receive lapsed ms between calls.
+     * @param {int} [interval=5000] Milliseconds between each call.
+     *
+     * @constructs Timer
+     * @extends youbora.YouboraObject
+     * @memberof youbora
+     */
+    constructor: function (callback, interval) {
+      this.callback = callback
+      this.interval = interval || 5000
+      this.isRunning = false
+      this._timer = null
+
+      this.chrono = new Chrono()
+    },
+
+    /**
+     * Starts the timer.
+     */
+    start: function () {
+      this.isRunning = true
+      this._setTick()
+    },
+
+    /**
+     * Stops the timer.
+     */
+    stop: function () {
+      this.isRunning = false
+      if (this._timer) clearTimeout(this._timer)
+    },
+
+    /**
+     * Sets the next tick execution.
+     * @private
+     */
+    _setTick: function () {
+      this.chrono.start()
+      this._timer = setTimeout(function () {
+        this.callback(this.chrono.stop())
+        this._setTick()
+      }.bind(this), this.interval)
+    }
+  }
+)
+
+module.exports = Timer
+
+
+/***/ }),
+/* 14 */
+/***/ (function(module, exports, __webpack_require__) {
+
+var YouboraObject = __webpack_require__(1)
+var Log = __webpack_require__(0)
+var YBRequest = __webpack_require__(5)
+var Transform = __webpack_require__(6)
+
+var Communication = YouboraObject.extend(
+  /** @lends youbora.Communication.prototype */
+  {
+    /**
+     * Youbora Communication implements an abstraction layer over API requests.
+     * Internally, Communication implements queues of {@link Request} objects.
+     * This queue can be blocked using {@link Transform}
+     *
+     * @constructs Communication
+     * @extends youbora.YouboraObject
+     * @memberof youbora
+     *
+     * @param {string} host The fastdata host address.
+     * @param {boolean} httpSecure True for https, false for http, undefined for //.
+     */
+    constructor: function () {
+      /** Array of {@link Transform}, only when the array is empty the request Queues will begin sending. */
+      this.transforms = []
+
+      /**
+       * Queue of {@link YBRequest}
+       * @private
+       */
+      this._requests = []
+    },
+
+    /**
+     * Enqueues the request provided.
+     *
+     * @param {YBRequest} request Request to be enqueued
+     * @param {function} [callback] The defined load callback to the Request
+     */
+    sendRequest: function (request, callback, callbackParams) {
+      if (request) {
+        if (typeof callback === 'function') request.on(YBRequest.Event.SUCCESS, callback, callbackParams)
+        this._registerRequest(request)
+      }
+    },
+
+    /**
+     * Build a generic request to the given host.
+     *
+     * @param {string} host Host of the service called.
+     * @param {string} service A string with the service to be called. ie: '/data', '/joinTime'...
+     * @param {Object} [params] Object of key:value params.
+     * @param {function} [callback] The defined load callback to the Request
+     */
+    buildRequest: function (host, service, params, callback) {
+      params = params || {}
+      var request = new YBRequest(host, service, params)
+      if (typeof callback === 'function') request.on(YBRequest.Event.SUCCESS, callback)
+      this._registerRequest(request)
+    },
+
+    /**
+     * Adds a Transform to the queue. See {@link Transform}.
+     *
+     * @param {RequestTransform} transform
+     */
+    addTransform: function (transform) {
+      if (transform.parse && transform.isBlocking) {
+        this.transforms.push(transform)
+        transform.on(Transform.Event.DONE, this._processRequests.bind(this))
+      } else {
+        Log.warn(transform + ' is not a valid RequestTransform.')
+      }
+    },
+
+    /**
+     * Removes a {@link Transform}.
+     *
+     * @param {RequestTransform} transform Transform object to remove.
+     */
+    removeTransform: function (transform) {
+      var pos = this.transforms.indexOf(transform)
+      if (pos !== -1) {
+        this.transforms.splice(pos, 1)
+      } else {
+        Log.warn('Trying to remove unexisting Transform \'' + transform + '\'.')
+      }
+    },
+
+    /**
+     * Adds an {@link YBRequest} to the queue of requests.
+     *
+     * @private
+     * @param {YBRequest} request The Request to be queued.
+     */
+    _registerRequest: function (request) {
+      this._requests.push(request)
+      this._processRequests()
+    },
+
+    /**
+     * Execute pending requests in the queue. Returns rejected ones to the queue.
+     * @private
+     */
+    _processRequests: function () {
+      var workingQueue = this._requests
+      this._requests = []
+
+      var rejected = []
+      while (workingQueue.length) {
+        var request = workingQueue.shift()
+        var transformState = this._transform(request)
+        if (transformState === Transform.STATE_NO_BLOCKED) {
+          request.send()
+        } else if (transformState === Transform.STATE_BLOCKED) {
+          rejected.push(request)
+        } //else { remove }
+      }
+
+      while (rejected.length) {
+        this._requests.push(rejected.shift())
+      }
+    },
+
+    /**
+     * Pass the given request to each transform.
+     * @private
+     * @returns {int} STATE_NO_BLOCKED if everything is right. STATE_BLOCKED if some parser rejected it.
+     * STATE_OFFLINE if offline transform blocked it.
+     */
+    _transform: function (request) {
+      var ret = Transform.STATE_NO_BLOCKED
+      this.transforms.forEach(function (transform) {
+        if (transform.isBlocking(request)) {
+          ret = Transform.STATE_BLOCKED
+          return
+        } else {
+          transform.parse(request)
+        }
+        if (transform.getState() === Transform.STATE_OFFLINE) {
+          ret = Transform.STATE_OFFLINE
+          return
+        }
+      })
+      return ret
+    }
+  })
+
+module.exports = Communication
+
+
+/***/ }),
+/* 15 */
+/***/ (function(module, exports, __webpack_require__) {
+
+var YouboraObject = __webpack_require__(1)
+var Log = __webpack_require__(0)
+
+var startParams = [
+  'accountCode',
+  'username',
+  'rendition',
+  'player',
+  'title',
+  'title2',
+  'live',
+  'mediaDuration',
+  'mediaResource',
+  'transactionCode',
+  'properties',
+  'cdn',
+  'playerVersion',
+  'param1',
+  'param2',
+  'param3',
+  'param4',
+  'param5',
+  'param6',
+  'param7',
+  'param8',
+  'param9',
+  'param10',
+  'param11',
+  'param12',
+  'param13',
+  'param14',
+  'param15',
+  'param16',
+  'param17',
+  'param18',
+  'param19',
+  'param20',
+  'obfuscateIp',
+  'p2pEnabled',
+  'pluginVersion',
+  'pluginInfo',
+  'isp',
+  'connectionType',
+  'ip',
+  'deviceCode',
+  'preloadDuration',
+  'referer',
+  'userType',
+  'streamingProtocol',
+  'householdId',
+  'experiments'
+]
+
+var adStartParams = [
+  'playhead',
+  'adTitle',
+  'adPosition',
+  'adDuration',
+  'adCampaign',
+  'adResource',
+  'adPlayerVersion',
+  'adProperties',
+  'adAdapterVersion',
+  'extraparam1',
+  'extraparam2',
+  'extraparam3',
+  'extraparam4',
+  'extraparam5',
+  'extraparam6',
+  'extraparam7',
+  'extraparam8',
+  'extraparam9',
+  'extraparam10'
+]
+
+var RequestBuilder = YouboraObject.extend(
+  /** @lends youbora.RequestBuilder.prototype */
+  {
+    /**
+     * This class helps building params associated with each event: /start, /joinTime...
+     *
+     * @constructs RequestBuilder
+     * @extends youbora.YouboraObject
+     * @memberof youbora
+     *
+     * @param {Plugin} plugin A Plugin instance
+     */
+    constructor: function (plugin) {
+      this._plugin = plugin
+      this._adNumber = 0
+
+      /** Stores a list of the last params fetched */
+      this.lastSent = {}
+    },
+
+    /**
+     * Adds to params all the entities specified in paramList, unless they are already set.
+     *
+     * @param {Object} params Object of params key:value.
+     * @param {Array.string} paramList A list of params to fetch.
+     * @param {bool} onlyDifferent If true, only fetches params that have changed
+     */
+    fetchParams: function (params, paramList, onlyDifferent) {
+      params = params || {}
+      paramList = paramList || []
+      for (var i = 0; i < paramList.length; i++) {
+        var param = paramList[i]
+
+        if (params[param]) { continue }
+        var getterName = RequestBuilder.getters[param]
+
+        if (this._plugin[getterName]) {
+          var value = this._plugin[getterName]()
+          if (value !== null && (!onlyDifferent || this.lastSent[param] !== value)) {
+            params[param] = value
+            this.lastSent[param] = value
+          }
+        } else {
+          Log.warn('Trying to call undefined getter ' + param + ':' + getterName)
+        }
+      }
+      return params
+    },
+
+    buildBody: function (service) {
+      var body = null
+      return this.fetchParams(body, RequestBuilder.bodyParams[service], false)
+    },
+
+    /**
+     * Adds to params object all the entities specified in paramList, unless they are already set.
+     *
+     * @param {Object} params Object of params key:value.
+     * @param {string} service The name of the service. Use {@link Plugin.Service} enum.
+     */
+    buildParams: function (params, service) {
+      params = params || {}
+      this.fetchParams(params, RequestBuilder.params[service], false)
+      this.fetchParams(params, RequestBuilder.differentParams[service], true)
+      return params
+    },
+
+    /**
+     * Creates an adnumber if it does not exist and stores it in lastSent. If it already exists,
+     * it is incremented by 1.
+     *
+     * @returns {number} adNumber
+     */
+    getNewAdNumber: function () {
+      var adNumber = this.lastSent.adNumber
+      if (adNumber && this.lastSent.adPosition === this._plugin.getAdPosition()) {
+        adNumber += 1
+      } else {
+        adNumber = 1
+      }
+      this.lastSent.adNumber = adNumber
+      return adNumber
+    },
+
+    /**
+     * Return changed entities since last check
+     *
+     * @returns {Object} params
+     */
+    getChangedEntities: function () {
+      return this.fetchParams({}, RequestBuilder.differentParams['entities'], true)
+    }
+  },
+  /** @lends youbora.RequestBuilder */
+  {
+    // Static Members
+
+    /** List of params used by each service */
+    params: {
+      '/data': ['system', 'pluginVersion', 'requestNumber', 'username'],
+
+      '/init': startParams,
+      '/start': startParams,
+      '/joinTime': ['joinDuration', 'playhead', 'mediaDuration'],
+      '/pause': ['playhead'],
+      '/resume': ['pauseDuration', 'playhead'],
+      '/seek': ['seekDuration', 'playhead'],
+      '/bufferUnderrun': ['bufferDuration', 'playhead'],
+      '/error': ['player'].concat(startParams),
+      '/stop': ['bitrate', 'playhead', 'pauseDuration'],
+
+      '/adInit': adStartParams,
+      '/adStart': adStartParams,
+      '/adJoin': ['playhead', 'adPosition', 'adJoinDuration', 'adPlayhead'],
+      '/adPause': ['playhead', 'adPosition', 'adPlayhead'],
+      '/adResume': ['playhead', 'adPosition', 'adPlayhead', 'adPauseDuration'],
+      '/adBufferUnderrun': ['playhead', 'adPosition', 'adPlayhead', 'adBufferDuration'],
+      '/adStop': ['playhead', 'adPosition', 'adPlayhead', 'adBitrate', 'adTotalDuration', 'pauseDuration'],
+      '/adClick': ['playhead', 'adPosition', 'adPlayhead'],
+      '/adError': adStartParams,
+      '/adBlocked': adStartParams,
+      '/ping': ['droppedFrames', 'playrate', 'cdnDownloadedTraffic', 'p2pDownloadedTraffic', 'uploadTraffic', 'latency', 'packetLoss', 'packetSent'],
+
+      '/infinity/session/start': [
+        'accountCode',
+        'username',
+        'navContext',
+        'route',
+        'page'
+      ],
+      '/infinity/session/stop': [],
+      '/infinity/session/nav': ['navContext', 'username', 'route', 'page'],
+      '/infinity/session/beat': [],
+      '/infinity/event': ['accountCode'],
+
+      '/offlineEvents': {}
+    },
+
+    /** Values for request body */
+    bodyParams: {
+      '/offlineEvents': ['viewJson']
+    },
+
+    /** List of params used by each service (only if they are different) */
+    differentParams: {
+      '/join': [
+        'title',
+        'title2',
+        'live',
+        'mediaDuration',
+        'mediaResource'
+      ],
+      '/adJoin': ['adTitle', 'adDuration', 'adResource'],
+      'entities': [
+        'rendition',
+        'title',
+        'title2',
+        'live',
+        'param1',
+        'param2',
+        'param3',
+        'param4',
+        'param5',
+        'param6',
+        'param7',
+        'param8',
+        'param9',
+        'param10',
+        'param11',
+        'param12',
+        'param13',
+        'param14',
+        'param15',
+        'param16',
+        'param17',
+        'param18',
+        'param19',
+        'param20',
+        'connectionType',
+        'deviceCode',
+        'ip',
+        'username',
+        'cdn',
+        'nodeHost',
+        'nodeType',
+        'nodeTypeString'
+      ]
+    },
+
+    /** List of params and its related getter */
+    getters: {
+      requestNumber: 'getRequestNumber',
+      playhead: 'getPlayhead',
+      playrate: 'getPlayrate',
+      fps: 'getFramesPerSecond',
+      droppedFrames: 'getDroppedFrames',
+      mediaDuration: 'getDuration',
+      bitrate: 'getBitrate',
+      throughput: 'getThroughput',
+      rendition: 'getRendition',
+      title: 'getTitle',
+      title2: 'getTitle2',
+      live: 'getIsLive',
+      mediaResource: 'getResource',
+      transactionCode: 'getTransactionCode',
+      properties: 'getMetadata',
+      playerVersion: 'getPlayerVersion',
+      player: 'getPlayerName',
+      cdn: 'getCdn',
+      pluginVersion: 'getPluginVersion',
+      userType: 'getUserType',
+      streamingProtocol: 'getStreamingProtocol',
+      obfuscateIp: 'getObfuscateIp',
+      householdId: 'getHouseholdId',
+      latency: 'getLatency',
+      packetLoss: 'getPacketLoss',
+      packetSent: 'getPacketSent',
+
+      param1: 'getExtraparam1',
+      param2: 'getExtraparam2',
+      param3: 'getExtraparam3',
+      param4: 'getExtraparam4',
+      param5: 'getExtraparam5',
+      param6: 'getExtraparam6',
+      param7: 'getExtraparam7',
+      param8: 'getExtraparam8',
+      param9: 'getExtraparam9',
+      param10: 'getExtraparam10',
+      param11: 'getExtraparam11',
+      param12: 'getExtraparam12',
+      param13: 'getExtraparam13',
+      param14: 'getExtraparam14',
+      param15: 'getExtraparam15',
+      param16: 'getExtraparam16',
+      param17: 'getExtraparam17',
+      param18: 'getExtraparam18',
+      param19: 'getExtraparam19',
+      param20: 'getExtraparam20',
+
+      extraparam1: 'getAdExtraparam1',
+      extraparam2: 'getAdExtraparam2',
+      extraparam3: 'getAdExtraparam3',
+      extraparam4: 'getAdExtraparam4',
+      extraparam5: 'getAdExtraparam5',
+      extraparam6: 'getAdExtraparam6',
+      extraparam7: 'getAdExtraparam7',
+      extraparam8: 'getAdExtraparam8',
+      extraparam9: 'getAdExtraparam9',
+      extraparam10: 'getAdExtraparam10',
+
+      adPosition: 'getAdPosition',
+      adPlayhead: 'getAdPlayhead',
+      adDuration: 'getAdDuration',
+      adCampaign: 'getAdCampaign',
+      adBitrate: 'getAdBitrate',
+      adTitle: 'getAdTitle',
+      adResource: 'getAdResource',
+      adPlayerVersion: 'getAdPlayerVersion',
+      adProperties: 'getAdMetadata',
+      adAdapterVersion: 'getAdAdapterVersion',
+
+      pluginInfo: 'getPluginInfo',
+
+      isp: 'getIsp',
+      connectionType: 'getConnectionType',
+      ip: 'getIp',
+
+      deviceCode: 'getDeviceCode',
+
+      system: 'getAccountCode',
+      accountCode: 'getAccountCode',
+      username: 'getUsername',
+
+      preloadDuration: 'getPreloadDuration',
+
+      joinDuration: 'getJoinDuration',
+      bufferDuration: 'getBufferDuration',
+      seekDuration: 'getSeekDuration',
+      pauseDuration: 'getPauseDuration',
+
+      adJoinDuration: 'getAdJoinDuration',
+      adBufferDuration: 'getAdBufferDuration',
+      adPauseDuration: 'getAdPauseDuration',
+      adTotalDuration: 'getAdTotalDuration',
+
+      referer: 'getReferer',
+
+      nodeHost: 'getNodeHost',
+      nodeType: 'getNodeType',
+      nodeTypeString: 'getNodeTypeString',
+
+      route: 'getReferer',
+      sessionId: 'getSessionId',
+      navContext: 'getContext',
+      page: 'getPageName',
+
+      cdnDownloadedTraffic: 'getCdnTraffic',
+      p2pDownloadedTraffic: 'getP2PTraffic',
+      p2pEnabled: 'getIsP2PEnabled',
+      uploadTraffic: 'getUploadTraffic',
+
+      viewJson: 'getOfflineView',
+      experiments: 'getExperiments'
+    }
+
+  }
+)
+
+module.exports = RequestBuilder
+
+
+/***/ }),
 /* 16 */
+/***/ (function(module, exports, __webpack_require__) {
+
+var Emitter = __webpack_require__(4)
+var Comm = __webpack_require__(14)
+
+var YouboraInfinity = Emitter.extend(
+  /** @lends youbora.Infinity.prototype */
+  {
+
+    /**
+     * This class is the base of youbora infinity. Every plugin will have an instance.
+     *
+     * @param {youbora.Plugin} plugin Parent plugin.
+     *
+     * @constructs youbora.Infinity
+     * @extends youbora.Emitter
+     * @memberof youbora
+     */
+    constructor: function (plugin) {
+      /** Parent {@link youbora.Plugin} reference. */
+      this._plugin = plugin
+    },
+
+    /**
+     * @alias youbora.Infinity.prototype.begin.
+     */
+    andBeyond: function () {
+      YouboraInfinity.prototype.begin.apply(this, arguments)
+    },
+
+    /**
+     * This method will start infinity logic, setting storage as needed.
+     * Will call fireSessionStart the first time and fireNav for every subsequent route change.
+     *
+     * @param {Object} [params] Object of key:value params to add to the request.
+     */
+    begin: function (params) {
+      this._comm = new Comm()
+      this._comm.addTransform(this._plugin.viewTransform)
+
+      if (this._plugin.getContext()) {
+        this.fireNav(params) // returning
+      } else {
+        this.fireSessionStart(params) // first time
+      }
+    },
+
+    _generateNewContext: function () {
+      var context = btoa(new Date().getTime())
+      this._plugin.storage.setSession('context', context)
+    },
+
+    _setLastActive: function () {
+      this._plugin.storage.setSession('lastactive', new Date().getTime())
+    },
+
+    /**
+     * Returns the current {@link youbora.Communication} instance.
+     *
+     * @returns {youbora.Communication} communication instance
+     */
+    getComm: function () {
+      return this._comm
+    },
+
+    // Fire
+    /**
+     * Emits session start request.
+     *
+     * @param {Object} [params] Object of key:value params to add to the request.
+     */
+    fireSessionStart: function (params) {
+      this._generateNewContext()
+      this.emit(YouboraInfinity.Event.SESSION_START, { params: params })
+      this._setLastActive()
+    },
+
+    /**
+     * Emits session start request.
+     *
+     * @param {Object} [params] Object of key:value params to add to the request.
+     */
+    fireSessionStop: function (params) {
+      this.emit(YouboraInfinity.Event.SESSION_STOP, { params: params })
+      this._setLastActive()
+    },
+
+    /**
+     * Emits session start request.
+     *
+     * @param {Object} [params] Object of key:value params to add to the request.
+     */
+    fireNav: function (params) {
+      this.emit(YouboraInfinity.Event.NAV, { params: params })
+      this._setLastActive()
+    },
+
+    /**
+     * Emits session start request.
+     *
+     * @param {Object} [params] Object of key:value params to add to the request.
+     */
+    fireEvent: function (params) {
+      this.emit(YouboraInfinity.Event.EVENT, { params: params })
+      this._setLastActive()
+    }
+  },
+  /** @lends youbora.Plugin */
+  {
+    // Static Memebers //
+    /**
+     * List of events that could be fired
+     * @enum
+     * @event
+     */
+    Event: {
+      NAV: 'nav',
+      SESSION_START: 'sessionStart',
+      SESSION_STOP: 'sessionStop',
+      BEAT: 'beat',
+      EVENT: 'event'
+    }
+  }
+)
+
+module.exports = YouboraInfinity
+
+
+/***/ }),
+/* 17 */
 /***/ (function(module, exports) {
 
 /**
@@ -2335,7 +2793,7 @@ module.exports = function (target) {
 
 
 /***/ }),
-/* 17 */
+/* 18 */
 /***/ (function(module, exports) {
 
 /**
@@ -2349,12 +2807,20 @@ module.exports = function (target) {
 var HybridNetowrk = {
   /** Returns CDN traffic bytes using streamroot or peer5. Otherwise null */
   getCdnTraffic: function () {
-    if (typeof Streamroot !== 'undefined' && Streamroot.p2pAvailable && Streamroot.peerAgents) {
-      var acum = 0
-      for (agent in Streamroot.peerAgents) {
-        acum += Streamroot.peerAgents[agent].stats.cdn
+    if (typeof Streamroot !== 'undefined') {
+      if (Streamroot.p2pAvailable && Streamroot.peerAgents) {
+        var acum = 0
+        for (agent in Streamroot.peerAgents) {
+          acum += Streamroot.peerAgents[agent].stats.cdn
+        }
+        return acum
+      } else if (Streamroot.instances && Streamroot.instances.length > 0) {
+        var acum = 0
+        for (instance in Streamroot.instances) {
+          acum += instance.stats.currentContent.cdnDownload;
+        }
+        return acum
       }
-      return acum
     }
     if (typeof peer5 !== 'undefined' && peer5.getStats) {
       return peer5.getStats().totalHttpDownloaded
@@ -2364,13 +2830,21 @@ var HybridNetowrk = {
 
   /** Returns P2P traffic bytes using streamroot or peer5. Otherwise null */
   getP2PTraffic: function () {
-    if (typeof Streamroot !== 'undefined' && Streamroot.p2pAvailable && Streamroot.peerAgents) {
-      var acum = 0
-      for (agent in Streamroot.peerAgents) {
-        if (Streamroot.peerAgents[agent].isP2PEnabled)
-          acum += Streamroot.peerAgents[agent].stats.p2p
+    if (typeof Streamroot !== 'undefined') {
+      if (Streamroot.p2pAvailable && Streamroot.peerAgents) {
+        var acum = 0
+        for (agent in Streamroot.peerAgents) {
+          if (Streamroot.peerAgents[agent].isP2PEnabled)
+            acum += Streamroot.peerAgents[agent].stats.p2p
+        }
+        return acum
+      } else if (Streamroot.instances && Streamroot.instances.length > 0) {
+        var acum = 0
+        for (instance in Streamroot.instances) {
+          acum += instance.stats.currentContent.dnaDownload;
+        }
+        return acum
       }
-      return acum
     }
     if (typeof peer5 !== 'undefined' && peer5.getStats) {
       return peer5.getStats().totalP2PDownloaded
@@ -2380,13 +2854,21 @@ var HybridNetowrk = {
 
   /** Returns P2P traffic sent in bytes, using streamroot or peer5. Otherwise null*/
   getUploadTraffic: function () {
-    if (typeof Streamroot !== 'undefined' && Streamroot.p2pAvailable && Streamroot.peerAgents) {
-      var acum = 0
-      for (agent in Streamroot.peerAgents) {
-        if (Streamroot.peerAgents[agent].isP2PEnabled)
-          acum += Streamroot.peerAgents[agent].stats.upload
+    if (typeof Streamroot !== 'undefined') {
+      if (Streamroot.p2pAvailable && Streamroot.peerAgents) {
+        var acum = 0
+        for (agent in Streamroot.peerAgents) {
+          if (Streamroot.peerAgents[agent].isP2PEnabled)
+            acum += Streamroot.peerAgents[agent].stats.upload
+        }
+        return acum
+      } else if (Streamroot.instances && Streamroot.instances.length > 0) {
+        var acum = 0
+        for (instance in Streamroot.instances) {
+          acum += instance.stats.currentContent.dnaUpload;
+        }
+        return acum
       }
-      return acum
     }
     if (typeof peer5 !== 'undefined' && peer5.getStats) {
       return peer5.getStats().totalP2PUploaded
@@ -2397,12 +2879,20 @@ var HybridNetowrk = {
 
   /** Returns if P2P is enabled, using streamroot or peer5. Otherwise null*/
   getIsP2PEnabled: function () {
-    if (typeof Streamroot !== 'undefined' && Streamroot.p2pAvailable && Streamroot.peerAgents) {
-      var acum = false
-      for (agent in Streamroot.peerAgents) { // if at least one agent is enabled
-        acum = acum || Streamroot.peerAgents[agent].isP2PEnabled
+    if (typeof Streamroot !== 'undefined') {
+      if (Streamroot.p2pAvailable && Streamroot.peerAgents) {
+        var acum = false
+        for (agent in Streamroot.peerAgents) { // if at least one agent is enabled
+          acum = acum || Streamroot.peerAgents[agent].isP2PEnabled
+        }
+        return acum
+      } else if (Streamroot.instances && Streamroot.instances.length > 0) {
+        var acum = false
+        for (instance in Streamroot.instances) {
+          acum = acum || instance.dnaDownloadEnabled || instance.dnaUploadEnabled;
+        }
       }
-      return acum
+      return false
     }
     if (typeof peer5 !== 'undefined' && peer5.isEnabled) {
       return peer5.isEnabled()
@@ -2415,7 +2905,7 @@ module.exports = HybridNetowrk
 
 
 /***/ }),
-/* 18 */
+/* 19 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var YBRequest = __webpack_require__(5)
@@ -2450,6 +2940,8 @@ var ViewTransform = Transform.extend(
       this._httpSecure = plugin.options.httpSecure
 
       this._plugin = plugin
+
+      this.transformName = "View"
     },
 
     /**
@@ -2466,6 +2958,16 @@ var ViewTransform = Transform.extend(
       var params = {
         apiVersion: 'v7',
         outputformat: 'json'
+      }
+
+      if (this._plugin.options && this._plugin.options['offline']) {
+        //set the options
+        this.response.host = "OFFLINE"
+        this.response.code = "OFFLINE"
+        this.response.pingTime = 60
+        this.response.beatTime = 60
+        this.done()
+        return null
       }
 
       params = this._plugin.requestBuilder.buildParams(params, service)
@@ -2583,13 +3085,13 @@ module.exports = ViewTransform
 
 
 /***/ }),
-/* 19 */
+/* 20 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var Transform = __webpack_require__(6)
-var HlsParser = __webpack_require__(20)
-var CdnParser = __webpack_require__(21)
-var LocationheaderParser = __webpack_require__(22)
+var HlsParser = __webpack_require__(21)
+var CdnParser = __webpack_require__(22)
+var LocationheaderParser = __webpack_require__(23)
 var Log = __webpack_require__(0)
 var Constants = __webpack_require__(3)
 
@@ -2622,6 +3124,8 @@ var ResourceTransform = Transform.extend(
       this._responses = {}
 
       this._isBusy = false
+
+      this.transformName = "Resource"
     },
 
     /**
@@ -2803,7 +3307,7 @@ module.exports = ResourceTransform
 
 
 /***/ }),
-/* 20 */
+/* 21 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var YBRequest = __webpack_require__(5)
@@ -2917,7 +3421,7 @@ module.exports = HlsParser
 
 
 /***/ }),
-/* 21 */
+/* 22 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var Emitter = __webpack_require__(4)
@@ -3266,7 +3770,7 @@ module.exports = CdnParser
 
 
 /***/ }),
-/* 22 */
+/* 23 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var Emitter = __webpack_require__(4)
@@ -3297,12 +3801,12 @@ var LocationheaderParser = Emitter.extend(
         method: 'HEAD',
         maxRetries: 0,
         requestHeaders: {},
-        // cache: true
+        cache: true
       })
 
       request.on(YBRequest.Event.SUCCESS, function (resp) {
-        this._response = resp.getXHR().getAllResponseHeaders()
-        this._parseResponse(this._response)
+        this._realResource = resp.getXHR().responseURL
+        this.done()
       }.bind(this))
 
       request.on(YBRequest.Event.ERROR, function (resp) {
@@ -3310,15 +3814,6 @@ var LocationheaderParser = Emitter.extend(
       }.bind(this))
 
       request.send()
-    },
-
-    _parseResponse: function (headers) {
-      headers.split('\n').forEach(function (line) {
-        if (line.startsWith('Location:')) {
-          this._realResource = line.slice(10)
-        }
-      }.bind(this))
-      this.done()
     },
 
     /**
@@ -3351,7 +3846,61 @@ module.exports = LocationheaderParser
 
 
 /***/ }),
-/* 23 */
+/* 24 */
+/***/ (function(module, exports, __webpack_require__) {
+
+var YBRequest = __webpack_require__(5)
+var Transform = __webpack_require__(6)
+var Log = __webpack_require__(0)
+var Util = __webpack_require__(2)
+var Constants = __webpack_require__(3)
+
+var OfflineTransform = Transform.extend(
+  /** @lends youbora.OfflineTransform.prototype */
+  {
+    /**
+     * This class manages Fastdata service and view index.
+     *
+     * @constructs
+     * @extends youbora.Transform
+     * @memberof youbora
+     *
+     * @param {Plugin} plugin Instance of {@link Plugin}
+     * @param {string} session If provided, plugin will use this as a FD response.
+     */
+    constructor: function (plugin, session) {
+      this._sendRequest = false
+      this._isBusy = false
+      this.plugin = plugin
+      this.session = session
+      this.transformName = "Offline"
+    },
+
+    /**
+     * Transform requests
+     * @param {youbora.comm.YBRequest} request YBRequest to transform.
+     */
+    parse: function (request) {
+      if (request) {
+        this.plugin.offlineStorage.addEvent(request.service, request.params)
+      }
+    },
+
+    hasToSend: function (request) {
+      return false
+    },
+
+    getState: function () {
+      return Transform.STATE_OFFLINE
+    },
+
+  })
+
+module.exports = OfflineTransform
+
+
+/***/ }),
+/* 25 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var YouboraObject = __webpack_require__(1)
@@ -3402,6 +3951,12 @@ var Options = YouboraObject.extend(
 
       /** @prop {string} [userType] User type. */
       this['userType'] = null
+
+      /**
+      * @prop {boolean} [offline=false]
+      * If true the plugin will store the events and send them later when there's connection
+      */
+      this['offline'] = false
 
       /** @prop {string} [referer] Site url.
        *  By default window.location.href */
@@ -3771,7 +4326,7 @@ module.exports = Options
 
 
 /***/ }),
-/* 24 */
+/* 26 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var YouboraObject = __webpack_require__(1)
@@ -3874,385 +4429,7 @@ module.exports = YouboraStorage
 
 
 /***/ }),
-/* 25 */
-/***/ (function(module, exports, __webpack_require__) {
-
-var YouboraObject = __webpack_require__(1)
-var Log = __webpack_require__(0)
-
-var startParams = [
-  'accountCode',
-  'username',
-  'rendition',
-  'player',
-  'title',
-  'title2',
-  'live',
-  'mediaDuration',
-  'mediaResource',
-  'transactionCode',
-  'properties',
-  'cdn',
-  'playerVersion',
-  'param1',
-  'param2',
-  'param3',
-  'param4',
-  'param5',
-  'param6',
-  'param7',
-  'param8',
-  'param9',
-  'param10',
-  'param11',
-  'param12',
-  'param13',
-  'param14',
-  'param15',
-  'param16',
-  'param17',
-  'param18',
-  'param19',
-  'param20',
-  'obfuscateIp',
-  'p2pEnabled',
-  'pluginVersion',
-  'pluginInfo',
-  'isp',
-  'connectionType',
-  'ip',
-  'deviceCode',
-  'preloadDuration',
-  'referer',
-  'userType',
-  'streamingProtocol',
-  'householdId',
-  'experiments'
-]
-
-var adStartParams = [
-  'playhead',
-  'adTitle',
-  'adPosition',
-  'adDuration',
-  'adCampaign',
-  'adResource',
-  'adPlayerVersion',
-  'adProperties',
-  'adAdapterVersion',
-  'extraparam1',
-  'extraparam2',
-  'extraparam3',
-  'extraparam4',
-  'extraparam5',
-  'extraparam6',
-  'extraparam7',
-  'extraparam8',
-  'extraparam9',
-  'extraparam10'
-]
-
-var RequestBuilder = YouboraObject.extend(
-  /** @lends youbora.RequestBuilder.prototype */
-  {
-    /**
-     * This class helps building params associated with each event: /start, /joinTime...
-     *
-     * @constructs RequestBuilder
-     * @extends youbora.YouboraObject
-     * @memberof youbora
-     *
-     * @param {Plugin} plugin A Plugin instance
-     */
-    constructor: function (plugin) {
-      this._plugin = plugin
-      this._adNumber = 0
-
-      /** Stores a list of the last params fetched */
-      this.lastSent = {}
-    },
-
-    /**
-     * Adds to params all the entities specified in paramList, unless they are already set.
-     *
-     * @param {Object} params Object of params key:value.
-     * @param {Array.string} paramList A list of params to fetch.
-     * @param {bool} onlyDifferent If true, only fetches params that have changed
-     */
-    fetchParams: function (params, paramList, onlyDifferent) {
-      params = params || {}
-      paramList = paramList || []
-      for (var i = 0; i < paramList.length; i++) {
-        var param = paramList[i]
-
-        if (params[param]) { continue }
-        var getterName = RequestBuilder.getters[param]
-
-        if (this._plugin[getterName]) {
-          var value = this._plugin[getterName]()
-          if (value !== null && (!onlyDifferent || this.lastSent[param] !== value)) {
-            params[param] = value
-            this.lastSent[param] = value
-          }
-        } else {
-          Log.warn('Trying to call undefined getter ' + param + ':' + getterName)
-        }
-      }
-
-      return params
-    },
-
-    /**
-     * Adds to params object all the entities specified in paramList, unless they are already set.
-     *
-     * @param {Object} params Object of params key:value.
-     * @param {string} service The name of the service. Use {@link Plugin.Service} enum.
-     */
-    buildParams: function (params, service) {
-      params = params || {}
-      this.fetchParams(params, RequestBuilder.params[service], false)
-      this.fetchParams(params, RequestBuilder.differentParams[service], true)
-      return params
-    },
-
-    /**
-     * Creates an adnumber if it does not exist and stores it in lastSent. If it already exists,
-     * it is incremented by 1.
-     *
-     * @returns {number} adNumber
-     */
-    getNewAdNumber: function () {
-      var adNumber = this.lastSent.adNumber
-      if (adNumber && this.lastSent.adPosition === this._plugin.getAdPosition()) {
-        adNumber += 1
-      } else {
-        adNumber = 1
-      }
-      this.lastSent.adNumber = adNumber
-      return adNumber
-    },
-
-    /**
-     * Return changed entities since last check
-     *
-     * @returns {Object} params
-     */
-    getChangedEntities: function () {
-      return this.fetchParams({}, RequestBuilder.differentParams['entities'], true)
-    }
-  },
-  /** @lends youbora.RequestBuilder */
-  {
-    // Static Members
-
-    /** List of params used by each service */
-    params: {
-      '/data': ['system', 'pluginVersion', 'requestNumber'],
-
-      '/init': startParams,
-      '/start': startParams,
-      '/joinTime': ['joinDuration', 'playhead', 'mediaDuration'],
-      '/pause': ['playhead'],
-      '/resume': ['pauseDuration', 'playhead'],
-      '/seek': ['seekDuration', 'playhead'],
-      '/bufferUnderrun': ['bufferDuration', 'playhead'],
-      '/error': ['player'].concat(startParams),
-      '/stop': ['bitrate', 'playhead', 'pauseDuration'],
-
-      '/adInit': adStartParams,
-      '/adStart': adStartParams,
-      '/adJoin': ['playhead', 'adPosition', 'adJoinDuration', 'adPlayhead'],
-      '/adPause': ['playhead', 'adPosition', 'adPlayhead'],
-      '/adResume': ['playhead', 'adPosition', 'adPlayhead', 'adPauseDuration'],
-      '/adBufferUnderrun': ['playhead', 'adPosition', 'adPlayhead', 'adBufferDuration'],
-      '/adStop': ['playhead', 'adPosition', 'adPlayhead', 'adBitrate', 'adTotalDuration', 'pauseDuration'],
-      '/adClick': ['playhead', 'adPosition', 'adPlayhead'],
-      '/adError': adStartParams,
-      '/adBlocked': adStartParams,
-      '/ping': ['droppedFrames', 'playrate', 'cdnDownloadedTraffic', 'p2pDownloadedTraffic', 'uploadTraffic', 'latency', 'packetLoss', 'packetSent'],
-
-      '/infinity/session/start': [
-        'accountCode',
-        'username',
-        'navContext',
-        'route',
-        'page'
-      ],
-      '/infinity/session/stop': [],
-      '/infinity/session/nav': ['navContext', 'username', 'route', 'page'],
-      '/infinity/session/beat': [],
-      '/infinity/event': ['accountCode']
-    },
-
-    /** List of params used by each service (only if they are different) */
-    differentParams: {
-      '/join': [
-        'title',
-        'title2',
-        'live',
-        'mediaDuration',
-        'mediaResource'
-      ],
-      '/adJoin': ['adTitle', 'adDuration', 'adResource'],
-      'entities': [
-        'rendition',
-        'title',
-        'title2',
-        'live',
-        'param1',
-        'param2',
-        'param3',
-        'param4',
-        'param5',
-        'param6',
-        'param7',
-        'param8',
-        'param9',
-        'param10',
-        'param11',
-        'param12',
-        'param13',
-        'param14',
-        'param15',
-        'param16',
-        'param17',
-        'param18',
-        'param19',
-        'param20',
-        'connectionType',
-        'deviceCode',
-        'ip',
-        'username',
-        'cdn',
-        'nodeHost',
-        'nodeType',
-        'nodeTypeString'
-      ]
-    },
-
-    /** List of params and its related getter */
-    getters: {
-      requestNumber: 'getRequestNumber',
-      playhead: 'getPlayhead',
-      playrate: 'getPlayrate',
-      fps: 'getFramesPerSecond',
-      droppedFrames: 'getDroppedFrames',
-      mediaDuration: 'getDuration',
-      bitrate: 'getBitrate',
-      throughput: 'getThroughput',
-      rendition: 'getRendition',
-      title: 'getTitle',
-      title2: 'getTitle2',
-      live: 'getIsLive',
-      mediaResource: 'getResource',
-      transactionCode: 'getTransactionCode',
-      properties: 'getMetadata',
-      playerVersion: 'getPlayerVersion',
-      player: 'getPlayerName',
-      cdn: 'getCdn',
-      pluginVersion: 'getPluginVersion',
-      userType: 'getUserType',
-      streamingProtocol: 'getStreamingProtocol',
-      obfuscateIp: 'getObfuscateIp',
-      householdId: 'getHouseholdId',
-      latency: 'getLatency',
-      packetLoss: 'getPacketLoss',
-      packetSent: 'getPacketSent',
-
-      param1: 'getExtraparam1',
-      param2: 'getExtraparam2',
-      param3: 'getExtraparam3',
-      param4: 'getExtraparam4',
-      param5: 'getExtraparam5',
-      param6: 'getExtraparam6',
-      param7: 'getExtraparam7',
-      param8: 'getExtraparam8',
-      param9: 'getExtraparam9',
-      param10: 'getExtraparam10',
-      param11: 'getExtraparam11',
-      param12: 'getExtraparam12',
-      param13: 'getExtraparam13',
-      param14: 'getExtraparam14',
-      param15: 'getExtraparam15',
-      param16: 'getExtraparam16',
-      param17: 'getExtraparam17',
-      param18: 'getExtraparam18',
-      param19: 'getExtraparam19',
-      param20: 'getExtraparam20',
-
-      extraparam1: 'getAdExtraparam1',
-      extraparam2: 'getAdExtraparam2',
-      extraparam3: 'getAdExtraparam3',
-      extraparam4: 'getAdExtraparam4',
-      extraparam5: 'getAdExtraparam5',
-      extraparam6: 'getAdExtraparam6',
-      extraparam7: 'getAdExtraparam7',
-      extraparam8: 'getAdExtraparam8',
-      extraparam9: 'getAdExtraparam9',
-      extraparam10: 'getAdExtraparam10',
-
-      adPosition: 'getAdPosition',
-      adPlayhead: 'getAdPlayhead',
-      adDuration: 'getAdDuration',
-      adCampaign: 'getAdCampaign',
-      adBitrate: 'getAdBitrate',
-      adTitle: 'getAdTitle',
-      adResource: 'getAdResource',
-      adPlayerVersion: 'getAdPlayerVersion',
-      adProperties: 'getAdMetadata',
-      adAdapterVersion: 'getAdAdapterVersion',
-
-      pluginInfo: 'getPluginInfo',
-
-      isp: 'getIsp',
-      connectionType: 'getConnectionType',
-      ip: 'getIp',
-
-      deviceCode: 'getDeviceCode',
-
-      system: 'getAccountCode',
-      accountCode: 'getAccountCode',
-      username: 'getUsername',
-
-      preloadDuration: 'getPreloadDuration',
-
-      joinDuration: 'getJoinDuration',
-      bufferDuration: 'getBufferDuration',
-      seekDuration: 'getSeekDuration',
-      pauseDuration: 'getPauseDuration',
-
-      adJoinDuration: 'getAdJoinDuration',
-      adBufferDuration: 'getAdBufferDuration',
-      adPauseDuration: 'getAdPauseDuration',
-      adTotalDuration: 'getAdTotalDuration',
-
-      referer: 'getReferer',
-
-      nodeHost: 'getNodeHost',
-      nodeType: 'getNodeType',
-      nodeTypeString: 'getNodeTypeString',
-
-      route: 'getReferer',
-      sessionId: 'getSessionId',
-      navContext: 'getContext',
-      page: 'getPageName',
-
-      cdnDownloadedTraffic: 'getCdnTraffic',
-      p2pDownloadedTraffic: 'getP2PTraffic',
-      p2pEnabled: 'getIsP2PEnabled',
-      uploadTraffic: 'getUploadTraffic',
-
-      experiments: 'getExperiments'
-    }
-
-  }
-)
-
-module.exports = RequestBuilder
-
-
-/***/ }),
-/* 26 */
+/* 27 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var YouboraObject = __webpack_require__(1)
@@ -4373,7 +4550,7 @@ module.exports = BackgroundDetector
 
 
 /***/ }),
-/* 27 */
+/* 28 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var YouboraObject = __webpack_require__(1)
@@ -4423,11 +4600,11 @@ module.exports = DeviceDetector
 
 
 /***/ }),
-/* 28 */
+/* 29 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var YouboraObject = __webpack_require__(1)
-var Timer = __webpack_require__(12)
+var Timer = __webpack_require__(13)
 var Chrono = __webpack_require__(7)
 
 var PlayheadMonitor = YouboraObject.extend(
@@ -4572,7 +4749,7 @@ module.exports = PlayheadMonitor
 
 
 /***/ }),
-/* 29 */
+/* 30 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -4583,9 +4760,9 @@ Object.defineProperty(exports, "__esModule", {
 });
 exports.NAME = exports.VERSION = undefined;
 
-var _playkitJs = __webpack_require__(9);
+var _playkitJs = __webpack_require__(10);
 
-var _youbora = __webpack_require__(30);
+var _youbora = __webpack_require__(31);
 
 var _youbora2 = _interopRequireDefault(_youbora);
 
@@ -4608,7 +4785,7 @@ var pluginName = "youbora";
 (0, _playkitJs.registerPlugin)(pluginName, _youbora2.default);
 
 /***/ }),
-/* 30 */
+/* 31 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -4622,15 +4799,15 @@ var _get = function get(object, property, receiver) { if (object === null) objec
 
 var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
-var _playkitJs = __webpack_require__(9);
+var _playkitJs = __webpack_require__(10);
 
-var _youboralib = __webpack_require__(10);
+var _youboralib = __webpack_require__(11);
 
 var _youboralib2 = _interopRequireDefault(_youboralib);
 
-var _adapter = __webpack_require__(54);
+var _adapter = __webpack_require__(56);
 
-var _nativeads = __webpack_require__(55);
+var _nativeads = __webpack_require__(57);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
@@ -4776,13 +4953,13 @@ Youbora.defaultConfig = {
 exports.default = Youbora;
 
 /***/ }),
-/* 31 */
+/* 32 */
 /***/ (function(module, exports) {
 
-module.exports = {"name":"youboralib","type":"lib","tech":"js","author":"Jordi Aguilar","version":"6.2.6","built":"2018-05-15","repo":"https://bitbucket.org/npaw/lib-plugin-js.git"}
+module.exports = {"name":"youboralib","type":"lib","tech":"js","author":"Jordi Aguilar","version":"6.3.2","built":"2018-07-06","repo":"https://bitbucket.org/npaw/lib-plugin-js.git"}
 
 /***/ }),
-/* 32 */
+/* 33 */
 /***/ (function(module, exports) {
 
 /* eslint no-extend-native: "off" */
@@ -4828,7 +5005,7 @@ module.exports = applyPolyfills
 
 
 /***/ }),
-/* 33 */
+/* 34 */
 /***/ (function(module, exports) {
 
 var F = function () { }
@@ -4847,80 +5024,6 @@ module.exports = function (o) {
   F.prototype = o
   return new F()
 }
-
-
-/***/ }),
-/* 34 */
-/***/ (function(module, exports, __webpack_require__) {
-
-var Transform = __webpack_require__(6)
-var Constants = __webpack_require__(3)
-
-var Nqs6Transform = Transform.extend(
-  /** @lends youbora.Nqs6Transform.prototype */
-  {
-    /**
-     * This class ensures NQS6 backwards compatibility.
-     * Deprecated since NQS6 clusters are essentialy gone.
-     *
-     * @deprecated
-     * @constructs
-     * @extends youbora.Transform
-     * @memberof youbora
-     */
-    constructor: function () {
-      this.done()
-    },
-
-    /**
-     * Transform requests
-     * @param {YBRequest} request YBRequest to transform.
-     */
-    parse: function (request) {
-      this._cloneParam(request, 'accountCode', 'system')
-      this._cloneParam(request, 'transactionCode', 'transcode')
-      this._cloneParam(request, 'username', 'user')
-      this._cloneParam(request, 'mediaResource', 'resource')
-      this._cloneParam(request, 'msg', 'msg')
-
-      if (request.service !== Constants.Service.JOIN) {
-        this._cloneParam(request, 'playhead', 'time')
-      }
-
-      switch (request.service) {
-        case Constants.Service.START:
-          this._cloneParam(request, 'mediaDuration', 'duration')
-          break
-
-        case Constants.Service.JOIN:
-          this._cloneParam(request, 'joinDuration', 'time')
-          this._cloneParam(request, 'playhead', 'eventTime')
-          break
-
-        case Constants.Service.SEEK:
-          this._cloneParam(request, 'seekDuration', 'duration')
-          break
-
-        case Constants.Service.BUFFER:
-          this._cloneParam(request, 'bufferDuration', 'duration')
-          break
-
-        case Constants.Service.PING:
-          for (var key in request.params.entities) {
-            request.params.entityType = key
-            request.params.entityValue = request.params.entities[key]
-            break
-          }
-          break
-      }
-    },
-
-    _cloneParam: function (request, from, to) {
-      request.params[to] = request.params[from]
-    }
-  })
-
-module.exports = Nqs6Transform
 
 
 /***/ }),
@@ -5088,25 +5191,27 @@ module.exports = {
 /***/ (function(module, exports, __webpack_require__) {
 
 var Emitter = __webpack_require__(4)
-var Timer = __webpack_require__(12)
+var Timer = __webpack_require__(13)
 var Chrono = __webpack_require__(7)
 var Constants = __webpack_require__(3)
 var Util = __webpack_require__(2)
 
 var YBRequest = __webpack_require__(5)
-var Communication = __webpack_require__(13)
+var Communication = __webpack_require__(14)
 var FlowTransform = __webpack_require__(42)
-var ViewTransform = __webpack_require__(18)
-var ResourceTransform = __webpack_require__(19)
+var ViewTransform = __webpack_require__(19)
+var ResourceTransform = __webpack_require__(20)
+var OfflineTransform = __webpack_require__(24)
 
-var Options = __webpack_require__(23)
-var YouboraStorage = __webpack_require__(24)
-var RequestBuilder = __webpack_require__(25)
+var Options = __webpack_require__(25)
+var YouboraStorage = __webpack_require__(26)
+var OfflineStorage = __webpack_require__(43)
+var RequestBuilder = __webpack_require__(15)
 
-var YouboraInfinity = __webpack_require__(14)
+var YouboraInfinity = __webpack_require__(16)
 
-var BackgroundDetector = __webpack_require__(26)
-var DeviceDetector = __webpack_require__(27)
+var BackgroundDetector = __webpack_require__(27)
+var DeviceDetector = __webpack_require__(28)
 
 var Plugin = Emitter.extend(
   /** @lends youbora.Plugin.prototype */
@@ -5138,6 +5243,9 @@ var Plugin = Emitter.extend(
 
       /** Reference to {@link youbora.YouboraStorage} */
       this.storage = new YouboraStorage()
+
+      /** Reference to {@link youbora.OfflineStorage} */
+      this.offlineStorage = new OfflineStorage()
 
       /** Stored {@link Options} of the session. */
       this.options = new Options(options)
@@ -5213,9 +5321,16 @@ var Plugin = Emitter.extend(
      * @param {string} willSendEvent Name of the will-send event. Use {@link Plugin.Event} enum.
      * @param {string} service Name of the service. Use {@link Constants.Service} enum.
      * @param {Object} params Params of the request
+     * @param {Object} body Body of the request, if it is a POST request
+     * @param {string} method Request method. GET by default
+     * @param {function} callback Callback method for successful request
+     * @param {Object} callbackParams Json with params for callback call
      * @private
      */
-    _send: function (willSendEvent, service, params) {
+    _send: function (willSendEvent, service, params, body, method, callback, callbackParams) {
+      if (this.getIsLive()) {
+        params.mediaDuration = undefined
+      }
       var now = new Date().getTime()
       if (this.lastEventTime && (now > (this.lastEventTime + 600000))) { // 600000ms = 10 minutes
         // if last event was sent more than 10 minutes ago, it will use new view code
@@ -5242,9 +5357,15 @@ var Plugin = Emitter.extend(
 
       this.emit(willSendEvent, data)
 
-      if (this._comm && params !== null && this.options.enabled) {
+      if (this._comm && (params !== null || typeof method != "undefined") && this.options.enabled) {
         this.lastServeiceSent = service
-        this._comm.sendRequest(new YBRequest(null, service, params))
+        var options = {}
+        if (typeof method != "undefined" && method != "GET") {
+          options.method = method
+        }
+        var request = new YBRequest(null, service, params, options)
+        if (body) request.setBody(body)
+        this._comm.sendRequest(request, callback, callbackParams)
       }
     },
 
@@ -5258,8 +5379,11 @@ var Plugin = Emitter.extend(
       this._comm = new Communication()
       this._comm.addTransform(new FlowTransform())
       this._comm.addTransform(this.viewTransform)
-      this._comm.addTransform(this.resourceTransform)
-      // this._comm.addTransform(new Nqs6Transform())
+      if (this.options && this.options['offline']) {
+        this._comm.addTransform(new OfflineTransform(this))
+      } else {
+        this._comm.addTransform(this.resourceTransform)
+      }
     },
 
     /**
@@ -5320,8 +5444,7 @@ var Plugin = Emitter.extend(
 // Plugin is actually a big class, I decided to separate the logic into
 // different mixin files to ease the maintainability of each file.
 // Filename convention will be plugin+xxxxx.js where xxxxx is the added functionality.
-Util.assign(Plugin.prototype, __webpack_require__(43))
-Util.assign(Plugin.prototype, __webpack_require__(46))
+Util.assign(Plugin.prototype, __webpack_require__(44))
 Util.assign(Plugin.prototype, __webpack_require__(47))
 Util.assign(Plugin.prototype, __webpack_require__(48))
 Util.assign(Plugin.prototype, __webpack_require__(49))
@@ -5329,6 +5452,7 @@ Util.assign(Plugin.prototype, __webpack_require__(50))
 Util.assign(Plugin.prototype, __webpack_require__(51))
 Util.assign(Plugin.prototype, __webpack_require__(52))
 Util.assign(Plugin.prototype, __webpack_require__(53))
+Util.assign(Plugin.prototype, __webpack_require__(54))
 
 module.exports = Plugin
 
@@ -5354,8 +5478,7 @@ var Constants = __webpack_require__(3)
 var FlowTransform = Transform.extend(
   /** @lends youbora.FlowTransform.prototype */
   {
-    _services: [Constants.Service.INIT, Constants.Service.START],
-
+    _services: [Constants.Service.INIT, Constants.Service.START, Constants.Service.OFFLINE_EVENTS],
     /**
      * Returns if transform is blocking.
      *
@@ -5383,10 +5506,167 @@ module.exports = FlowTransform
 /* 43 */
 /***/ (function(module, exports, __webpack_require__) {
 
+var YouboraObject = __webpack_require__(1)
+var Log = __webpack_require__(0)
+
+/**
+ * This class manages data storage for offline events in localStorage.
+ *
+ * @extends youbora.Emitter
+ * @memberof youbora
+ */
+var OfflineStorage = YouboraObject.extend({
+  constructor: function () {
+    this.disabledStorage = false
+    if (!localStorage) {
+      Log.error('Youbora offline events need localStorage which is not supported by your browser.')
+      this.disabledStorage = true
+    } else {
+      try {
+        localStorage.setItem('youboraTestItem', 123)
+        localStorage.removeItem('youboraTestItem')
+      }
+      catch (err) {
+        Log.error('Youbora offline events need localStorage which is not supported by your browser or settings.')
+        this.disabledStorage = true
+        return null
+      }
+    }
+    this.actualView = null
+    //this.viewList = []
+    this.givenIds = []
+    this._getOldViewList()
+  },
+
+  _newView: function () {
+    //search for first unused id
+    var viewId = this._getValidId()
+
+    // create empty view
+    var viewName = 'youboraOffline.' + viewId
+    localStorage.setItem(viewName, '')
+
+    // add to viewlist
+    this.viewList.push(viewId)
+    localStorage.setItem('youboraOffline.views', this.viewList)
+
+    // save the id
+    this.actualView = viewId
+  },
+
+  addEvent: function (event, params) {
+    if (this.disabledStorage) return null
+
+    // if event is start, create new view
+    if (event === "/start") this._newView()
+
+    // if event is init, ignore
+    if (event === "/init") return null
+
+    // if we have no view discard
+    if (!this.actualView) return null
+
+    //create event object
+    var fullEvent = "{\"request\":\"" + event.slice(1) + "\"," // {"request":"start",
+    fullEvent += "\"unixtime\":" + Date.now() + "," // "unixtime":1499876515,
+    for (param in params) {
+      if (params[param] === undefined) break
+      fullEvent += "\"" + param + "\":" // "aParam":
+      if (param === "code") {
+        fullEvent += "\"" + "CODE_PLACEHOLDER" + "\"," // "CODE_PLACEHOLDER",
+      } else if (param === "sessionId") {
+        fullEvent += "\"" + "SESSION_PLACEHOLDER" + "\"," // "SESSION_PLACEHOLDER",
+        // modify code to support offline with infinity
+      } else if (typeof params[param] === "string") {
+        fullEvent += "\"" + params[param] + "\"," // "aStringValue",
+      } else if (typeof params[param] === "object") {
+        fullEvent += "\"" + JSON.stringify(params[param]).replace(/"/g, "\\\"") + "\"," // json object
+      } else {
+        fullEvent += params[param] + ","  // 123, for example
+      }
+    }
+    fullEvent = fullEvent.slice(0, -1) // remove the last comma
+    fullEvent += "}"
+
+    // get accumulated view object
+    var viewName = 'youboraOffline.' + this.actualView
+    var temp = localStorage.getItem(viewName)
+    if (temp != "") temp = temp + ',' // comma between events
+
+    // add the event
+    localStorage.setItem(viewName, temp + fullEvent)
+  },
+
+  getView: function () {
+    if (this.disabledStorage) return null
+    if (this.viewList.length > this.givenIds.length) { // if we have any view not sent yet
+      var position = 0
+      while (true) {
+        var idToSend = this.viewList[position]
+        if (!this.givenIds.includes(idToSend)) {
+          this.givenIds.push(idToSend)
+          return ["[" + localStorage.getItem('youboraOffline.' + idToSend) + "]", idToSend]
+        }
+        position++
+      }
+    }
+    return [null, null]
+  },
+
+  removeView: function (id) {
+    if (this.disabledStorage) {
+      return null
+    }
+    var storageItemName = 'youboraOffline.' + id
+    localStorage.removeItem(storageItemName)
+    var position = this.viewList.indexOf(id)
+    if (position !== -1) this.viewList.splice(position, 1)
+    position = this.givenIds.indexOf(id)
+    if (position !== -1) this.givenIds.splice(position, 1)
+    localStorage.setItem('youboraOffline.views', this.viewList.toString())
+    if (id === this.actualView) this.actualView = null
+  },
+
+  _getOldViewList: function () {
+    var stringList = ""
+    if (localStorage['youboraOffline.views']) {
+      stringList = localStorage.getItem('youboraOffline.views')
+    } else {
+      localStorage.setItem('youboraOffline.views', '')
+    }
+
+    if (stringList === "") {
+      this.viewList = []
+    } else {
+      this.viewList = stringList.split(',')
+    }
+  },
+
+  _getValidId: function () {
+    // get a value not in the list
+    var id = Math.floor(Math.random() * 1e8).toString()
+    if (this.viewList.indexOf(id) >= 0) {
+      return this._getValidId()
+    }
+    return id
+  },
+
+  sent: function () {
+    this.givenIds = []
+  }
+})
+
+module.exports = OfflineStorage
+
+
+/***/ }),
+/* 44 */
+/***/ (function(module, exports, __webpack_require__) {
+
 var Log = __webpack_require__(0)
 var Constants = __webpack_require__(3)
 
-var Adapter = __webpack_require__(15)
+var Adapter = __webpack_require__(9)
 
 // This file is designed to add extra functionalities to Plugin class
 
@@ -5481,6 +5761,7 @@ var PluginContentMixin = {
       }
       this._send(Constants.WillSendEvent.WILL_SEND_INIT, Constants.Service.INIT, params)
       Log.notice(Constants.Service.INIT + ' ' + (params.title || params.mediaResource))
+      this._adSavedError()
     }
   },
 
@@ -5497,6 +5778,7 @@ var PluginContentMixin = {
       (!!this.options['content.title'] || !!this._adapter.getTitle())
     if (allParamsReady && !this._adapter.flags.isInited && !this.isInitiated) { //start
       this._send(Constants.WillSendEvent.WILL_SEND_START, Constants.Service.START, params)
+      this._adSavedError()
       Log.notice(Constants.Service.START + ' ' + (params.title || params.mediaResource))
       this.isStarted = true
       //chrono if had no adapter when inited
@@ -5508,6 +5790,7 @@ var PluginContentMixin = {
       this._adapter.flags.isInited = true
       this._adapter.chronos.join.start()
       this._send(Constants.WillSendEvent.WILL_SEND_START, Constants.Service.INIT, params)
+      this._adSavedError()
       Log.notice(Constants.Service.INIT + ' ' + (params.title || params.mediaResource))
     }
   },
@@ -5527,6 +5810,7 @@ var PluginContentMixin = {
           }
         }
         this._send(Constants.WillSendEvent.WILL_SEND_START, Constants.Service.START, params)
+        this._adSavedError()
         Log.notice(Constants.Service.START + ' ' + (params.title || params.mediaResource))
         this.isStarted = true
       }
@@ -5589,7 +5873,23 @@ var PluginContentMixin = {
   },
 
   _errorListener: function (e) {
-    this.fireError(e.data.params || {})
+    if (!this._blockError(e.data.params)) {
+      this.fireError(e.data.params || {})
+      this._adSavedError()
+    }
+  },
+
+  _blockError: function (errorParams) {
+    var now = Date.now()
+    var sameError = this._lastErrorParams ?
+      this._lastErrorParams.errorCode === errorParams.errorCode && this._lastErrorParams.msg === errorParams.msg : false
+    if (sameError && this._lastErrorTime + 5000 > now) {
+      this._lastErrorTime = now
+      return true
+    }
+    this._lastErrorTime = now
+    this._lastErrorParams = errorParams
+    return false
   },
 
   _stopListener: function (e) {
@@ -5615,7 +5915,7 @@ module.exports = PluginContentMixin
 
 
 /***/ }),
-/* 44 */
+/* 45 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var YouboraObject = __webpack_require__(1)
@@ -5662,7 +5962,7 @@ module.exports = PlaybackChronos
 
 
 /***/ }),
-/* 45 */
+/* 46 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var YouboraObject = __webpack_require__(1)
@@ -5715,7 +6015,7 @@ module.exports = PlaybackFlags
 
 
 /***/ }),
-/* 46 */
+/* 47 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var Util = __webpack_require__(2)
@@ -5730,7 +6030,7 @@ var PluginGetterMixin = {
    *
    * @memberof youbora.Plugin.prototype
    */
-  getHost: function() {
+  getHost: function () {
     var host = this.options['host']
     if (this.viewTransform && this.viewTransform.response && this.viewTransform.response.host) {
       host = this.viewTransform.response.host
@@ -5739,7 +6039,7 @@ var PluginGetterMixin = {
   },
 
 
-  getUserType: function() {
+  getUserType: function () {
     return this.options['userType']
   },
 
@@ -5748,7 +6048,7 @@ var PluginGetterMixin = {
    *
    * @memberof youbora.Plugin.prototype
    */
-  isParseHls: function() {
+  isParseHls: function () {
     return this.options['parse.hls']
   },
 
@@ -5757,7 +6057,7 @@ var PluginGetterMixin = {
    *
    * @memberof youbora.Plugin.prototype
    */
-  isParseCdnNode: function() {
+  isParseCdnNode: function () {
     return this.options['parse.cdnNode']
   },
 
@@ -5766,7 +6066,7 @@ var PluginGetterMixin = {
    *
    * @memberof youbora.Plugin.prototype
    */
-  isLocHeader: function() {
+  isLocHeader: function () {
     return this.options['parse.locationHeader']
   },
 
@@ -5775,7 +6075,7 @@ var PluginGetterMixin = {
    *
    * @memberof youbora.Plugin.prototype
    */
-  getParseCdnNodeList: function() {
+  getParseCdnNodeList: function () {
     return this.options['parse.cdnNode.list']
   },
 
@@ -5784,7 +6084,7 @@ var PluginGetterMixin = {
    *
    * @memberof youbora.Plugin.prototype
    */
-  getParseCdnNodeNameHeader: function() {
+  getParseCdnNodeNameHeader: function () {
     return this.options['parse.cdnNameHeader']
   },
 
@@ -5793,7 +6093,7 @@ var PluginGetterMixin = {
    *
    * @memberof youbora.Plugin.prototype
    */
-  getObfuscateIp: function() {
+  getObfuscateIp: function () {
     return this.options['obfuscateIp']
   },
 
@@ -5802,7 +6102,7 @@ var PluginGetterMixin = {
    *
    * @memberof youbora.Plugin.prototype
    */
-  getExtraparam1: function() {
+  getExtraparam1: function () {
     return this.options['extraparam.1']
   },
 
@@ -5811,7 +6111,7 @@ var PluginGetterMixin = {
    *
    * @memberof youbora.Plugin.prototype
    */
-  getExtraparam2: function() {
+  getExtraparam2: function () {
     return this.options['extraparam.2']
   },
 
@@ -5820,7 +6120,7 @@ var PluginGetterMixin = {
    *
    * @memberof youbora.Plugin.prototype
    */
-  getExtraparam3: function() {
+  getExtraparam3: function () {
     return this.options['extraparam.3']
   },
 
@@ -5829,7 +6129,7 @@ var PluginGetterMixin = {
    *
    * @memberof youbora.Plugin.prototype
    */
-  getExtraparam4: function() {
+  getExtraparam4: function () {
     return this.options['extraparam.4']
   },
   /**
@@ -5837,7 +6137,7 @@ var PluginGetterMixin = {
    *
    * @memberof youbora.Plugin.prototype
    */
-  getExtraparam5: function() {
+  getExtraparam5: function () {
     return this.options['extraparam.5']
   },
 
@@ -5846,7 +6146,7 @@ var PluginGetterMixin = {
    *
    * @memberof youbora.Plugin.prototype
    */
-  getExtraparam6: function() {
+  getExtraparam6: function () {
     return this.options['extraparam.6']
   },
 
@@ -5855,7 +6155,7 @@ var PluginGetterMixin = {
    *
    * @memberof youbora.Plugin.prototype
    */
-  getExtraparam7: function() {
+  getExtraparam7: function () {
     return this.options['extraparam.7']
   },
 
@@ -5864,7 +6164,7 @@ var PluginGetterMixin = {
    *
    * @memberof youbora.Plugin.prototype
    */
-  getExtraparam8: function() {
+  getExtraparam8: function () {
     return this.options['extraparam.8']
   },
 
@@ -5873,7 +6173,7 @@ var PluginGetterMixin = {
    *
    * @memberof youbora.Plugin.prototype
    */
-  getExtraparam9: function() {
+  getExtraparam9: function () {
     return this.options['extraparam.9']
   },
 
@@ -5882,7 +6182,7 @@ var PluginGetterMixin = {
    *
    * @memberof youbora.Plugin.prototype
    */
-  getExtraparam10: function() {
+  getExtraparam10: function () {
     return this.options['extraparam.10']
   },
 
@@ -5891,7 +6191,7 @@ var PluginGetterMixin = {
    *
    * @memberof youbora.Plugin.prototype
    */
-  getExtraparam11: function() {
+  getExtraparam11: function () {
     return this.options['extraparam.11']
   },
 
@@ -5900,7 +6200,7 @@ var PluginGetterMixin = {
    *
    * @memberof youbora.Plugin.prototype
    */
-  getExtraparam12: function() {
+  getExtraparam12: function () {
     return this.options['extraparam.12']
   },
 
@@ -5909,7 +6209,7 @@ var PluginGetterMixin = {
    *
    * @memberof youbora.Plugin.prototype
    */
-  getExtraparam13: function() {
+  getExtraparam13: function () {
     return this.options['extraparam.13']
   },
 
@@ -5918,7 +6218,7 @@ var PluginGetterMixin = {
    *
    * @memberof youbora.Plugin.prototype
    */
-  getExtraparam14: function() {
+  getExtraparam14: function () {
     return this.options['extraparam.14']
   },
   /**
@@ -5926,7 +6226,7 @@ var PluginGetterMixin = {
    *
    * @memberof youbora.Plugin.prototype
    */
-  getExtraparam15: function() {
+  getExtraparam15: function () {
     return this.options['extraparam.15']
   },
 
@@ -5935,7 +6235,7 @@ var PluginGetterMixin = {
    *
    * @memberof youbora.Plugin.prototype
    */
-  getExtraparam16: function() {
+  getExtraparam16: function () {
     return this.options['extraparam.16']
   },
 
@@ -5944,7 +6244,7 @@ var PluginGetterMixin = {
    *
    * @memberof youbora.Plugin.prototype
    */
-  getExtraparam17: function() {
+  getExtraparam17: function () {
     return this.options['extraparam.17']
   },
 
@@ -5953,7 +6253,7 @@ var PluginGetterMixin = {
    *
    * @memberof youbora.Plugin.prototype
    */
-  getExtraparam18: function() {
+  getExtraparam18: function () {
     return this.options['extraparam.18']
   },
 
@@ -5962,7 +6262,7 @@ var PluginGetterMixin = {
    *
    * @memberof youbora.Plugin.prototype
    */
-  getExtraparam19: function() {
+  getExtraparam19: function () {
     return this.options['extraparam.19']
   },
 
@@ -5971,7 +6271,7 @@ var PluginGetterMixin = {
    *
    * @memberof youbora.Plugin.prototype
    */
-  getExtraparam20: function() {
+  getExtraparam20: function () {
     return this.options['extraparam.20']
   },
 
@@ -5980,7 +6280,7 @@ var PluginGetterMixin = {
    *
    * @memberof youbora.Plugin.prototype
    */
-  getAdExtraparam1: function() {
+  getAdExtraparam1: function () {
     return this.options['ad.extraparam.1']
   },
 
@@ -5989,7 +6289,7 @@ var PluginGetterMixin = {
    *
    * @memberof youbora.Plugin.prototype
    */
-  getAdExtraparam2: function() {
+  getAdExtraparam2: function () {
     return this.options['ad.extraparam.2']
   },
 
@@ -5998,7 +6298,7 @@ var PluginGetterMixin = {
    *
    * @memberof youbora.Plugin.prototype
    */
-  getAdExtraparam3: function() {
+  getAdExtraparam3: function () {
     return this.options['ad.extraparam.3']
   },
 
@@ -6007,7 +6307,7 @@ var PluginGetterMixin = {
    *
    * @memberof youbora.Plugin.prototype
    */
-  getAdExtraparam4: function() {
+  getAdExtraparam4: function () {
     return this.options['ad.extraparam.4']
   },
   /**
@@ -6015,7 +6315,7 @@ var PluginGetterMixin = {
    *
    * @memberof youbora.Plugin.prototype
    */
-  getAdExtraparam5: function() {
+  getAdExtraparam5: function () {
     return this.options['ad.extraparam.5']
   },
 
@@ -6024,7 +6324,7 @@ var PluginGetterMixin = {
    *
    * @memberof youbora.Plugin.prototype
    */
-  getAdExtraparam6: function() {
+  getAdExtraparam6: function () {
     return this.options['ad.extraparam.6']
   },
 
@@ -6033,7 +6333,7 @@ var PluginGetterMixin = {
    *
    * @memberof youbora.Plugin.prototype
    */
-  getAdExtraparam7: function() {
+  getAdExtraparam7: function () {
     return this.options['ad.extraparam.7']
   },
 
@@ -6042,7 +6342,7 @@ var PluginGetterMixin = {
    *
    * @memberof youbora.Plugin.prototype
    */
-  getAdExtraparam8: function() {
+  getAdExtraparam8: function () {
     return this.options['ad.extraparam.8']
   },
 
@@ -6051,7 +6351,7 @@ var PluginGetterMixin = {
    *
    * @memberof youbora.Plugin.prototype
    */
-  getAdExtraparam9: function() {
+  getAdExtraparam9: function () {
     return this.options['ad.extraparam.9']
   },
 
@@ -6060,7 +6360,7 @@ var PluginGetterMixin = {
    *
    * @memberof youbora.Plugin.prototype
    */
-  getAdExtraparam10: function() {
+  getAdExtraparam10: function () {
     return this.options['ad.extraparam.10']
   },
 
@@ -6069,7 +6369,7 @@ var PluginGetterMixin = {
    *
    * @memberof youbora.Plugin.prototype
    */
-  getPluginInfo: function() {
+  getPluginInfo: function () {
     var ret = {
       lib: version,
       adapter: this.getAdapterVersion(),
@@ -6083,7 +6383,7 @@ var PluginGetterMixin = {
    *
    * @memberof youbora.Plugin.prototype
    */
-  getIp: function() {
+  getIp: function () {
     return this.options['network.ip']
   },
 
@@ -6092,7 +6392,7 @@ var PluginGetterMixin = {
    *
    * @memberof youbora.Plugin.prototype
    */
-  getIsp: function() {
+  getIsp: function () {
     return this.options['network.isp']
   },
 
@@ -6101,7 +6401,7 @@ var PluginGetterMixin = {
    *
    * @memberof youbora.Plugin.prototype
    */
-  getConnectionType: function() {
+  getConnectionType: function () {
     return this.options['network.connectionType']
   },
 
@@ -6110,7 +6410,7 @@ var PluginGetterMixin = {
    *
    * @memberof youbora.Plugin.prototype
    */
-  getDeviceCode: function() {
+  getDeviceCode: function () {
     return this.options['device.code']
   },
 
@@ -6119,7 +6419,7 @@ var PluginGetterMixin = {
    *
    * @memberof youbora.Plugin.prototype
    */
-  getAccountCode: function() {
+  getAccountCode: function () {
     return this.options['accountCode']
   },
 
@@ -6128,7 +6428,7 @@ var PluginGetterMixin = {
    *
    * @memberof youbora.Plugin.prototype
    */
-  getUsername: function() {
+  getUsername: function () {
     return this.options['username']
   },
 
@@ -6137,7 +6437,7 @@ var PluginGetterMixin = {
    *
    * @memberof youbora.Plugin.prototype
    */
-  getReferer: function() {
+  getReferer: function () {
     if (this.options['referer']) return this.options['referer']
     var ret = ''
     if (typeof window !== 'undefined' && window.location) {
@@ -6151,7 +6451,7 @@ var PluginGetterMixin = {
    *
    * @memberof youbora.Plugin.prototype
    */
-  getNodeHost: function() {
+  getNodeHost: function () {
     return this.options['content.cdnNode'] || this.resourceTransform.getNodeHost()
   },
 
@@ -6160,7 +6460,7 @@ var PluginGetterMixin = {
    *
    * @memberof youbora.Plugin.prototype
    */
-  getNodeType: function() {
+  getNodeType: function () {
     return this.options['content.cdnType'] || this.resourceTransform.getNodeType()
   },
 
@@ -6169,7 +6469,7 @@ var PluginGetterMixin = {
    *
    * @memberof youbora.Plugin.prototype
    */
-  getNodeTypeString: function() {
+  getNodeTypeString: function () {
     return this.resourceTransform.getNodeTypeString()
   },
 
@@ -6178,11 +6478,20 @@ var PluginGetterMixin = {
    *
    * @memberof youbora.Plugin.prototype
    */
-  getRequestNumber: function() {
+  getRequestNumber: function () {
     return Math.random()
   },
 
-  getExperiments: function() {
+  /**
+  * Returns a whole offline view and its id.
+  *
+  * @memberof youbora.Plugin.prototype
+  */
+  getOfflineView: function () {
+    return this.offlineStorage.getView()
+  },
+
+  getExperiments: function () {
     if (this.options['experiments'].length > 0) return this.options['experiments']
     return null
   }
@@ -6190,8 +6499,9 @@ var PluginGetterMixin = {
 
 module.exports = PluginGetterMixin
 
+
 /***/ }),
-/* 47 */
+/* 48 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var Log = __webpack_require__(0)
@@ -6754,13 +7064,13 @@ module.exports = PluginContentGetterMixin
 
 
 /***/ }),
-/* 48 */
+/* 49 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var Log = __webpack_require__(0)
 var Constants = __webpack_require__(3)
 
-var Adapter = __webpack_require__(15)
+var Adapter = __webpack_require__(9)
 
 // This file is designed to add extra functionalities to Plugin class
 
@@ -6940,6 +7250,11 @@ var PluginAdsMixin = {
         this._adapter.chronos.join.startTime + this._adsAdapter.chronos.total.getDeltaTime(),
         new Date().getTime()
       )
+    } else if (!this._adapter && this.isInitiated) {
+      this.initChrono.startTime = Math.min(
+        this.initChrono.startTime + this._adsAdapter.chronos.total.getDeltaTime(),
+        new Date().getTime()
+      )
     }
 
     var params = e.data.params || {}
@@ -6950,20 +7265,38 @@ var PluginAdsMixin = {
 
   _adErrorListener: function (e) {
     var params = e.data.params || {}
-    if (this._adapter && !this._adapter.flags.isStarted) {
-      /*if (!this._adapter.flags.isInited) {
-        e.data.params.errorLevel = "instreamfailure"
-        if (!this.options['ad.ignore']) this._errorListener(e)
-        // decrease the viewcode in 1 if you want to have the error with the rest of the view
-        return null
-      }*/
-      params.adNumber = this.requestBuilder.lastSent.adNumber
-      //this._adapter.fireStart()
-    } else {
+    if (this._adapter && !this._adapter.flags.isStarted && !this._adapter.flags.isInited && !this.isInitiated) {
+      this._savedAdError = e;
+      return null // Ignore ad errors before content
+    }
+    if (this._blockAdError(e.data.params)) return null
+    if (!this._adsAdapter || (!this._adsAdapter.flags.isStarted && !this._adsAdapter.flags.isInited)) {
       params.adNumber = this.requestBuilder.getNewAdNumber()
+    } else {
+      params.adNumber = this.requestBuilder.lastSent.adNumber
     }
     if (!this.options['ad.ignore']) this._send(Constants.WillSendEvent.WILL_SEND_AD_ERROR, Constants.Service.AD_ERROR, params)
     Log.notice(Constants.Service.AD_ERROR)
+  },
+
+  _adSavedError: function () {
+    if (this._savedAdError) {
+      this._adErrorListener(this._savedAdError)
+      this._savedAdError = null
+    }
+  },
+
+  _blockAdError: function (errorParams) {
+    var now = Date.now()
+    var sameError = this._lastAdErrorParams ?
+      this._lastAdErrorParams.errorCode === errorParams.errorCode && this._lastAdErrorParams.msg === errorParams.msg : false
+    if (sameError && this._lastAdErrorTime + 5000 > now) {
+      this._lastAdErrorTime = now
+      return true
+    }
+    this._lastAdErrorTime = now
+    this._lastAdErrorParams = errorParams
+    return false
   },
 
   _adClickListener: function (e) {
@@ -6985,7 +7318,7 @@ module.exports = PluginAdsMixin
 
 
 /***/ }),
-/* 49 */
+/* 50 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var Log = __webpack_require__(0)
@@ -7227,7 +7560,7 @@ module.exports = PluginAdsGettersMixin
 
 
 /***/ }),
-/* 50 */
+/* 51 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var Log = __webpack_require__(0)
@@ -7310,12 +7643,14 @@ module.exports = PluginPingMixin
 
 
 /***/ }),
-/* 51 */
+/* 52 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var Log = __webpack_require__(0)
 var Util = __webpack_require__(2)
 var Constants = __webpack_require__(3)
+var RequestBuilder = __webpack_require__(15)
+var Transform = __webpack_require__(6)
 
 // This file is designed to add extra functionalities to Plugin class
 
@@ -7326,7 +7661,7 @@ var PluginFireMixin = {
    *
    * @memberof youbora.Plugin.prototype
    */
-  firePreloadBegin: function() {
+  firePreloadBegin: function () {
     if (!this.isPreloading) {
       this.isPreloading = true
       this.preloadChrono.start()
@@ -7338,7 +7673,7 @@ var PluginFireMixin = {
    *
    * @memberof youbora.Plugin.prototype
    */
-  firePreloadEnd: function() {
+  firePreloadEnd: function () {
     if (this.isPreloading) {
       this.isPreloading = false
       this.preloadChrono.stop()
@@ -7353,7 +7688,7 @@ var PluginFireMixin = {
    *
    * @memberof youbora.Plugin.prototype
    */
-  fireInit: function(params) {
+  fireInit: function (params) {
     if (!this.isInitiated) {
       if (!this.getAdapter() || (this.getAdapter() && !this.getAdapter().flags.isInited && !this.getAdapter().flags.isStarted)) {
         this.viewTransform.nextView()
@@ -7364,6 +7699,7 @@ var PluginFireMixin = {
 
         params = params || {}
         this._send(Constants.WillSendEvent.WILL_SEND_INIT, Constants.Service.INIT, params)
+        this._adSavedError()
         Log.notice(Constants.Service.INIT + ' ' + (params.title || params.mediaResource))
       }
     }
@@ -7380,12 +7716,13 @@ var PluginFireMixin = {
    *
    * @memberof youbora.Plugin.prototype
    */
-  fireError: function(object, msg, metadata, level) {
+  fireError: function (object, msg, metadata, level) {
     if (!this.isInitiated && (!this.getAdapter() || (!this.getAdapter().flags.isStarted && !this.getAdapter().flags.isInited))) this.viewTransform.nextView()
     if (!this._comm) this._initComm()
     var params = Util.buildErrorParams(object, msg, metadata, level)
 
     this._send(Constants.WillSendEvent.WILL_SEND_ERROR, Constants.Service.ERROR, params)
+    this._adSavedError()
     Log.notice(Constants.Service.ERROR +
       ' ' + params.errorLevel +
       ' ' + params.errorCode
@@ -7406,7 +7743,7 @@ var PluginFireMixin = {
    *
    * @memberof youbora.Plugin.prototype
    */
-  fireFatalError: function(object, msg, metadata) {
+  fireFatalError: function (object, msg, metadata) {
     this.options['ad.afterStop'] = 0
     this.fireError(object, msg, metadata, 'fatal')
     if (this._adapter) { this._adapter.fireStop() } else { this.fireStop() }
@@ -7420,7 +7757,7 @@ var PluginFireMixin = {
    *
    * @memberof youbora.Plugin.prototype
    */
-  fireStop: function(params) {
+  fireStop: function (params) {
     if (params && params.end !== undefined && params.end) {
       params.end = undefined
       this.options['ad.afterStop'] = 0
@@ -7446,20 +7783,65 @@ var PluginFireMixin = {
       Log.notice(Constants.Service.STOP + ' at ' + params.playhead + 's')
       this._reset()
     }
+  },
+
+  /**
+   * Fires /offlineEvents. If offline is disabled, will try to send all the views stored.
+   *
+   * @param {Object} [params] Object of key:value params.
+   *
+   * @memberof youbora.Plugin.prototype
+   */
+  fireOfflineEvents: function (params) {
+    if (this.options && !this.options['offline']) {
+      if ((!this._adapter || (!this._adapter.flags.isStarted && !this._adapter.flags.isInited)) &&
+        (!this._adsAdapter || (!this._adsAdapter.flags.isStarted && !this._adsAdapter.flags.isInited))) {
+        this._offlineParams = params
+        if (this.viewTransform.response.code && this.viewTransform.response.host) {
+          this._generateAndSendOffline()
+        } else {
+          this.offlineReference = this._generateAndSendOffline.bind(this)
+          this.viewTransform.on(Transform.Event.DONE, this.offlineReference)
+        }
+      } else {
+        Log.error("Adapters have to be stopped")
+      }
+    } else {
+      Log.error("To send offline events, offline option must be disabled")
+    }
+  },
+
+  _generateAndSendOffline: function () {
+    var params = this._offlineParams
+    this._initComm()
+    while (true) {
+      var bodyAndId = this.requestBuilder.buildBody(Constants.Service.OFFLINE_EVENTS).viewJson
+      if (bodyAndId[0] === null) break
+      var newViewCode = this.viewTransform.nextView()
+      var body = bodyAndId[0].replace(/CODE_PLACEHOLDER/g, newViewCode.toString())
+        .replace(/,"sessionId":"SESSION_PLACEHOLDER"/g, "") // modify to support offline+infinity
+      this._send(Constants.WillSendEvent.WILL_SEND_OFFLINE_EVENTS, Constants.Service.OFFLINE_EVENTS,
+        params, body, "POST", function (a, callbackParams) {
+          this.offlineStorage.removeView(callbackParams['offlineId'])
+        }.bind(this), { 'offlineId': bodyAndId[1] })
+    }
+    this.offlineStorage.sent()
+    this._offlineParams = null
   }
 }
 
 module.exports = PluginFireMixin
 
+
 /***/ }),
-/* 52 */
+/* 53 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var Constants = __webpack_require__(3)
 var Log = __webpack_require__(0)
 var YBRequest = __webpack_require__(5)
 
-var YouboraInfinity = __webpack_require__(14)
+var YouboraInfinity = __webpack_require__(16)
 
 // This file is designed to add extra functionalities to Plugin class
 
@@ -7558,7 +7940,7 @@ module.exports = PluginInfinityMixin
 
 
 /***/ }),
-/* 53 */
+/* 54 */
 /***/ (function(module, exports) {
 
 // This file is designed to add extra functionalities to Plugin class
@@ -7599,7 +7981,112 @@ module.exports = PluginInfinityGettersMixin
 
 
 /***/ }),
-/* 54 */
+/* 55 */
+/***/ (function(module, exports, __webpack_require__) {
+
+var Adapter = __webpack_require__(9)
+var Util = __webpack_require__(2)
+
+var StandardAdapter = Adapter.extend(
+  /** @lends youbora.StandardAdapter.prototype */
+  {
+    /**
+     * Override to return a json object with the following:
+     *
+     * [{
+      'object': player object that emmits events,
+      'suscriber': method of the player object used to register listeners,
+      'unsuscriber': method of the player used to unregister listeners,
+      'events': {
+        event name: adapter method to be called when the event is triggered,
+        ...
+      }
+    }]
+     */
+    getListenersList: function () {
+    },
+
+    /**
+     * It calls initializeAdapter and ListenersList getter, to register the methods to the right
+     * events keeping a reference list to be able to unregister them.
+     * Also registers all of them in the logAllEvents to debug.
+     */
+    registerListeners: function () {
+      if (this._registeredListeners && this._registeredListeners.length != 0) return null
+      var listeners = this.getListenersList()
+      this._registeredListeners = []
+      // Register listeners
+      for (var index in listeners) {
+        var playerObject = listeners[index]['object']
+        if (!playerObject) playerObject = this.player
+        var suscriber = listeners[index]['suscriber']
+        if (!suscriber) {
+          if (typeof playerObject.addEventListener === 'function') {
+            suscriber = 'addEventListener'
+          } else if (typeof playerObject.on === 'function') {
+            suscriber = 'on'
+          }
+        }
+        var unsuscriber = listeners[index]['unsuscriber']
+        if (!unsuscriber) {
+          if (typeof playerObject.removeEventListener === 'function') {
+            unsuscriber = 'removeEventListener'
+          } else if (typeof playerObject.off === 'function') {
+            unsuscriber = 'off'
+          }
+        }
+        var references = listeners[index]['events']
+
+        // Console all events if logLevel=DEBUG
+        var eventList = []
+        //get a list for all events of the player
+        for (var subindex in references) {
+          eventList.push(subindex)
+        }
+        if (suscriber === "addEventListener" || suscriber === "on") {
+          Util.logAllEvents(playerObject, [null].concat(eventList))
+        } else {
+          Util.logAllEvents(playerObject[suscriber], [null].concat(eventList))
+        }
+
+        // register methods
+        for (var key in references) {
+          if (references[key]) {
+            this._registeredListeners.push([playerObject, unsuscriber, key, references[key].bind(this)])
+            var position = this._registeredListeners.length - 1
+            playerObject[suscriber](key, this._registeredListeners[position][3])
+          }
+        }
+      }
+    },
+
+    /**
+     * It unregisters everything registered with registerListeners before.
+     */
+    /** Unregister listeners to this.player. */
+    unregisterListeners: function () {
+      // Disable playhead monitoring
+      this.monitor.stop()
+      // Unregister the saved listeners
+      if (this._registeredListeners.length === 0) return null
+      for (var key in this._registeredListeners) {
+        var object = this._registeredListeners[key]
+        var playerObject = object[0]
+        var unsuscriber = object[1]
+        var event = object[2]
+        var listener = object[3]
+        playerObject[unsuscriber](event, listener)
+      }
+      this._registeredListeners = []
+    }
+  }
+)
+
+module.exports = StandardAdapter
+
+
+/***/ }),
+/* 56 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -7610,15 +8097,17 @@ Object.defineProperty(exports, "__esModule", {
 });
 exports.YouboraAdapter = undefined;
 
-var _youboralib = __webpack_require__(10);
+var _youboralib = __webpack_require__(11);
 
 var _youboralib2 = _interopRequireDefault(_youboralib);
 
-var _playkitJs = __webpack_require__(9);
+var _playkitJs = __webpack_require__(10);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
-var YouboraAdapter = _youboralib2.default.Adapter.extend({
+function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
+
+var YouboraAdapter = _youboralib2.default.StandardAdapter.extend({
 
   constructor: function constructor(player, config) {
     this.config = config;
@@ -7693,39 +8182,14 @@ var YouboraAdapter = _youboralib2.default.Adapter.extend({
     return this.config.householdId;
   },
 
-  /**  @returns {void} - Register listeners to this.player. */
-  registerListeners: function registerListeners() {
-    this.deltaErrorTime = 5000; // Threshold time to ignore repeated errors
+  /**  @returns {void} - Return a list of events and methods to suscribe from this.player. */
+  getListenersList: function getListenersList() {
+    var _events;
+
     var Event = this.player.Event;
-    // References
-    this.references = [];
-    this.references[Event.PLAY] = this.playListener.bind(this);
-    this.references[Event.LOAD_START] = this.loadListener.bind(this);
-    this.references[Event.PAUSE] = this.pauseListener.bind(this);
-    this.references[Event.PLAYING] = this.playingListener.bind(this);
-    this.references[Event.ERROR] = this.errorListener.bind(this);
-    this.references[Event.SEEKING] = this.seekingListener.bind(this);
-    this.references[Event.SEEKED] = this.seekedListener.bind(this);
-    this.references[Event.PLAYER_STATE_CHANGED] = this.stateChangeListener.bind(this);
-    this.references[Event.ENDED] = this.endedListener.bind(this);
-    this.references[Event.CHANGE_SOURCE_STARTED] = this.forceEndedListener.bind(this);
-
-    // Register listeners
-    for (var key in this.references) {
-      this.player.addEventListener(key, this.references[key]);
-    }
-  },
-
-  /**  @returns {void} - Unregister listeners to this.player. */
-  unregisterListeners: function unregisterListeners() {
-
-    // unregister listeners
-    if (this.player && this.references) {
-      for (var key in this.references) {
-        this.player.removeEventListener(key, this.references[key]);
-      }
-      this.references = [];
-    }
+    return [{
+      events: (_events = {}, _defineProperty(_events, Event.PLAY, this.playListener), _defineProperty(_events, Event.LOAD_START, this.loadListener), _defineProperty(_events, Event.PAUSE, this.pauseListener), _defineProperty(_events, Event.PLAYING, this.playingListener), _defineProperty(_events, Event.ERROR, this.errorListener), _defineProperty(_events, Event.SEEKING, this.seekingListener), _defineProperty(_events, Event.SEEKED, this.seekedListener), _defineProperty(_events, Event.PLAYER_STATE_CHANGED, this.stateChangeListener), _defineProperty(_events, Event.ENDED, this.endedListener), _defineProperty(_events, Event.CHANGE_SOURCE_STARTED, this.forceEndedListener), _events)
+    }];
   },
 
   /** @returns {void}
@@ -7772,12 +8236,6 @@ var YouboraAdapter = _youboralib2.default.Adapter.extend({
    * @param {Object} e - object with payload including severity, code and data.
    * - The name of the plugin.- Listener for 'error' event. */
   errorListener: function errorListener(e) {
-    var now = new Date().getTime();
-    if (this.lastErrorCode === e.payload.code && this.lastErrorTime + this.deltaErrorTime > now) {
-      return null;
-    }
-    this.lastErrorCode = e.payload.code;
-    this.lastErrorTime = now;
     if (e.payload.severity === _playkitJs.Error.Severity.CRITICAL) {
       this.fireError(e.payload.code, e.payload.data);
       this.fireStop();
@@ -7833,10 +8291,11 @@ var YouboraAdapter = _youboralib2.default.Adapter.extend({
     this.initialPlayhead = null;
   }
 });
+
 exports.YouboraAdapter = YouboraAdapter;
 
 /***/ }),
-/* 55 */
+/* 57 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -7847,13 +8306,15 @@ Object.defineProperty(exports, "__esModule", {
 });
 exports.NativeAdsAdapter = undefined;
 
-var _youboralib = __webpack_require__(10);
+var _youboralib = __webpack_require__(11);
 
 var _youboralib2 = _interopRequireDefault(_youboralib);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
-var NativeAdsAdapter = _youboralib2.default.Adapter.extend({
+function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
+
+var NativeAdsAdapter = _youboralib2.default.StandardAdapter.extend({
 
   /**  @returns {String} - current plugin version */
   getVersion: function getVersion() {
@@ -7876,16 +8337,13 @@ var NativeAdsAdapter = _youboralib2.default.Adapter.extend({
 
   /**  @returns {String} - current ad position (only ads) */
   getPosition: function getPosition() {
-    var PREROLL = "pre";
-    var MIDROLL = "mid";
-    var POSTROLL = "post";
-    var returnValue = MIDROLL;
+    var returnValue = _youboralib2.default.Adapter.AdPosition.MIDROLL;
     switch (this.adPosition) {
       case "preroll":
-        returnValue = PREROLL;
+        returnValue = _youboralib2.default.Adapter.AdPosition.PREROLL;
         break;
       case "postroll":
-        returnValue = POSTROLL;
+        returnValue = _youboralib2.default.Adapter.AdPosition.POSTROLL;
         break;
       case "midroll":
         break;
@@ -7894,46 +8352,22 @@ var NativeAdsAdapter = _youboralib2.default.Adapter.extend({
         break;
       default:
         if (!this.plugin.getAdapter().flags.isJoined) {
-          returnValue = PREROLL;
+          returnValue = _youboralib2.default.Adapter.AdPosition.PREROLL;
         } else if (!this.plugin.getAdapter().getIsLive() && this.plugin.getAdapter().getPlayhead() > this.plugin.getAdapter().getDuration() - 1) {
-          returnValue = POSTROLL;
+          returnValue = _youboralib2.default.Adapter.AdPosition.POSTROLL;
         }
     }
     return returnValue;
   },
 
-  /**  @returns {void} - Register listeners to this.player. */
-  registerListeners: function registerListeners() {
-    this.deltaErrorTime = 5000; // Threshold time to ignore repeated errors
+  /**  @returns {void} - Return a list of events and methods to suscribe from this.player. */
+  getListenersList: function getListenersList() {
+    var _events;
+
     var Event = this.player.Event;
-    // Register listeners
-    this.references = [];
-    this.references[Event.AD_LOADED] = this.loadedAdListener.bind(this);
-    this.references[Event.AD_STARTED] = this.startAdListener.bind(this);
-    this.references[Event.AD_RESUMED] = this.resumeAdListener.bind(this);
-    this.references[Event.AD_PAUSED] = this.pauseAdListener.bind(this);
-    this.references[Event.AD_CLICKED] = this.clickAdListener.bind(this);
-    this.references[Event.AD_SKIPPED] = this.skipAdListener.bind(this);
-    this.references[Event.AD_COMPLETED] = this.stopAdListener.bind(this);
-    this.references[Event.AD_ERROR] = this.errorAdListener.bind(this);
-    this.references[Event.AD_PROGRESS] = this.progressAdListener.bind(this);
-    this.references[Event.ALL_ADS_COMPLETED] = this.allAdsCompletedListener.bind(this);
-
-    for (var key in this.references) {
-      this.player.addEventListener(key, this.references[key]);
-    }
-  },
-
-  /**  @returns {void} - Unregister listeners to this.player. */
-  unregisterListeners: function unregisterListeners() {
-
-    // unregister listeners
-    if (this.player && this.references) {
-      for (var key in this.references) {
-        this.player.removeEventListener(key, this.references[key]);
-      }
-      this.references = [];
-    }
+    return [{
+      events: (_events = {}, _defineProperty(_events, Event.AD_LOADED, this.loadedAdListener), _defineProperty(_events, Event.AD_STARTED, this.startAdListener), _defineProperty(_events, Event.AD_RESUMED, this.resumeAdListener), _defineProperty(_events, Event.AD_PAUSED, this.pauseAdListener), _defineProperty(_events, Event.AD_CLICKED, this.clickAdListener), _defineProperty(_events, Event.AD_SKIPPED, this.skipAdListener), _defineProperty(_events, Event.AD_COMPLETED, this.stopAdListener), _defineProperty(_events, Event.AD_ERROR, this.errorAdListener), _defineProperty(_events, Event.AD_PROGRESS, this.progressAdListener), _defineProperty(_events, Event.ALL_ADS_COMPLETED, this.allAdsCompletedListener), _events)
+    }];
   },
 
   loadedAdListener: function loadedAdListener(e) {
@@ -7962,7 +8396,7 @@ var NativeAdsAdapter = _youboralib2.default.Adapter.extend({
   },
 
   clickAdListener: function clickAdListener() {
-    this.fireClick({ url: this.adObject.clickThroughUrl });
+    this.fireClick({ adUrl: this.adObject.clickThroughUrl });
   },
 
   skipAdListener: function skipAdListener() {
@@ -7971,14 +8405,8 @@ var NativeAdsAdapter = _youboralib2.default.Adapter.extend({
   },
 
   errorAdListener: function errorAdListener(e) {
-    var now = new Date().getTime();
-    if (this.lastErrorCode === e.payload.error.code && this.lastErrorTime + this.deltaErrorTime > now) {
-      return null;
-    }
-    this.lastErrorCode = e.payload.error.code;
-    this.lastErrorTime = now;
     this.fireError(e.payload.error.code, e.payload.error.message);
-    if (this.getPosition() === "post") {
+    if (this.getPosition() === _youboralib2.default.Adapter.AdPosition.POSTROLL) {
       this.plugin.getAdapter().stopBlockedByAds = false;
       this.plugin.getAdapter().fireStop();
     }
@@ -7987,7 +8415,7 @@ var NativeAdsAdapter = _youboralib2.default.Adapter.extend({
   allAdsCompletedListener: function allAdsCompletedListener() {
     this.fireStop();
     this.plugin.getAdapter().stopBlockedByAds = false;
-    if (this.getPosition() === "post") this.plugin.getAdapter().fireStop();
+    if (this.getPosition() === _youboralib2.default.Adapter.AdPosition.POSTROLL) this.plugin.getAdapter().fireStop();
     this.adPosition = null;
   },
 
@@ -7999,7 +8427,7 @@ var NativeAdsAdapter = _youboralib2.default.Adapter.extend({
   resetFlags: function resetFlags() {
     this.currentTime = null;
     this.adObject = null;
-    if (this.getPosition() === "post") {
+    if (this.getPosition() === _youboralib2.default.Adapter.AdPosition.POSTROLL) {
       this.adPosition = null;
     }
   }

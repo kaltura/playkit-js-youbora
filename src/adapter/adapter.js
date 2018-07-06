@@ -3,7 +3,7 @@ import youbora from 'youboralib'
 import { Error } from 'playkit-js'
 import { MediaType } from 'playkit-js'
 
-let YouboraAdapter = youbora.Adapter.extend({
+let YouboraAdapter = youbora.StandardAdapter.extend({
 
   constructor: function (player, config) {
     this.config = config
@@ -78,39 +78,23 @@ let YouboraAdapter = youbora.Adapter.extend({
     return this.config.householdId
   },
 
-  /**  @returns {void} - Register listeners to this.player. */
-  registerListeners: function () {
-    this.deltaErrorTime = 5000 // Threshold time to ignore repeated errors
+  /**  @returns {void} - Return a list of events and methods to suscribe from this.player. */
+  getListenersList: function () {
     const Event = this.player.Event
-    // References
-    this.references = []
-    this.references[Event.PLAY] = this.playListener.bind(this)
-    this.references[Event.LOAD_START] = this.loadListener.bind(this)
-    this.references[Event.PAUSE] = this.pauseListener.bind(this)
-    this.references[Event.PLAYING] = this.playingListener.bind(this)
-    this.references[Event.ERROR] = this.errorListener.bind(this)
-    this.references[Event.SEEKING] = this.seekingListener.bind(this)
-    this.references[Event.SEEKED] = this.seekedListener.bind(this)
-    this.references[Event.PLAYER_STATE_CHANGED] = this.stateChangeListener.bind(this)
-    this.references[Event.ENDED] = this.endedListener.bind(this)
-    this.references[Event.CHANGE_SOURCE_STARTED] = this.forceEndedListener.bind(this)
-
-    // Register listeners
-    for (let key in this.references) {
-      this.player.addEventListener(key, this.references[key])
-    }
-  },
-
-  /**  @returns {void} - Unregister listeners to this.player. */
-  unregisterListeners: function () {
-
-    // unregister listeners
-    if (this.player && this.references) {
-      for (let key in this.references) {
-        this.player.removeEventListener(key, this.references[key])
+    return [{
+      events: {
+        [Event.PLAY]: this.playListener,
+        [Event.LOAD_START]: this.loadListener,
+        [Event.PAUSE]: this.pauseListener,
+        [Event.PLAYING]: this.playingListener,
+        [Event.ERROR]: this.errorListener,
+        [Event.SEEKING]: this.seekingListener,
+        [Event.SEEKED]: this.seekedListener,
+        [Event.PLAYER_STATE_CHANGED]: this.stateChangeListener,
+        [Event.ENDED]: this.endedListener,
+        [Event.CHANGE_SOURCE_STARTED]: this.forceEndedListener,
       }
-      this.references = []
-    }
+    }]
   },
 
   /** @returns {void}
@@ -158,12 +142,6 @@ let YouboraAdapter = youbora.Adapter.extend({
    * @param {Object} e - object with payload including severity, code and data.
    * - The name of the plugin.- Listener for 'error' event. */
   errorListener: function (e) {
-    let now = new Date().getTime()
-    if (this.lastErrorCode === e.payload.code && this.lastErrorTime + this.deltaErrorTime > now) {
-      return null
-    }
-    this.lastErrorCode = e.payload.code
-    this.lastErrorTime = now
     if (e.payload.severity === Error.Severity.CRITICAL) {
       this.fireError(e.payload.code, e.payload.data)
       this.fireStop()
