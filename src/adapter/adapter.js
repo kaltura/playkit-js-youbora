@@ -34,7 +34,7 @@ let YouboraAdapter = youbora.StandardAdapter.extend({
   getBitrate: function () {
     let activeVideo = this.player.getActiveTracks().video
     if (activeVideo && activeVideo.bandwidth) {
-      return activeVideo.bandwidth
+      return isNaN(activeVideo.bandwidth) ? null : activeVideo.bandwidth
     }
     return null
   },
@@ -43,6 +43,9 @@ let YouboraAdapter = youbora.StandardAdapter.extend({
   getRendition: function () {
     let activeVideo = this.player.getActiveTracks().video
     if (activeVideo) {
+      if (isNaN(activeVideo.bandwidth)) {
+        return null
+      }
       return youbora.Util.buildRenditionString(activeVideo.width, activeVideo.height, activeVideo.bandwidth)
     }
     return null
