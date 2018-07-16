@@ -1,3 +1,3 @@
-import * as Playkit from 'playkit-js'
+import * as Playkit from 'playkit-js';
 
 window.Playkit = Playkit;
