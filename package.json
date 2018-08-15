@@ -1,5 +1,5 @@
 {
-  "name": "playkit-js-youbora",
+  "name": "@playkit-js/playkit-js-youbora",
   "version": "0.4.3",
   "main": "dist/playkit-youbora.js",
   "scripts": {
@@ -10,10 +10,9 @@
     "watch": "webpack --progress --colors --watch",
     "test": "NODE_ENV=test karma start --color",
     "release": "standard-version",
-    "publish": "git push --follow-tags --no-verify origin master",
+    "pushTaggedRelease": "git push --follow-tags --no-verify origin master",
     "eslint": "eslint . --color",
     "flow": "flow check",
-    "commit:dist": "git add --force --all dist && (git commit -m 'chore: update dist' || exit 0)",
     "precommit": "lint-staged"
   },
   "lint-staged": {
@@ -25,11 +24,6 @@
       "prettier --write",
       "git add"
     ]
-  },
-  "standard-version": {
-    "scripts": {
-      "postbump": "yarn run build && npm run commit:dist"
-    }
   },
   "devDependencies": {
     "babel-cli": "^6.18.0",
@@ -82,7 +76,18 @@
   "peerDependencies": {
     "playkit-js": "https://github.com/kaltura/playkit-js.git#v0.31.2"
   },
-  "keywords": [],
+  "keywords": [
+    "kaltura",
+    "analytics",
+    "youbora",
+    "NPAW",
+    "QOE",
+    "QOS",
+    "player",
+    "playkit-js",
+    "playkit-js-youbora",
+    "html5 player"
+  ],
   "license": "AGPL-3.0",
   "repository": {
     "type": "git",
