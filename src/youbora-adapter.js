@@ -99,59 +99,66 @@ $YB.plugins.KalturaV3.prototype.getIsLive = function() {
  * @returns {void}
  */
 $YB.plugins.KalturaV3.prototype.registerListeners = function() {
-  // save context
-  let context = this;
   let Event = this.player.Event;
   let State = this.player.State;
 
   // Play is clicked (/start)
-  this.player.addEventListener(Event.PLAY, function() {
-    context.playHandler();
+  this.player.addEventListener(Event.PLAY, () => {
+    this.playHandler();
   });
 
   // video ends (stop)
-  this.player.addEventListener(Event.ENDED, function() {
-    context.endedHandler();
+  this.player.addEventListener(Event.ENDED, () => {
+    this.endedHandler();
   });
 
-  this.player.addEventListener(Event.PLAYING, function() {
-    context.playingHandler();
+  this.player.addEventListener(Event.PLAYING, () => {
+    this.playingHandler();
   });
 
   // Video pauses (pause)
-  this.player.addEventListener(Event.PAUSE, function() {
-    context.pauseHandler();
+  this.player.addEventListener(Event.PAUSE, () => {
+    this.pauseHandler();
   });
 
   // video error (error)
-  this.player.addEventListener(Event.ERROR, function(error) {
+  this.player.addEventListener(Event.ERROR, error => {
     if (error.payload.severity === Error.Severity.CRITICAL) {
-      context.errorHandler(error.payload.code, error.payload.data);
-      context.endedHandler();
+      this.errorHandler(error.payload.code, error.payload.data);
+      this.endedHandler();
     }
   });
 
   // video seek start
-  this.player.addEventListener(Event.SEEKING, function() {
-    if (!context.viewManager.isBuffering) {
-      context.seekingHandler();
+  this.player.addEventListener(Event.SEEKING, () => {
+    if (!this.viewManager.isBuffering) {
+      this.seekingHandler();
     }
   });
 
   // video seek end
-  this.player.addEventListener(Event.SEEKED, function() {
-    context.seekedHandler();
+  this.player.addEventListener(Event.SEEKED, () => {
+    this.seekedHandler();
   });
 
-  this.player.addEventListener(Event.PLAYER_STATE_CHANGED, function(e) {
+  this.player.addEventListener(Event.PLAYER_STATE_CHANGED, e => {
     let newState = e.payload.newState.type;
     let oldState = e.payload.oldState.type;
     if (newState === State.BUFFERING) {
-      context.bufferingHandler();
+      this.bufferingHandler();
     }
     if (oldState === State.BUFFERING) {
-      context.bufferedHandler();
+      this.bufferedHandler();
     }
+  });
+
+  this.player.addEventListener(Event.AD_BREAK_START, () => {
+    this.playHandler();
+    this.ignoringAdHandler();
+  });
+
+  this.player.addEventListener(Event.AD_BREAK_END, () => {
+    this.ignoredAdHandler();
   });
 };
 
