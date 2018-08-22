@@ -25,6 +25,9 @@
       "git add"
     ]
   },
+  "publishConfig": {
+    "access": "public"
+  },
   "devDependencies": {
     "babel-cli": "^6.18.0",
     "babel-core": "^6.18.2",
@@ -96,5 +99,8 @@
   "bugs": {
     "url": "https://github.com/kaltura/playkit-js-youbora/issues"
   },
-  "homepage": "https://github.com/kaltura/playkit-js-youbora#readme"
+  "homepage": "https://github.com/kaltura/playkit-js-youbora#readme",
+  "kcc": {
+    "name": "playkit-youbora"
+  }
 }
