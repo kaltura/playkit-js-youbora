@@ -6,7 +6,7 @@ import YouboraAdapter from './youbora-adapter';
  * Youbora plugin for analytics.
  * @classdesc
  */
-export default class Youbora extends BasePlugin {
+class Youbora extends BasePlugin {
   /**
    * The default configuration of the plugin.
    * @type {Object}
@@ -113,3 +113,5 @@ export default class Youbora extends BasePlugin {
     }
   }
 }
+
+export {Youbora};
