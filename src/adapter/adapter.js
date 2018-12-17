@@ -146,7 +146,19 @@ let YouboraAdapter = youbora.StandardAdapter.extend({
    * - The name of the plugin.- Listener for 'error' event. */
   errorListener: function (e) {
     if (e.payload.severity === Error.Severity.CRITICAL) {
-      this.fireError(e.payload.code, e.payload.data)
+      let categoryName = '';
+      let codeName = '';
+      for (let k in Error.Category) {
+        if (Error.Category[k] === error.payload.category) {
+          categoryName = k;
+        }
+      }
+      for (let k in Error.Code) {
+        if (Error.Code[k] === error.payload.code) {
+          codeName = k;
+        }
+      }
+      this.fireError(e.payload.code, {data: e.payload.data, msg: categoryName + ' ' + codeName)
       this.fireStop()
     }
   },
