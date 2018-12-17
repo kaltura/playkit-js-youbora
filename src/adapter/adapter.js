@@ -121,6 +121,7 @@ let YouboraAdapter = youbora.StandardAdapter.extend({
 
   /** @returns {void} - Listener for 'play' event. */
   playListener: function () {
+    if (this.blockedByError) return
     if (!this.flags.isStarted) {
       this.plugin.options['content.isLive.noSeek'] = !this.player.isDvr()
       this.initialPlayhead = this.getPlayhead()
@@ -142,10 +143,11 @@ let YouboraAdapter = youbora.StandardAdapter.extend({
   },
 
   /** @returns {void}
-   * @param {Object} e - object with payload including severity, code and data.
+   * @param {Object} error - object with payload including severity, code and data.
    * - The name of the plugin.- Listener for 'error' event. */
-  errorListener: function (e) {
-    if (e.payload.severity === Error.Severity.CRITICAL) {
+  errorListener: function (error) {
+    if (this.blockedByError) return
+    if (error.payload.severity === Error.Severity.CRITICAL) {
       let categoryName = '';
       let codeName = '';
       for (let k in Error.Category) {
@@ -158,8 +160,9 @@ let YouboraAdapter = youbora.StandardAdapter.extend({
           codeName = k;
         }
       }
-      this.fireError(e.payload.code, {data: e.payload.data, msg: categoryName + ' ' + codeName)
+      this.fireError(error.payload.code, { data: error.payload.data, msg: (categoryName + ' ' + codeName) })
       this.fireStop()
+      this.blockedByError = true
     }
   },
 
@@ -211,6 +214,7 @@ let YouboraAdapter = youbora.StandardAdapter.extend({
   reset: function () {
     this.stopBlockedByAds = false
     this.initialPlayhead = null
+    this.blockedByError = false
   }
 }
 )

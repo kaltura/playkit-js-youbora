@@ -7,7 +7,7 @@
 		exports["youbora"] = factory(require("playkit-js"));
 	else
 		root["playkit"] = root["playkit"] || {}, root["playkit"]["youbora"] = factory(root["playkit"]["core"]);
-})(this, function(__WEBPACK_EXTERNAL_MODULE_10__) {
+})(this, function(__WEBPACK_EXTERNAL_MODULE_16__) {
 return /******/ (function(modules) { // webpackBootstrap
 /******/ 	// The module cache
 /******/ 	var installedModules = {};
@@ -70,7 +70,7 @@ return /******/ (function(modules) { // webpackBootstrap
 /******/ 	__webpack_require__.p = "";
 /******/
 /******/ 	// Load entry module and return exports
-/******/ 	return __webpack_require__(__webpack_require__.s = 30);
+/******/ 	return __webpack_require__(__webpack_require__.s = 31);
 /******/ })
 /************************************************************************/
 /******/ ([
@@ -78,7 +78,7 @@ return /******/ (function(modules) { // webpackBootstrap
 /***/ (function(module, exports, __webpack_require__) {
 
 var Emitter = __webpack_require__(4)
-var isArray = __webpack_require__(12)
+var isArray = __webpack_require__(10)
 
 /**
  * Static Log class for YouboraLib
@@ -319,8 +319,8 @@ module.exports = Log
 /* 1 */
 /***/ (function(module, exports, __webpack_require__) {
 
-var assign = __webpack_require__(17)
-var createObject = __webpack_require__(34)
+var assign = __webpack_require__(18)
+var createObject = __webpack_require__(35)
 
 var YouboraObject = function () { }
 
@@ -581,9 +581,9 @@ var Util = {
 
   // The following methods replace core js functionallity to ensure compatibility in old versions.
 
-  assign: __webpack_require__(17),
+  assign: __webpack_require__(18),
 
-  isArray: __webpack_require__(12)
+  isArray: __webpack_require__(10)
 }
 
 module.exports = Util
@@ -691,7 +691,7 @@ module.exports = Constants
 /***/ (function(module, exports, __webpack_require__) {
 
 var YouboraObject = __webpack_require__(1)
-var isArray = __webpack_require__(12)
+var isArray = __webpack_require__(10)
 
 /**
  * This class extends YouboraObject, adding event emitting/listening functionalities.
@@ -1261,7 +1261,7 @@ module.exports = Chrono
 /* 8 */
 /***/ (function(module, exports, __webpack_require__) {
 
-module.exports = __webpack_require__(32).version
+module.exports = __webpack_require__(33).version
 
 
 /***/ }),
@@ -1271,11 +1271,11 @@ module.exports = __webpack_require__(32).version
 var Emitter = __webpack_require__(4)
 var Log = __webpack_require__(0)
 var Util = __webpack_require__(2)
-var HybridNetwork = __webpack_require__(18)
+var HybridNetwork = __webpack_require__(19)
 var version = __webpack_require__(8)
-var PlaybackChronos = __webpack_require__(45)
-var PlaybackFlags = __webpack_require__(46)
-var PlayheadMonitor = __webpack_require__(29)
+var PlaybackChronos = __webpack_require__(48)
+var PlaybackFlags = __webpack_require__(49)
+var PlayheadMonitor = __webpack_require__(30)
 
 var Adapter = Emitter.extend(
   /** @lends youbora.Adapter.prototype */
@@ -1756,7 +1756,7 @@ var Adapter = Emitter.extend(
      * @param {Object} [params] Object of key:value params to add to the request.
      */
     fireStop: function (params) {
-      if (this.flags.isStarted) {
+      if (this.flags.isStarted || this.flags.isInited) {
         if (this.monitor) this.monitor.stop()
 
         this.flags.reset()
@@ -1915,109 +1915,6 @@ module.exports = Adapter
 /* 10 */
 /***/ (function(module, exports) {
 
-module.exports = __WEBPACK_EXTERNAL_MODULE_10__;
-
-/***/ }),
-/* 11 */
-/***/ (function(module, exports, __webpack_require__) {
-
-// No-Conflict
-var previousYoubora = youbora
-var youbora = {}
-
-/**
- * This allows you to run multiple instances of YouboraLib on the same webapp.
- * After loading the new version, call `noConflict()` to get a reference to it.
- * At the same time the old version will be returned to Youbora.
- */
-youbora.noConflict = function () {
-  youbora = previousYoubora
-  return this
-}
-
-// Info
-youbora.VERSION = __webpack_require__(8)
-
-// Polyfills
-youbora.polyfills = __webpack_require__(33)
-
-// Base Classes
-youbora.Object = __webpack_require__(1)
-youbora.Emitter = __webpack_require__(4)
-
-// Log
-youbora.Log = __webpack_require__(0)
-youbora.Log.loadLevelFromUrl()
-
-// General classes
-youbora.Util = __webpack_require__(2)
-youbora.HybridNetwork = __webpack_require__(18)
-youbora.Chrono = __webpack_require__(7)
-youbora.Timer = __webpack_require__(13)
-youbora.Constants = __webpack_require__(3)
-
-// Comm classes
-youbora.Request = __webpack_require__(5)
-youbora.Communication = __webpack_require__(14)
-
-// Resource Transform classes
-youbora.Transform = __webpack_require__(6)
-youbora.ViewTransform = __webpack_require__(19)
-youbora.ResourceTransform = __webpack_require__(20)
-youbora.CdnParser = __webpack_require__(22)
-youbora.HlsParser = __webpack_require__(21)
-youbora.OfflineParser = __webpack_require__(24)
-youbora.LocationheaderParser = __webpack_require__(23)
-
-// Plugin Classes
-youbora.Options = __webpack_require__(25)
-youbora.Plugin = __webpack_require__(41)
-youbora.Storage = __webpack_require__(26)
-youbora.RequestBuilder = __webpack_require__(15)
-
-// Adapters
-youbora.PlayheadMonitor = __webpack_require__(29)
-youbora.Adapter = __webpack_require__(9)
-youbora.StandardAdapter = __webpack_require__(55)
-youbora.adapters = {}
-
-// Infinity
-youbora.Infinity = __webpack_require__(16)
-
-// Detector classes
-youbora.BackgroundDetector = __webpack_require__(27)
-youbora.DeviceDetector = __webpack_require__(28)
-
-/**
- * Register the given adapter in <youbora>.adapters.
- *
- * @param {string} key Unique adapter identifier.
- * @param {youbora.Adapter} Adapter Adapter class.
- *
- * @memberof youbora
- */
-youbora.registerAdapter = function (key, Adapter) {
-  this.adapters[key] = Adapter
-}.bind(youbora)
-
-/**
- * Remove the given adapter in <youbora>.adapters.
- *
- * @param {string} key Unique adapter identifier.
- *
- * @memberof youbora
- */
-youbora.unregisterAdapter = function (key) {
-  this.adapters[key] = null
-}.bind(youbora)
-
-module.exports = youbora
-
-
-/***/ }),
-/* 12 */
-/***/ (function(module, exports) {
-
 /**
  * See Array.isArray.
  * @memberof youbora.Util
@@ -2028,7 +1925,7 @@ module.exports = function (obj) {
 
 
 /***/ }),
-/* 13 */
+/* 11 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var YouboraObject = __webpack_require__(1)
@@ -2091,7 +1988,7 @@ module.exports = Timer
 
 
 /***/ }),
-/* 14 */
+/* 12 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var YouboraObject = __webpack_require__(1)
@@ -2114,10 +2011,10 @@ var Communication = YouboraObject.extend(
      * @param {string} host The fastdata host address.
      * @param {boolean} httpSecure True for https, false for http, undefined for //.
      */
-    constructor: function () {
+    constructor: function (pluginref) {
       /** Array of {@link Transform}, only when the array is empty the request Queues will begin sending. */
       this.transforms = []
-
+      this.pluginRef = pluginref
       /**
        * Queue of {@link YBRequest}
        * @private
@@ -2205,6 +2102,7 @@ var Communication = YouboraObject.extend(
         var request = workingQueue.shift()
         var transformState = this._transform(request)
         if (transformState === Transform.STATE_NO_BLOCKED) {
+          if (this.pluginRef) request.host = this.pluginRef.getHost()
           request.send()
         } else if (transformState === Transform.STATE_BLOCKED) {
           rejected.push(request)
@@ -2244,7 +2142,195 @@ module.exports = Communication
 
 
 /***/ }),
-/* 15 */
+/* 13 */
+/***/ (function(module, exports, __webpack_require__) {
+
+var YouboraObject = __webpack_require__(1)
+var Log = __webpack_require__(0)
+
+/**
+ * This class manages data sotrage in the browser memory.
+ *
+ * @extends youbora.Emitter
+ * @memberof youbora
+ */
+var YouboraStorage = YouboraObject.extend(
+  /** @lends youbora.YouboraStorage.prototype */
+  {
+    /**
+     *
+     * @constructs YouboraStorage
+     * @extends YouboraObject
+     * @memberof youbora
+     *
+     * @param {String} [prefix] Optional. Sets the prefix for saved objects in storages or cookies. 'youbora' by default.
+     * @param {Boolean} [forceCookies] Optional. Set to true to force cookies instead of storages. False by default.
+     */
+    constructor: function (prefix, forceCookies) {
+      this.prefix = prefix || 'youbora'
+      this.forceCookies = forceCookies || false
+    },
+    /**
+     * Saves in localStorage or equivalent
+     *
+     * @param {string} key Key of the value. 'youbora.' will be appended.
+     * @param {string} value Value.
+     */
+    setLocal: function (key, value) {
+      try {
+        if (this.forceCookies || typeof localStorage === "undefined" || !localStorage) {
+          return this._setCookie(this.prefix + '.' + key, value)
+        } else {
+          return localStorage.setItem(this.prefix + '.' + key, value)
+        }
+      }
+      catch (err) {
+        Log.error('Youbora Infinity needs localStorage or cookies, not supported by your browser.')
+      }
+      return null
+    },
+
+    /**
+     * Reads from localStorage or equivalent
+     *
+     * @param {string} key Key of the value. prefix will be appended.
+     */
+    getLocal: function (key) {
+      try {
+        if (this.forceCookies || typeof localStorage === "undefined" || !localStorage) {
+          return this._getCookie(this.prefix + '.' + key)
+        } else {
+          return localStorage.getItem(this.prefix + '.' + key)
+        }
+      } catch (err) {
+        Log.error('Youbora Infinity needs localStorage or cookies, not supported by your browser.')
+      }
+      return null
+    },
+
+    /**
+     * Removes from localStorage or equivalent
+     *
+     * @param {string} key Key of the value. prefix will be appended.
+     */
+    removeLocal: function (key) {
+      try {
+        if (this.forceCookies || typeof localStorage === "undefined" || !localStorage) {
+          return this._removeCookie(this.prefix + '.' + key)
+        } else {
+          return localStorage.removeItem(this.prefix + '.' + key)
+        }
+      } catch (err) {
+        Log.error('Youbora Infinity needs localStorage or cookies, not supported by your browser.')
+      }
+      return null
+    },
+
+    /**
+     * Saves in sessionStorage or equivalent
+     *
+     * @param {string} key Key of the value. prefix will be appended.
+     * @param {string} value Value.
+     */
+    setSession: function (key, value) {
+      try {
+        if (this.forceCookies || typeof sessionStorage === "undefined" || !sessionStorage) {
+          return this._setCookie(this.prefix + '.' + 'session.' + key, value)
+        } else {
+          return sessionStorage.setItem(this.prefix + '.' + key, value)
+        }
+      } catch (err) {
+        Log.error('Youbora Infinity needs sessionStorage or cookies, not supported by your browser.')
+      }
+      return null
+    },
+
+    /**
+     * Reads from sessionStorage or equivalent
+     *
+     * @param {string} key Key of the value. prefix will be appended.
+     */
+    getSession: function (key) {
+
+      try {
+        if (this.forceCookies || typeof sessionStorage === "undefined" || !sessionStorage) {
+          return this._getCookie(this.prefix + '.' + 'session.' + key)
+        } else {
+          return sessionStorage.getItem(this.prefix + '.' + key)
+        }
+      } catch (err) {
+        Log.error('Youbora Infinity needs sessionStorage or cookies, not supported by your browser.')
+      }
+      return null
+    },
+
+    /**
+   * Removes from sessionStorage or equivalent
+   *
+   * @param {string} key Key of the value. prefix will be appended.
+   */
+    removeSession: function (key) {
+      try {
+        if (this.forceCookies || typeof sessionStorage === "undefined" || !sessionStorage) {
+          return this._removeCookie(this.prefix + '.' + 'session.' + key)
+        } else {
+          return sessionStorage.removeItem(this.prefix + '.' + key)
+        }
+      } catch (err) {
+        Log.error('Youbora Infinity needs sessionStorage or cookies, not supported by your browser.')
+      }
+      return null
+    },
+
+    // Private cookies methods
+
+    /**
+   * Sets a cookie value
+   *
+   * @param {string} cname Key of the value.
+   * @param {Object} cvalue Value.
+   */
+    _setCookie: function (cname, cvalue) {
+      document.cookie = cname + "=" + cvalue + ";"
+    },
+
+    /**
+   * Gets a cookie value
+   *
+   * @param {string} cname Key of the value.
+   */
+    _getCookie: function (cname) {
+      var name = cname + "="
+      var decodedCookie = decodeURIComponent(document.cookie);
+      var ca = decodedCookie.split(';')
+      for (var i = 0; i < ca.length; i++) {
+        var c = ca[i]
+        while (c.charAt(0) == ' ') {
+          c = c.substring(1)
+        }
+        if (c.indexOf(name) == 0) {
+          return c.substring(name.length, c.length)
+        }
+      }
+      return null
+    },
+
+    /**
+   * Removes a cookie
+   *
+   * @param {string} cname Key of the value.
+   */
+    _removeCookie: function (cname) {
+      document.cookie = cname + '=;expires=Thu, 01 Jan 1970 00:00:01 GMT;'
+    }
+  }
+)
+
+module.exports = YouboraStorage
+
+
+/***/ }),
+/* 14 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var YouboraObject = __webpack_require__(1)
@@ -2253,6 +2339,7 @@ var Log = __webpack_require__(0)
 var startParams = [
   'accountCode',
   'username',
+  'anonymousUser',
   'rendition',
   'player',
   'title',
@@ -2297,7 +2384,8 @@ var startParams = [
   'userType',
   'streamingProtocol',
   'householdId',
-  'experiments'
+  'experiments',
+  'npawFingerprint'
 ]
 
 var adStartParams = [
@@ -2421,7 +2509,7 @@ var RequestBuilder = YouboraObject.extend(
 
     /** List of params used by each service */
     params: {
-      '/data': ['system', 'pluginVersion', 'requestNumber', 'username'],
+      '/data': ['system', 'pluginVersion', 'requestNumber', 'username', 'isInfinity'],
 
       '/init': startParams,
       '/start': startParams,
@@ -2448,14 +2536,20 @@ var RequestBuilder = YouboraObject.extend(
       '/infinity/session/start': [
         'accountCode',
         'username',
+        'anonymousUser',
         'navContext',
         'route',
-        'page'
+        'page',
+        'npawFingerprint',
+        'referer',
+        'referral',
+        'language',
+        'deviceCode',
       ],
       '/infinity/session/stop': [],
-      '/infinity/session/nav': ['navContext', 'username', 'route', 'page'],
+      '/infinity/session/nav': ['navContext', 'route', 'page'],
       '/infinity/session/beat': [],
-      '/infinity/event': ['accountCode'],
+      '/infinity/event': ['accountCode', 'navContext'],
 
       '/offlineEvents': {}
     },
@@ -2467,19 +2561,10 @@ var RequestBuilder = YouboraObject.extend(
 
     /** List of params used by each service (only if they are different) */
     differentParams: {
-      '/join': [
-        'title',
-        'title2',
-        'live',
-        'mediaDuration',
-        'mediaResource'
-      ],
-      '/adJoin': ['adTitle', 'adDuration', 'adResource'],
       'entities': [
         'rendition',
         'title',
         'title2',
-        'live',
         'param1',
         'param2',
         'param3',
@@ -2500,10 +2585,6 @@ var RequestBuilder = YouboraObject.extend(
         'param18',
         'param19',
         'param20',
-        'connectionType',
-        'deviceCode',
-        'ip',
-        'username',
         'cdn',
         'nodeHost',
         'nodeType',
@@ -2594,6 +2675,7 @@ var RequestBuilder = YouboraObject.extend(
       system: 'getAccountCode',
       accountCode: 'getAccountCode',
       username: 'getUsername',
+      anonymousUser: 'getAnonymousUser',
 
       preloadDuration: 'getPreloadDuration',
 
@@ -2608,13 +2690,14 @@ var RequestBuilder = YouboraObject.extend(
       adTotalDuration: 'getAdTotalDuration',
 
       referer: 'getReferer',
+      referral: 'getReferral',
+      language: 'getLanguage',
 
       nodeHost: 'getNodeHost',
       nodeType: 'getNodeType',
       nodeTypeString: 'getNodeTypeString',
 
       route: 'getReferer',
-      sessionId: 'getSessionId',
       navContext: 'getContext',
       page: 'getPageName',
 
@@ -2624,7 +2707,9 @@ var RequestBuilder = YouboraObject.extend(
       uploadTraffic: 'getUploadTraffic',
 
       viewJson: 'getOfflineView',
-      experiments: 'getExperiments'
+      experiments: 'getExperiments',
+      npawFingerprint: 'getFingerprint',
+      isInfinity: 'getIsInfinity'
     }
 
   }
@@ -2634,11 +2719,11 @@ module.exports = RequestBuilder
 
 
 /***/ }),
-/* 16 */
+/* 15 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var Emitter = __webpack_require__(4)
-var Comm = __webpack_require__(14)
+var Comm = __webpack_require__(12)
 
 var YouboraInfinity = Emitter.extend(
   /** @lends youbora.Infinity.prototype */
@@ -2656,6 +2741,10 @@ var YouboraInfinity = Emitter.extend(
     constructor: function (plugin) {
       /** Parent {@link youbora.Plugin} reference. */
       this._plugin = plugin
+      if (this._plugin.storage) {
+        this._plugin.storage.removeSession('infinityStarted')
+        this._plugin.storage.removeSession('infinityStopped')
+      }
     },
 
     /**
@@ -2671,14 +2760,18 @@ var YouboraInfinity = Emitter.extend(
      *
      * @param {Object} [params] Object of key:value params to add to the request.
      */
-    begin: function (params) {
-      this._comm = new Comm()
+    begin: function (dimensions, parentId) {
+      this._plugin.storage.setSession('infinityStarted', 'true')
+      this._plugin.storage.removeSession('infinityStopped')
+      this._comm = new Comm(this._plugin)
       this._comm.addTransform(this._plugin.viewTransform)
-
-      if (this._plugin.getContext()) {
-        this.fireNav(params) // returning
+      if (this._plugin && this._plugin.storage && typeof this._plugin.storage.getLocal === "function") {
+        this._registeredProperties = this._plugin.storage.getLocal("inifnityRegisteredProperties")
+      }
+      if (!parentId && !this._plugin.getIsSessionExpired()) {
+        this.fireNav(dimensions) // returning
       } else {
-        this.fireSessionStart(params) // first time
+        this.fireSessionStart(dimensions, parentId) // first time
       }
     },
 
@@ -2688,7 +2781,15 @@ var YouboraInfinity = Emitter.extend(
     },
 
     _setLastActive: function () {
+      if (!this._firstActive) {
+        this._firstActive = this.getFirstActive()
+      }
+      this._plugin.storage.setLocal('lastactive', new Date().getTime())
       this._plugin.storage.setSession('lastactive', new Date().getTime())
+    },
+
+    getFirstActive: function () {
+      return Number(this._plugin.getLastActive()) || 0
     },
 
     /**
@@ -2706,9 +2807,12 @@ var YouboraInfinity = Emitter.extend(
      *
      * @param {Object} [params] Object of key:value params to add to the request.
      */
-    fireSessionStart: function (params) {
+    fireSessionStart: function (dimensions, parentId) {
+      this.infinityStarted = true
+      this.infinityStopped = false
       this._generateNewContext()
-      this.emit(YouboraInfinity.Event.SESSION_START, { params: params })
+      this._plugin.viewTransform._parentId = parentId
+      this.emit(YouboraInfinity.Event.SESSION_START, this._getParamsJson(dimensions, null, null, true, true))
       this._setLastActive()
     },
 
@@ -2718,7 +2822,32 @@ var YouboraInfinity = Emitter.extend(
      * @param {Object} [params] Object of key:value params to add to the request.
      */
     fireSessionStop: function (params) {
-      this.emit(YouboraInfinity.Event.SESSION_STOP, { params: params })
+      this.infinityStopped = true
+      this.emit(YouboraInfinity.Event.SESSION_STOP, params)
+      this._plugin.storage.removeLocal('data')
+      this._plugin.storage.removeLocal('session')
+      this._plugin.storage.removeLocal('lastactive')
+      this._plugin.storage.removeSession('data')
+      this._plugin.storage.removeSession('session')
+      this._plugin.storage.removeSession('lastactive')
+    },
+
+    /**
+     * Emits session start request.
+     *
+     * @param {Object} [params] Object of key:value params to add to the request.
+     */
+    fireNav: function (dimensions) {
+      this._plugin.storage.setSession('infinityStarted', 'true')
+      this._plugin.storage.removeSession('infinityStopped')
+      if (!this._plugin.getContext()) this._generateNewContext()
+      this.emit(YouboraInfinity.Event.NAV, this._getParamsJson(dimensions, null, null, true))
+      var now = new Date().getTime()
+      if (this._plugin && this._plugin._beat) {
+        var time = this._plugin._beat.chrono.startTime ? (now - this._plugin._beat.chrono.startTime) : 0
+        this._plugin._sendBeat(time)
+        this._plugin._beat.chrono.startTime = now
+      }
       this._setLastActive()
     },
 
@@ -2727,19 +2856,80 @@ var YouboraInfinity = Emitter.extend(
      *
      * @param {Object} [params] Object of key:value params to add to the request.
      */
-    fireNav: function (params) {
-      this.emit(YouboraInfinity.Event.NAV, { params: params })
+    fireEvent: function (eventName, dimensions, values) {
+      this.emit(YouboraInfinity.Event.EVENT, this._getParamsJson(dimensions, values, eventName))
       this._setLastActive()
     },
 
+    /** Register properties sent by the User, to send in all the events
+    *
+    * @memberof youbora.Infinity.prototype
+    */
+    register: function (dimensions, values) {
+      this._registeredProperties = { 'dimensions': dimensions, 'values': values }
+      this._plugin.storage.setLocal("inifnityRegisteredProperties", JSON.stringify(this._registeredProperties))
+    },
+
+    /** Calls register if registeredProperties is empty
+    *
+    * @memberof youbora.Infinity.prototype
+    */
+    registerOnce: function (dimensions, values) {
+      if (!this._registeredProperties) {
+        this.register(dimensions, values)
+      }
+    },
+
+    /** Unregister properties registered with register()
+    *
+    * @memberof youbora.Infinity.prototype
+    */
+    unregister: function () {
+      this._registeredProperties = null
+      this._plugin.storage.removeLocal("inifnityRegisteredProperties")
+    },
+
     /**
-     * Emits session start request.
+     * Splits params in dimensions (strings) and values (numbers)
      *
-     * @param {Object} [params] Object of key:value params to add to the request.
+     * @param {Object} [params] Object of key:value params to split before adding to request.
      */
-    fireEvent: function (params) {
-      this.emit(YouboraInfinity.Event.EVENT, { params: params })
-      this._setLastActive()
+    _getParamsJson: function (dimensions, values, eventName, isNavigaton, isStart) {
+      var returnparams = {}
+      if (eventName) returnparams.name = eventName
+      returnparams.dimensions = dimensions || {}
+      returnparams.values = values || {}
+      if (this._registeredProperties) {
+        for (var key in this._registeredProperties.dimensions) {
+          returnparams.dimensions[key] = this._registeredProperties.dimensions[key]
+        }
+        for (var key in this._registeredProperties.values) {
+          returnparams.values[key] = this._registeredProperties.values[key]
+        }
+      }
+      var paramsObject = { 'params': returnparams }
+      if (isNavigaton) {
+        if (paramsObject.params.dimensions.page) {
+          paramsObject.params.page = paramsObject.params.dimensions.page
+          delete paramsObject.params.dimensions.page
+        }
+        if (paramsObject.params.dimensions.route) {
+          paramsObject.params.route = paramsObject.params.dimensions.route
+          delete paramsObject.params.dimensions.route
+        }
+        if (!isStart) {
+          delete paramsObject.params.dimensions
+        }
+        delete paramsObject.params.values
+      }
+      return paramsObject
+    },
+
+    isActive: function () {
+      var now = new Date().getTime()
+      if (this._plugin.storage.getSession('infinityStarted') != null && !this._plugin.storage.getSession('infinityStopped')) return true
+      if (Number(this._plugin.getLastActive()) + this._plugin.sessionExpire > now) return true
+      return false
     }
   },
   /** @lends youbora.Plugin */
@@ -2764,7 +2954,111 @@ module.exports = YouboraInfinity
 
 
 /***/ }),
+/* 16 */
+/***/ (function(module, exports) {
+
+module.exports = __WEBPACK_EXTERNAL_MODULE_16__;
+
+/***/ }),
 /* 17 */
+/***/ (function(module, exports, __webpack_require__) {
+
+// No-Conflict
+var previousYoubora = youbora
+var youbora = {}
+
+/**
+ * This allows you to run multiple instances of YouboraLib on the same webapp.
+ * After loading the new version, call `noConflict()` to get a reference to it.
+ * At the same time the old version will be returned to Youbora.
+ */
+youbora.noConflict = function () {
+  youbora = previousYoubora
+  return this
+}
+
+// Info
+youbora.VERSION = __webpack_require__(8)
+
+// Polyfills
+youbora.polyfills = __webpack_require__(34)
+
+// Base Classes
+youbora.Object = __webpack_require__(1)
+youbora.Emitter = __webpack_require__(4)
+
+// Log
+youbora.Log = __webpack_require__(0)
+youbora.Log.loadLevelFromUrl()
+
+// General classes
+youbora.Util = __webpack_require__(2)
+youbora.HybridNetwork = __webpack_require__(19)
+youbora.Chrono = __webpack_require__(7)
+youbora.Timer = __webpack_require__(11)
+youbora.Constants = __webpack_require__(3)
+
+// Comm classes
+youbora.Request = __webpack_require__(5)
+youbora.Communication = __webpack_require__(12)
+
+// Resource Transform classes
+youbora.Transform = __webpack_require__(6)
+youbora.ViewTransform = __webpack_require__(20)
+youbora.ResourceTransform = __webpack_require__(21)
+youbora.CdnParser = __webpack_require__(23)
+youbora.HlsParser = __webpack_require__(22)
+youbora.OfflineParser = __webpack_require__(25)
+youbora.LocationheaderParser = __webpack_require__(24)
+
+// Plugin Classes
+youbora.Options = __webpack_require__(26)
+youbora.Plugin = __webpack_require__(42)
+youbora.Storage = __webpack_require__(13)
+youbora.RequestBuilder = __webpack_require__(14)
+
+// Adapters
+youbora.PlayheadMonitor = __webpack_require__(30)
+youbora.Adapter = __webpack_require__(9)
+youbora.StandardAdapter = __webpack_require__(58)
+youbora.adapters = {}
+
+// Infinity
+youbora.Infinity = __webpack_require__(15)
+
+// Detector classes
+youbora.BackgroundDetector = __webpack_require__(27)
+youbora.DeviceDetector = __webpack_require__(28)
+youbora.Fingerprint = __webpack_require__(29)
+
+/**
+ * Register the given adapter in <youbora>.adapters.
+ *
+ * @param {string} key Unique adapter identifier.
+ * @param {youbora.Adapter} Adapter Adapter class.
+ *
+ * @memberof youbora
+ */
+youbora.registerAdapter = function (key, Adapter) {
+  this.adapters[key] = Adapter
+}.bind(youbora)
+
+/**
+ * Remove the given adapter in <youbora>.adapters.
+ *
+ * @param {string} key Unique adapter identifier.
+ *
+ * @memberof youbora
+ */
+youbora.unregisterAdapter = function (key) {
+  this.adapters[key] = null
+}.bind(youbora)
+
+module.exports = youbora
+
+
+/***/ }),
+/* 18 */
 /***/ (function(module, exports) {
 
 /**
@@ -2793,7 +3087,7 @@ module.exports = function (target) {
 
 
 /***/ }),
-/* 18 */
+/* 19 */
 /***/ (function(module, exports) {
 
 /**
@@ -2810,15 +3104,15 @@ var HybridNetowrk = {
     if (typeof Streamroot !== 'undefined') {
       if (Streamroot.p2pAvailable && Streamroot.peerAgents) {
         var acum = 0
-        for (agent in Streamroot.peerAgents) {
+        for (var agent in Streamroot.peerAgents) {
           acum += Streamroot.peerAgents[agent].stats.cdn
         }
         return acum
       } else if (Streamroot.instances && Streamroot.instances.length > 0) {
         var acum = 0
-        for (instance in Streamroot.instances) {
-          acum += instance.stats.currentContent.cdnDownload;
-        }
+        Streamroot.instances.forEach(function (instance) {
+          acum += instance.stats.currentContent.cdnDownload
+        })
         return acum
       }
     }
@@ -2833,16 +3127,16 @@ var HybridNetowrk = {
     if (typeof Streamroot !== 'undefined') {
       if (Streamroot.p2pAvailable && Streamroot.peerAgents) {
         var acum = 0
-        for (agent in Streamroot.peerAgents) {
+        for (var agent in Streamroot.peerAgents) {
           if (Streamroot.peerAgents[agent].isP2PEnabled)
             acum += Streamroot.peerAgents[agent].stats.p2p
         }
         return acum
       } else if (Streamroot.instances && Streamroot.instances.length > 0) {
         var acum = 0
-        for (instance in Streamroot.instances) {
-          acum += instance.stats.currentContent.dnaDownload;
-        }
+        Streamroot.instances.forEach(function (instance) {
+          acum += instance.stats.currentContent.dnaDownload
+        })
         return acum
       }
     }
@@ -2857,16 +3151,16 @@ var HybridNetowrk = {
     if (typeof Streamroot !== 'undefined') {
       if (Streamroot.p2pAvailable && Streamroot.peerAgents) {
         var acum = 0
-        for (agent in Streamroot.peerAgents) {
+        for (var agent in Streamroot.peerAgents) {
           if (Streamroot.peerAgents[agent].isP2PEnabled)
             acum += Streamroot.peerAgents[agent].stats.upload
         }
         return acum
       } else if (Streamroot.instances && Streamroot.instances.length > 0) {
         var acum = 0
-        for (instance in Streamroot.instances) {
-          acum += instance.stats.currentContent.dnaUpload;
-        }
+        Streamroot.instances.forEach(function (instance) {
+          acum += instance.stats.currentContent.dnaUpload
+        })
         return acum
       }
     }
@@ -2882,15 +3176,15 @@ var HybridNetowrk = {
     if (typeof Streamroot !== 'undefined') {
       if (Streamroot.p2pAvailable && Streamroot.peerAgents) {
         var acum = false
-        for (agent in Streamroot.peerAgents) { // if at least one agent is enabled
+        for (var agent in Streamroot.peerAgents) { // if at least one agent is enabled
           acum = acum || Streamroot.peerAgents[agent].isP2PEnabled
         }
         return acum
       } else if (Streamroot.instances && Streamroot.instances.length > 0) {
         var acum = false
-        for (instance in Streamroot.instances) {
-          acum = acum || instance.dnaDownloadEnabled || instance.dnaUploadEnabled;
-        }
+        Streamroot.instances.forEach(function (instance) {
+          acum = acum || instance.dnaDownloadEnabled || instance.dnaUploadEnabled
+        })
       }
       return false
     }
@@ -2905,7 +3199,7 @@ module.exports = HybridNetowrk
 
 
 /***/ }),
-/* 19 */
+/* 20 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var YBRequest = __webpack_require__(5)
@@ -2933,7 +3227,7 @@ var ViewTransform = Transform.extend(
       /** /data response */
       this.response = {}
 
-      this._viewIndex = -1
+      this._viewIndex = new Date().getTime()
 
       this._session = session
 
@@ -2954,12 +3248,7 @@ var ViewTransform = Transform.extend(
      * @see FastDataConfig
      */
     init: function () {
-      var service = Constants.Service.DATA
-      var params = {
-        apiVersion: 'v7',
-        outputformat: 'json'
-      }
-
+      // offline
       if (this._plugin.options && this._plugin.options['offline']) {
         //set the options
         this.response.host = "OFFLINE"
@@ -2969,7 +3258,19 @@ var ViewTransform = Transform.extend(
         this.done()
         return null
       }
-
+      //reusing old data not expired
+      var now = new Date().getTime()
+      if (now < this._plugin.sessionExpire + (Number(this._plugin.getDataTime()) || 0)
+        && this._plugin.getStoredData()) {
+        this.setData(this._plugin.getStoredData())
+        return null
+      }
+      //request new data
+      var service = Constants.Service.DATA
+      var params = {
+        apiVersion: 'v7',
+        outputformat: 'json'
+      }
       params = this._plugin.requestBuilder.buildParams(params, service)
       if (params !== null) {
         Log.notice(service + ' ' + params.system)
@@ -3000,8 +3301,9 @@ var ViewTransform = Transform.extend(
         this.response.host = Util.addProtocol(resp.q.h, this._httpSecure)
         this.response.code = resp.q.c
         this.response.pingTime = resp.q.pt || 5
-        this.response.beatTime = resp.q.bt || 30
-
+        this.response.beatTime = resp.q.i ? resp.q.i.bt || 30 : 30
+        this.response.sessionExpire = resp.q.i ? resp.q.i.exp || 300 : 300
+        this._plugin.storage.setLocal('sessionExpire', this.response.sessionExpire)
         this.done()
       } catch (err) {
         Log.error('Fastdata response is invalid.')
@@ -3023,12 +3325,12 @@ var ViewTransform = Transform.extend(
     },
 
     /**
-     * This method will increment the view index (_0, _1, _2...). The library handles this
+     * This method will increment the view index (timestamp values). The library handles this
      * automatically, but some error flow might need calling this manually.
      * @return {string} new viewcode
      */
     nextView: function () {
-      this._viewIndex += 1
+      this._viewIndex = new Date().getTime()
       return this.getViewCode()
     },
 
@@ -3059,24 +3361,89 @@ var ViewTransform = Transform.extend(
     },
 
     /**
+ * Returns the current parentId
+ *
+ * @returns {string} parentId
+ */
+    getParentIdVideo: function () {
+      return this._session
+    },
+
+    getParentIdSession: function () {
+      return this._parentId
+    },
+
+    /**
+     * Sets the parentId
+     *
+     * @param {String} parentId Sets the parent id.
+     */
+    setParentId: function (parentId) {
+      this._parentId = parentId
+    },
+
+    /**
+ * Returns the current sessionRoot
+ *
+ * @returns {string} Sessionroot
+ */
+    getSessionRoot: function () {
+      if (!this._plugin.infinity || !this._plugin.infinity.isActive()) return null
+      return this._session
+    },
+
+    /**
+     * Sets the sessionRoot
+     *
+     * @param {String} sessionId Sets the session root.
+     */
+    setSessionRoot: function (sessionRoot) {
+      this._session = sessionRoot
+    },
+
+    /**
      * Transform requests
      * @param {youbora.comm.YBRequest} request YBRequest to transform.
      */
     parse: function (request) {
       request.host = request.host || this.response.host
-      request.params.sessionId = request.params.sessionId || this.getSessionId()
+      request.params.sessionRoot = request.params.sessionRoot || this.getSessionRoot()
+      //request.params.parentId = request.params.parentId || this.getParentId()
       if (request.service === Constants.Service.PING ||
         request.service === Constants.Service.START) {
         request.params.pingTime = request.params.pingTime || this.response.pingTime
       }
-
+      if (Constants.Service.SESSION_STOP === request.service) {
+        request.params.sessionRoot = this._session
+      }
       if ([ // Unless infinity event
         Constants.Service.NAV,
         Constants.Service.SESSION_START,
         Constants.Service.SESSION_STOP,
-        Constants.Service.EVENT
+        Constants.Service.EVENT,
+        Constants.Service.BEAT
       ].indexOf(request.service) === -1) {
         request.params.code = request.params.code || this.getViewCode()
+      } else {
+        request.params.sessionId = request.params.sessionId || this.getSessionId()
+        if (!request.params.sessionRoot) request.params.sessionRoot = request.params.sessionId
+      }
+      if (Constants.Service.BEAT === request.service) {
+        request.params.sessions = "[\"" + (request.params.sessionId || this.getSessionId()) + "\"]"
+      }
+      if ([ // Creating view event
+        Constants.Service.START,
+        Constants.Service.INIT,
+        Constants.Service.ERROR
+      ].indexOf(request.service) !== -1) {
+        if (this._plugin.storage.getSession('infinityStarted')) {
+          request.params.parentId = request.params.parentId || this.getParentIdVideo()
+          request.params.navContext = request.params.navContext || this._plugin.getContext()
+        }
+      }
+
+      if (Constants.Service.SESSION_START === request.service) {
+        request.params.parentId = request.params.parentId || this.getParentIdSession()
       }
     }
   })
@@ -3085,13 +3452,13 @@ module.exports = ViewTransform
 
 
 /***/ }),
-/* 20 */
+/* 21 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var Transform = __webpack_require__(6)
-var HlsParser = __webpack_require__(21)
-var CdnParser = __webpack_require__(22)
-var LocationheaderParser = __webpack_require__(23)
+var HlsParser = __webpack_require__(22)
+var CdnParser = __webpack_require__(23)
+var LocationheaderParser = __webpack_require__(24)
 var Log = __webpack_require__(0)
 var Constants = __webpack_require__(3)
 
@@ -3135,7 +3502,7 @@ var ResourceTransform = Transform.extend(
      * @return {string} The initial or parsed resource
      */
     getResource: function () {
-      if (this._plugin && this._plugin.options && this._plugin.options['content.resource']) {
+      if (this._plugin && this._plugin.options && this._plugin.options['content.resource'] && !this._plugin.options['parse.locationHeader']) {
         return this._plugin.options['content.resource']
       }
       return this._realResource || this._initResource
@@ -3307,7 +3674,7 @@ module.exports = ResourceTransform
 
 
 /***/ }),
-/* 21 */
+/* 22 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var YBRequest = __webpack_require__(5)
@@ -3421,7 +3788,7 @@ module.exports = HlsParser
 
 
 /***/ }),
-/* 22 */
+/* 23 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var Emitter = __webpack_require__(4)
@@ -3759,18 +4126,18 @@ var CdnParser = Emitter.extend(
 )
 
 // Adding built-in parsers
-CdnParser.add('Level3', __webpack_require__(35))
-CdnParser.add('Cloudfront', __webpack_require__(36))
-CdnParser.add('Akamai', __webpack_require__(37))
-CdnParser.add('Highwinds', __webpack_require__(38))
-CdnParser.add('Fastly', __webpack_require__(39))
-CdnParser.add('Balancer', __webpack_require__(40))
+CdnParser.add('Level3', __webpack_require__(36))
+CdnParser.add('Cloudfront', __webpack_require__(37))
+CdnParser.add('Akamai', __webpack_require__(38))
+CdnParser.add('Highwinds', __webpack_require__(39))
+CdnParser.add('Fastly', __webpack_require__(40))
+CdnParser.add('Balancer', __webpack_require__(41))
 
 module.exports = CdnParser
 
 
 /***/ }),
-/* 23 */
+/* 24 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var Emitter = __webpack_require__(4)
@@ -3846,7 +4213,7 @@ module.exports = LocationheaderParser
 
 
 /***/ }),
-/* 24 */
+/* 25 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var YBRequest = __webpack_require__(5)
@@ -3900,7 +4267,7 @@ module.exports = OfflineTransform
 
 
 /***/ }),
-/* 25 */
+/* 26 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var YouboraObject = __webpack_require__(1)
@@ -3942,6 +4309,9 @@ var Options = YouboraObject.extend(
 
       /** @prop {string} [username] User ID value inside your system. */
       this['username'] = null
+
+      /** @prop {string} [username] User ID value inside your system. */
+      this['anonymousUser'] = null
 
       /**
        *  @prop {boolean} [obfuscateIp=false]
@@ -4015,7 +4385,7 @@ var Options = YouboraObject.extend(
 
       /**
        * @prop {string} [network.connectionType]
-       * See a list of codes in {@link http://mapi.youbora.com:8081/connectionTypes}
+       * Type of connection used
        */
       this['network.connectionType'] = null
 
@@ -4294,8 +4664,12 @@ var Options = YouboraObject.extend(
       /** @prop {string} [ad.extraparam.10] Ad custom parameter 10. */
       this['ad.extraparam.10'] = null
 
-      /** @prop {number} [session.expire=21600000] Time until infinity session expires in ms. */
-      this['session.expire'] = 21600000
+      /** @prop {bool} [isInfinity] Asks for code for infinity. */
+      this['isInfinity'] = null
+
+      /** @prop {bool} [forceInit] Forces init to be sent instead of start, use it when mediaduration,
+       *  title, source or is live is reported with a wrong value by the player until jointime happens */
+      this['forceInit'] = false
 
       this.setOptions(options)
     },
@@ -4323,109 +4697,6 @@ var Options = YouboraObject.extend(
 )
 
 module.exports = Options
-
-
-/***/ }),
-/* 26 */
-/***/ (function(module, exports, __webpack_require__) {
-
-var YouboraObject = __webpack_require__(1)
-var Log = __webpack_require__(0)
-
-var prefix = 'youbora'
-
-/**
- * This class manages data sotrage in the browser memory.
- *
- * @extends youbora.Emitter
- * @memberof youbora
- */
-var YouboraStorage = YouboraObject.extend(
-  /** @lends youbora.YouboraStorage.prototype */
-  {
-    /**
-     * Saves in localStorage or equivalent
-     *
-     * @param {string} key Key of the value. 'youbora.' will be appended.
-     * @param {string} value Value.
-     */
-    setLocal: function (key, value) {
-      try {
-        if (!localStorage) {
-          Log.error('Youbora Infinity needs localStorage which is not supported by your browser.')
-          // TO-DO: develop alternative based on cookies
-        } else {
-          return localStorage.setItem('youbora.' + key, value)
-        }
-      }
-      catch (err) {
-        Log.error('Youbora Infinity needs localStorage which is not supported by your browser.')
-      }
-      return null
-    },
-
-    /**
-     * Reads from localStorage or equivalent
-     *
-     * @param {string} key Key of the value. prefix will be appended.
-     */
-    getLocal: function (key) {
-      try {
-        if (!localStorage) {
-          Log.error('Youbora Infinity needs localStorage which is not supported by your browser.')
-          // TO-DO: develop alternative based on cookies
-        } else {
-          return localStorage.getItem(prefix + '.' + key)
-        }
-      } catch (err) {
-        Log.error('Youbora Infinity needs localStorage which is not supported by your browser.')
-      }
-      return null
-    },
-
-    /**
-     * Saves in sessionStorage or equivalent
-     *
-     * @param {string} key Key of the value. prefix will be appended.
-     * @param {string} value Value.
-     */
-    setSession: function (key, value) {
-      try {
-        if (!sessionStorage) {
-          Log.error('Youbora Infinity needs sessionStorage which is not supported by your browser.')
-          // TO-DO: develop alternative based on cookies
-        } else {
-          return sessionStorage.setItem(prefix + '.' + key, value)
-        }
-      } catch (err) {
-        Log.error('Youbora Infinity needs sessionStorage which is not supported by your browser.')
-      }
-      return null
-    },
-
-    /**
-     * Reads from sessionStorage or equivalent
-     *
-     * @param {string} key Key of the value. prefix will be appended.
-     */
-    getSession: function (key) {
-
-      try {
-        if (!sessionStorage) {
-          Log.error('Youbora Infinity needs sessionStorage which is not supported by your browser.')
-          // TO-DO: develop alternative based on cookies
-        } else {
-          return sessionStorage.getItem(prefix + '.' + key)
-        }
-      } catch (err) {
-        Log.error('Youbora Infinity needs sessionStorage which is not supported by your browser.')
-      }
-      return null
-    }
-  }
-)
-
-module.exports = YouboraStorage
 
 
 /***/ }),
@@ -4489,10 +4760,29 @@ var BackgroundDetector = YouboraObject.extend({
             this._firePause()
             break
         }
+        if (this.plugin.storage.getSession('infinityStarted') != null && !this.plugin.storage.getSession('infinityStopped')) {
+          this.lastBeatTime = new Date().getTime()
+          var difftime = this.plugin._beat.chrono.startTime ? (this.lastBeatTime - this.plugin._beat.chrono.startTime) : 0
+          this.plugin._sendBeat(difftime)
+          this.plugin._beat.stop()
+        }
       }
     } else if (this.windowObject.document.visibilityState === 'visible') { // to Foreground
       this.isInBackground = false
-      // nothing yet
+      // nothing for video yet
+      var settings = this._getSettings()
+      if (typeof settings === "string" && settings) {
+        if (this.plugin.storage.getSession('infinityStarted') != null && !this.plugin.storage.getSession('infinityStopped')) {
+          var now = new Date().getTime()
+          if (now - this.lastBeatTime < this.plugin.sessionExpire) { //if session not expired
+            this.plugin._sendBeat(now - this.lastBeatTime)
+            this.plugin._beat.start()
+          } else { // session expired
+            this.plugin.restartViewTransform()
+            this.plugin.infinity.begin()
+          }
+        }
+      }
     }
   },
 
@@ -4603,8 +4893,59 @@ module.exports = DeviceDetector
 /* 29 */
 /***/ (function(module, exports, __webpack_require__) {
 
+var DataExtractor = __webpack_require__(45)
 var YouboraObject = __webpack_require__(1)
-var Timer = __webpack_require__(13)
+var MD5 = __webpack_require__(46)
+
+var HashGenerator = YouboraObject.extend({
+  constructor: function (plugin) {
+    this.plugin = plugin
+    this.dataExtractor = new DataExtractor()
+    this.key = this.getPreviousKey()
+  },
+
+  generateHashKey: function () {
+    if (!this.key) {
+      var data = this.dataExtractor.getAllData()
+      this.key = this._hashFunction(data)
+      this.plugin.storage.setLocal('youboraFingerprint', this.key)
+    }
+  },
+
+  getKey: function () {
+    if (!this.key) this.generateHashKey()
+    return this.key
+  },
+
+  _hashFunction: function (inputString) {
+    var outputString = ""
+    if (typeof inputString !== "string") {
+      outputString = JSON.stringify(inputString)
+    } else {
+      outputString = inputString
+    }
+    return MD5(outputString)
+  },
+
+  _reset: function () {
+    this.key = undefined
+  },
+
+  getPreviousKey: function () {
+    return this.plugin.storage.getLocal('youboraFingerprint')
+  }
+
+})
+
+module.exports = HashGenerator
+
+
+/***/ }),
+/* 30 */
+/***/ (function(module, exports, __webpack_require__) {
+
+var YouboraObject = __webpack_require__(1)
+var Timer = __webpack_require__(11)
 var Chrono = __webpack_require__(7)
 
 var PlayheadMonitor = YouboraObject.extend(
@@ -4749,7 +5090,7 @@ module.exports = PlayheadMonitor
 
 
 /***/ }),
-/* 30 */
+/* 31 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -4760,9 +5101,9 @@ Object.defineProperty(exports, "__esModule", {
 });
 exports.NAME = exports.VERSION = undefined;
 
-var _playkitJs = __webpack_require__(10);
+var _playkitJs = __webpack_require__(16);
 
-var _youbora = __webpack_require__(31);
+var _youbora = __webpack_require__(32);
 
 var _youbora2 = _interopRequireDefault(_youbora);
 
@@ -4785,7 +5126,7 @@ var pluginName = "youbora";
 (0, _playkitJs.registerPlugin)(pluginName, _youbora2.default);
 
 /***/ }),
-/* 31 */
+/* 32 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -4799,15 +5140,15 @@ var _get = function get(object, property, receiver) { if (object === null) objec
 
 var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
-var _playkitJs = __webpack_require__(10);
+var _playkitJs = __webpack_require__(16);
 
-var _youboralib = __webpack_require__(11);
+var _youboralib = __webpack_require__(17);
 
 var _youboralib2 = _interopRequireDefault(_youboralib);
 
-var _adapter = __webpack_require__(56);
+var _adapter = __webpack_require__(59);
 
-var _nativeads = __webpack_require__(57);
+var _nativeads = __webpack_require__(60);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
@@ -4953,13 +5294,13 @@ Youbora.defaultConfig = {
 exports.default = Youbora;
 
 /***/ }),
-/* 32 */
+/* 33 */
 /***/ (function(module, exports) {
 
-module.exports = {"name":"youboralib","type":"lib","tech":"js","author":"Jordi Aguilar","version":"6.3.2","built":"2018-07-06","repo":"https://bitbucket.org/npaw/lib-plugin-js.git"}
+module.exports = {"name":"youboralib","type":"lib","tech":"js","author":"Jordi Aguilar","version":"6.4.7","built":"2018-09-04","repo":"https://bitbucket.org/npaw/lib-plugin-js.git"}
 
 /***/ }),
-/* 33 */
+/* 34 */
 /***/ (function(module, exports) {
 
 /* eslint no-extend-native: "off" */
@@ -5005,7 +5346,7 @@ module.exports = applyPolyfills
 
 
 /***/ }),
-/* 34 */
+/* 35 */
 /***/ (function(module, exports) {
 
 var F = function () { }
@@ -5027,7 +5368,7 @@ module.exports = function (o) {
 
 
 /***/ }),
-/* 35 */
+/* 36 */
 /***/ (function(module, exports) {
 
 // {@see CdnParser}
@@ -5061,7 +5402,7 @@ module.exports = {
 
 
 /***/ }),
-/* 36 */
+/* 37 */
 /***/ (function(module, exports) {
 
 // {@see CdnParser}
@@ -5091,7 +5432,7 @@ module.exports = {
 
 
 /***/ }),
-/* 37 */
+/* 38 */
 /***/ (function(module, exports) {
 
 // {@see CdnParser}
@@ -5117,7 +5458,7 @@ module.exports = {
 
 
 /***/ }),
-/* 38 */
+/* 39 */
 /***/ (function(module, exports) {
 
 // {@see CdnParser}
@@ -5142,7 +5483,7 @@ module.exports = {
 
 
 /***/ }),
-/* 39 */
+/* 40 */
 /***/ (function(module, exports) {
 
 // {@see CdnParser}
@@ -5172,7 +5513,7 @@ module.exports = {
 
 
 /***/ }),
-/* 40 */
+/* 41 */
 /***/ (function(module, exports) {
 
 // {@see CdnParser}
@@ -5187,31 +5528,32 @@ module.exports = {
 
 
 /***/ }),
-/* 41 */
+/* 42 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var Emitter = __webpack_require__(4)
-var Timer = __webpack_require__(13)
+var Timer = __webpack_require__(11)
 var Chrono = __webpack_require__(7)
 var Constants = __webpack_require__(3)
 var Util = __webpack_require__(2)
 
 var YBRequest = __webpack_require__(5)
-var Communication = __webpack_require__(14)
-var FlowTransform = __webpack_require__(42)
-var ViewTransform = __webpack_require__(19)
-var ResourceTransform = __webpack_require__(20)
-var OfflineTransform = __webpack_require__(24)
+var Communication = __webpack_require__(12)
+var FlowTransform = __webpack_require__(43)
+var ViewTransform = __webpack_require__(20)
+var ResourceTransform = __webpack_require__(21)
+var OfflineTransform = __webpack_require__(25)
 
-var Options = __webpack_require__(25)
-var YouboraStorage = __webpack_require__(26)
-var OfflineStorage = __webpack_require__(43)
-var RequestBuilder = __webpack_require__(15)
+var Options = __webpack_require__(26)
+var YouboraStorage = __webpack_require__(13)
+var OfflineStorage = __webpack_require__(44)
+var RequestBuilder = __webpack_require__(14)
 
-var YouboraInfinity = __webpack_require__(16)
+var YouboraInfinity = __webpack_require__(15)
 
 var BackgroundDetector = __webpack_require__(27)
 var DeviceDetector = __webpack_require__(28)
+var Fingerprint = __webpack_require__(29)
 
 var Plugin = Emitter.extend(
   /** @lends youbora.Plugin.prototype */
@@ -5253,6 +5595,7 @@ var Plugin = Emitter.extend(
       this._adsAdapter = null
       this._ping = new Timer(this._sendPing.bind(this), 5000)
       this._beat = new Timer(this._sendBeat.bind(this), 30000)
+      this.sessionExpire = Number(this.storage.getLocal('sessionExpire')) * 1000 || 300000
 
       this.requestBuilder = new RequestBuilder(this)
 
@@ -5262,21 +5605,32 @@ var Plugin = Emitter.extend(
 
       if (adapter) this.setAdapter(adapter)
 
-      // FastData
-      this.viewTransform = new ViewTransform(this)
-      this.viewTransform.on(ViewTransform.Event.DONE, this._receiveData.bind(this))
-
-      if (this.getIsDataExpired()) {
-        this.viewTransform.init() // request a new data
-      } else {
-        this.viewTransform.setData(this.getStoredData()) // use stored data
-      }
+      this.restartViewTransform()
 
       this._initInfinity()
 
       this.deviceDetector = new DeviceDetector()
       this.backgroundDetector = new BackgroundDetector(this)
+      this.fingerprint = new Fingerprint(this)
       if (this.options['background.enabled']) this.backgroundDetector.startDetection()
+    },
+
+    restartViewTransform: function () {
+      // FastData
+      this.viewTransform = new ViewTransform(this)
+      this.viewTransform.on(ViewTransform.Event.DONE, this._receiveData.bind(this))
+
+      if (this.getIsDataExpired() || (this.storage.getLocal('accCode') !== this.options.accountCode) && (this.storage.getSession('accCode') !== this.options.accountCode)) { // If expired or nonexistant
+        this.storage.removeLocal('data')
+        this.storage.removeLocal('session')
+        this.storage.removeSession('data')
+        this.storage.removeSession('session')
+        this.storage.removeSession('infinityStarted')
+        this.storage.removeSession('infinityStopped')
+        this.viewTransform.init() // request a new data
+      } else {
+        this.viewTransform.setData(this.getStoredData()) // use stored data
+      }
     },
 
     /**
@@ -5287,11 +5641,17 @@ var Plugin = Emitter.extend(
     _receiveData: function (e) {
       this._ping.interval = e.target.response.pingTime * 1000
       this._beat.interval = e.target.response.beatTime * 1000
+      this.sessionExpire = e.target.response.sessionExpire * 1000
+      this.storage.setLocal('data', e.target.response.msg)
+      this.storage.setLocal('dataTime', new Date().getTime())
       this.storage.setSession('data', e.target.response.msg)
-
+      this.storage.setSession('dataTime', new Date().getTime())
+      this.storage.setLocal('accCode', this.options.accountCode)
+      this.storage.setSession('accCode', this.options.accountCode)
       if (this.getIsSessionExpired()) {
         this.viewTransform.setSessionId(this.viewTransform.response.code)
         this.storage.setLocal('session', this.viewTransform.response.code)
+        this.storage.setSession('session', this.viewTransform.response.code)
       } else {
         this.viewTransform.setSessionId(this.getSessionId())
       }
@@ -5444,21 +5804,21 @@ var Plugin = Emitter.extend(
 // Plugin is actually a big class, I decided to separate the logic into
 // different mixin files to ease the maintainability of each file.
 // Filename convention will be plugin+xxxxx.js where xxxxx is the added functionality.
-Util.assign(Plugin.prototype, __webpack_require__(44))
 Util.assign(Plugin.prototype, __webpack_require__(47))
-Util.assign(Plugin.prototype, __webpack_require__(48))
-Util.assign(Plugin.prototype, __webpack_require__(49))
 Util.assign(Plugin.prototype, __webpack_require__(50))
 Util.assign(Plugin.prototype, __webpack_require__(51))
 Util.assign(Plugin.prototype, __webpack_require__(52))
 Util.assign(Plugin.prototype, __webpack_require__(53))
 Util.assign(Plugin.prototype, __webpack_require__(54))
+Util.assign(Plugin.prototype, __webpack_require__(55))
+Util.assign(Plugin.prototype, __webpack_require__(56))
+Util.assign(Plugin.prototype, __webpack_require__(57))
 
 module.exports = Plugin
 
 
 /***/ }),
-/* 42 */
+/* 43 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var Transform = __webpack_require__(6)
@@ -5503,37 +5863,23 @@ module.exports = FlowTransform
 
 
 /***/ }),
-/* 43 */
+/* 44 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var YouboraObject = __webpack_require__(1)
-var Log = __webpack_require__(0)
+var Storage = __webpack_require__(13)
 
 /**
- * This class manages data storage for offline events in localStorage.
+ * This class manages data storage for offline events in an storage.
  *
  * @extends youbora.Emitter
  * @memberof youbora
  */
 var OfflineStorage = YouboraObject.extend({
   constructor: function () {
-    this.disabledStorage = false
-    if (!localStorage) {
-      Log.error('Youbora offline events need localStorage which is not supported by your browser.')
-      this.disabledStorage = true
-    } else {
-      try {
-        localStorage.setItem('youboraTestItem', 123)
-        localStorage.removeItem('youboraTestItem')
-      }
-      catch (err) {
-        Log.error('Youbora offline events need localStorage which is not supported by your browser or settings.')
-        this.disabledStorage = true
-        return null
-      }
-    }
+    this.storage = new Storage('youboraOffline')
     this.actualView = null
-    //this.viewList = []
+    this.viewList = []
     this.givenIds = []
     this._getOldViewList()
   },
@@ -5543,20 +5889,17 @@ var OfflineStorage = YouboraObject.extend({
     var viewId = this._getValidId()
 
     // create empty view
-    var viewName = 'youboraOffline.' + viewId
-    localStorage.setItem(viewName, '')
+    this.storage.setLocal(viewId, '')
 
     // add to viewlist
     this.viewList.push(viewId)
-    localStorage.setItem('youboraOffline.views', this.viewList)
+    this.storage.setLocal('views', this.viewList)
 
     // save the id
     this.actualView = viewId
   },
 
   addEvent: function (event, params) {
-    if (this.disabledStorage) return null
-
     // if event is start, create new view
     if (event === "/start") this._newView()
 
@@ -5569,14 +5912,17 @@ var OfflineStorage = YouboraObject.extend({
     //create event object
     var fullEvent = "{\"request\":\"" + event.slice(1) + "\"," // {"request":"start",
     fullEvent += "\"unixtime\":" + Date.now() + "," // "unixtime":1499876515,
-    for (param in params) {
+    for (var param in params) {
       if (params[param] === undefined) break
       fullEvent += "\"" + param + "\":" // "aParam":
       if (param === "code") {
         fullEvent += "\"" + "CODE_PLACEHOLDER" + "\"," // "CODE_PLACEHOLDER",
       } else if (param === "sessionId") {
         fullEvent += "\"" + "SESSION_PLACEHOLDER" + "\"," // "SESSION_PLACEHOLDER",
-        // modify code to support offline with infinity
+      } else if (param === "parentId") {
+        fullEvent += "\"" + "PARENT_PLACEHOLDER" + "\"," // "PARENT_PLACEHOLDER",
+      } else if (param === "sessionRoot") {
+        fullEvent += "\"" + "ROOT_PLACEHOLDER" + "\"," // "ROOT_PLACEHOLDER",
       } else if (typeof params[param] === "string") {
         fullEvent += "\"" + params[param] + "\"," // "aStringValue",
       } else if (typeof params[param] === "object") {
@@ -5589,23 +5935,21 @@ var OfflineStorage = YouboraObject.extend({
     fullEvent += "}"
 
     // get accumulated view object
-    var viewName = 'youboraOffline.' + this.actualView
-    var temp = localStorage.getItem(viewName)
+    var temp = this.storage.getLocal(this.actualView)
     if (temp != "") temp = temp + ',' // comma between events
 
     // add the event
-    localStorage.setItem(viewName, temp + fullEvent)
+    this.storage.setLocal(this.actualView, temp + fullEvent)
   },
 
   getView: function () {
-    if (this.disabledStorage) return null
     if (this.viewList.length > this.givenIds.length) { // if we have any view not sent yet
       var position = 0
       while (true) {
         var idToSend = this.viewList[position]
         if (!this.givenIds.includes(idToSend)) {
           this.givenIds.push(idToSend)
-          return ["[" + localStorage.getItem('youboraOffline.' + idToSend) + "]", idToSend]
+          return ["[" + this.storage.getLocal(idToSend) + "]", idToSend]
         }
         position++
       }
@@ -5614,30 +5958,26 @@ var OfflineStorage = YouboraObject.extend({
   },
 
   removeView: function (id) {
-    if (this.disabledStorage) {
-      return null
-    }
-    var storageItemName = 'youboraOffline.' + id
-    localStorage.removeItem(storageItemName)
+    this.storage.removeLocal(id)
     var position = this.viewList.indexOf(id)
     if (position !== -1) this.viewList.splice(position, 1)
     position = this.givenIds.indexOf(id)
     if (position !== -1) this.givenIds.splice(position, 1)
-    localStorage.setItem('youboraOffline.views', this.viewList.toString())
+    this.storage.setLocal('views', this.viewList.toString())
     if (id === this.actualView) this.actualView = null
   },
 
   _getOldViewList: function () {
     var stringList = ""
-    if (localStorage['youboraOffline.views']) {
-      stringList = localStorage.getItem('youboraOffline.views')
+    if (this.storage.getLocal('views')) {
+      stringList = this.storage.getLocal('views')
     } else {
-      localStorage.setItem('youboraOffline.views', '')
+      this.storage.setLocal('views', '')
     }
 
     if (stringList === "") {
       this.viewList = []
-    } else {
+    } else if (typeof stringList.split === "function") {
       this.viewList = stringList.split(',')
     }
   },
@@ -5660,7 +6000,121 @@ module.exports = OfflineStorage
 
 
 /***/ }),
-/* 44 */
+/* 45 */
+/***/ (function(module, exports, __webpack_require__) {
+
+var YouboraObject = __webpack_require__(1)
+
+var DataExtractor = YouboraObject.extend({
+  constructor: function (plugin) {
+    this.plugin = plugin
+  },
+
+  getAllData: function () {
+    var returnValue = {}
+    returnValue.userAgent = this.getUserAgent()
+    returnValue.threads = this.getVirtualCores()
+    returnValue.language = this.getLanguage()
+    returnValue.langList = this.getAvailableLanguages()
+    returnValue.resolution = this.getResolution()
+    returnValue.colorDepth = this.getColorDepth()
+    returnValue.deviceMemory = this.getMemory()
+    returnValue.touchscreen = this.getTouchscreen()
+    returnValue.localStorage = this.getLocalStorage()
+    returnValue.sessionStorage = this.getSessionStorage()
+    returnValue.cookiesAvailable = this.getCookiesAvailable()
+    returnValue.flashAvailable = this.getHasFlash()
+    returnValue.timeZone = this.getTimeZone()
+    returnValue.plugins = this.getPluginList()
+    return returnValue
+  },
+
+  // Getters
+  getUserAgent: function () {
+    return this._navigatorCheck() ? navigator.userAgent : null
+  },
+
+  getVirtualCores: function () {
+    return this._navigatorCheck() ? navigator.hardwareConcurrency : null
+  },
+
+  getLanguage: function () {
+    return this._navigatorCheck() ? navigator.language : null
+  },
+
+  getAvailableLanguages: function () {
+    return this._navigatorCheck() ? navigator.languages : null
+  },
+
+  getResolution: function () {
+    if (this._navigatorCheck() && navigator.screen) {
+      return navigator.screen.width.toString() + navigator.screen.height.toString()
+    }
+    return null
+  },
+
+  getColorDepth: function () {
+    return (this._navigatorCheck() && navigator.screen) ? navigator.screen.colorDepth : null
+  },
+
+  getMemory: function () {
+    return this._navigatorCheck() ? navigator.deviceMemory : null
+  },
+
+  getTouchscreen: function () {
+    return this._navigatorCheck() ? navigator.maxTouchPoints : null
+  },
+
+  getLocalStorage: function () {
+    return typeof localStorage !== "undefined"
+  },
+
+  getSessionStorage: function () {
+    return typeof sessionStorage !== "undefined"
+  },
+
+  getCookiesAvailable: function () {
+    return this._navigatorCheck() ? navigator.cookieEnabled : false
+  },
+
+  getHasFlash: function () {
+    if (!this._navigatorCheck()) return false
+    return (typeof navigator.plugins != "undefined" && typeof navigator.plugins["Shockwave Flash"] == "object") || (window.ActiveXObject && (new ActiveXObject("ShockwaveFlash.ShockwaveFlash")) != false)
+  },
+
+  getPluginList: function () {
+    if (!this._navigatorCheck() || !navigator.plugins || navigator.plugins.length === 0) return null
+    var pluginlist = ''
+    for (var counter = 0; counter < navigator.plugins.length; counter++) {
+      pluginlist += navigator.plugins[counter].description + ' ' + navigator.plugins[counter].filename + ' ' + navigator.plugins[counter].name + ' '
+    }
+    return pluginlist
+  },
+
+  getTimeZone: function () {
+    var date = new Date()
+    return date.getTimezoneOffset().toString()
+  },
+
+  _navigatorCheck: function () {
+    return typeof navigator !== "undefined"
+  }
+
+})
+
+module.exports = DataExtractor
+
+
+/***/ }),
+/* 46 */
+/***/ (function(module, exports) {
+
+var MD5 = function (s) { function L (k, d) { return (k << d) | (k >>> (32 - d)) } function K (G, k) { var I, d, F, H, x; F = (G & 2147483648); H = (k & 2147483648); I = (G & 1073741824); d = (k & 1073741824); x = (G & 1073741823) + (k & 1073741823); if (I & d) { return (x ^ 2147483648 ^ F ^ H) } if (I | d) { if (x & 1073741824) { return (x ^ 3221225472 ^ F ^ H) } else { return (x ^ 1073741824 ^ F ^ H) } } else { return (x ^ F ^ H) } } function r (d, F, k) { return (d & F) | ((~d) & k) } function q (d, F, k) { return (d & k) | (F & (~k)) } function p (d, F, k) { return (d ^ F ^ k) } function n (d, F, k) { return (F ^ (d | (~k))) } function u (G, F, aa, Z, k, H, I) { G = K(G, K(K(r(F, aa, Z), k), I)); return K(L(G, H), F) } function f (G, F, aa, Z, k, H, I) { G = K(G, K(K(q(F, aa, Z), k), I)); return K(L(G, H), F) } function D (G, F, aa, Z, k, H, I) { G = K(G, K(K(p(F, aa, Z), k), I)); return K(L(G, H), F) } function t (G, F, aa, Z, k, H, I) { G = K(G, K(K(n(F, aa, Z), k), I)); return K(L(G, H), F) } function e (G) { var Z; var F = G.length; var x = F + 8; var k = (x - (x % 64)) / 64; var I = (k + 1) * 16; var aa = Array(I - 1); var d = 0; var H = 0; while (H < F) { Z = (H - (H % 4)) / 4; d = (H % 4) * 8; aa[Z] = (aa[Z] | (G.charCodeAt(H) << d)); H++ } Z = (H - (H % 4)) / 4; d = (H % 4) * 8; aa[Z] = aa[Z] | (128 << d); aa[I - 2] = F << 3; aa[I - 1] = F >>> 29; return aa } function B (x) { var k = "", F = "", G, d; for (d = 0; d <= 3; d++) { G = (x >>> (d * 8)) & 255; F = "0" + G.toString(16); k = k + F.substr(F.length - 2, 2) } return k } function J (k) { k = k.replace(/rn/g, "n"); var d = ""; for (var F = 0; F < k.length; F++) { var x = k.charCodeAt(F); if (x < 128) { d += String.fromCharCode(x) } else { if ((x > 127) && (x < 2048)) { d += String.fromCharCode((x >> 6) | 192); d += String.fromCharCode((x & 63) | 128) } else { d += String.fromCharCode((x >> 12) | 224); d += String.fromCharCode(((x >> 6) & 63) | 128); d += String.fromCharCode((x & 63) | 128) } } } return d } var C = Array(); var P, h, E, v, g, Y, X, W, V; var S = 7, Q = 12, N = 17, M = 22; var A = 5, z = 9, y = 14, w = 20; var o = 4, m = 11, l = 16, j = 23; var U = 6, T = 10, R = 15, O = 21; s = J(s); C = e(s); Y = 1732584193; X = 4023233417; W = 2562383102; V = 271733878; for (P = 0; P < C.length; P += 16) { h = Y; E = X; v = W; g = V; Y = u(Y, X, W, V, C[P + 0], S, 3614090360); V = u(V, Y, X, W, C[P + 1], Q, 3905402710); W = u(W, V, Y, X, C[P + 2], N, 606105819); X = u(X, W, V, Y, C[P + 3], M, 3250441966); Y = u(Y, X, W, V, C[P + 4], S, 4118548399); V = u(V, Y, X, W, C[P + 5], Q, 1200080426); W = u(W, V, Y, X, C[P + 6], N, 2821735955); X = u(X, W, V, Y, C[P + 7], M, 4249261313); Y = u(Y, X, W, V, C[P + 8], S, 1770035416); V = u(V, Y, X, W, C[P + 9], Q, 2336552879); W = u(W, V, Y, X, C[P + 10], N, 4294925233); X = u(X, W, V, Y, C[P + 11], M, 2304563134); Y = u(Y, X, W, V, C[P + 12], S, 1804603682); V = u(V, Y, X, W, C[P + 13], Q, 4254626195); W = u(W, V, Y, X, C[P + 14], N, 2792965006); X = u(X, W, V, Y, C[P + 15], M, 1236535329); Y = f(Y, X, W, V, C[P + 1], A, 4129170786); V = f(V, Y, X, W, C[P + 6], z, 3225465664); W = f(W, V, Y, X, C[P + 11], y, 643717713); X = f(X, W, V, Y, C[P + 0], w, 3921069994); Y = f(Y, X, W, V, C[P + 5], A, 3593408605); V = f(V, Y, X, W, C[P + 10], z, 38016083); W = f(W, V, Y, X, C[P + 15], y, 3634488961); X = f(X, W, V, Y, C[P + 4], w, 3889429448); Y = f(Y, X, W, V, C[P + 9], A, 568446438); V = f(V, Y, X, W, C[P + 14], z, 3275163606); W = f(W, V, Y, X, C[P + 3], y, 4107603335); X = f(X, W, V, Y, C[P + 8], w, 1163531501); Y = f(Y, X, W, V, C[P + 13], A, 2850285829); V = f(V, Y, X, W, C[P + 2], z, 4243563512); W = f(W, V, Y, X, C[P + 7], y, 1735328473); X = f(X, W, V, Y, C[P + 12], w, 2368359562); Y = D(Y, X, W, V, C[P + 5], o, 4294588738); V = D(V, Y, X, W, C[P + 8], m, 2272392833); W = D(W, V, Y, X, C[P + 11], l, 1839030562); X = D(X, W, V, Y, C[P + 14], j, 4259657740); Y = D(Y, X, W, V, C[P + 1], o, 2763975236); V = D(V, Y, X, W, C[P + 4], m, 1272893353); W = D(W, V, Y, X, C[P + 7], l, 4139469664); X = D(X, W, V, Y, C[P + 10], j, 3200236656); Y = D(Y, X, W, V, C[P + 13], o, 681279174); V = D(V, Y, X, W, C[P + 0], m, 3936430074); W = D(W, V, Y, X, C[P + 3], l, 3572445317); X = D(X, W, V, Y, C[P + 6], j, 76029189); Y = D(Y, X, W, V, C[P + 9], o, 3654602809); V = D(V, Y, X, W, C[P + 12], m, 3873151461); W = D(W, V, Y, X, C[P + 15], l, 530742520); X = D(X, W, V, Y, C[P + 2], j, 3299628645); Y = t(Y, X, W, V, C[P + 0], U, 4096336452); V = t(V, Y, X, W, C[P + 7], T, 1126891415); W = t(W, V, Y, X, C[P + 14], R, 2878612391); X = t(X, W, V, Y, C[P + 5], O, 4237533241); Y = t(Y, X, W, V, C[P + 12], U, 1700485571); V = t(V, Y, X, W, C[P + 3], T, 2399980690); W = t(W, V, Y, X, C[P + 10], R, 4293915773); X = t(X, W, V, Y, C[P + 1], O, 2240044497); Y = t(Y, X, W, V, C[P + 8], U, 1873313359); V = t(V, Y, X, W, C[P + 15], T, 4264355552); W = t(W, V, Y, X, C[P + 6], R, 2734768916); X = t(X, W, V, Y, C[P + 13], O, 1309151649); Y = t(Y, X, W, V, C[P + 4], U, 4149444226); V = t(V, Y, X, W, C[P + 11], T, 3174756917); W = t(W, V, Y, X, C[P + 2], R, 718787259); X = t(X, W, V, Y, C[P + 9], O, 3951481745); Y = K(Y, h); X = K(X, E); W = K(W, v); V = K(V, g) } var i = B(Y) + B(X) + B(W) + B(V); return i.toLowerCase() }
+module.exports = MD5
+
+
+/***/ }),
+/* 47 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var Log = __webpack_require__(0)
@@ -5772,10 +6226,9 @@ var PluginContentMixin = {
       this._startPings()
     }
     var params = e.data.params || {}
-    var allParamsReady = (!!this.options['content.resource'] || !!this._adapter.getResource()) &&
-      (typeof this.options["content.isLive"] === 'boolean' || typeof this._adapter.getIsLive() === 'boolean') &&
-      (typeof this.options['content.duration'] === 'number' || typeof this._adapter.getDuration() === 'number' || this._adapter.getIsLive() || this.options["content.isLive"]) &&
-      (!!this.options['content.title'] || !!this._adapter.getTitle())
+    var allParamsReady = this.getResource() && typeof this.getIsLive() === 'boolean' &&
+      (this.getIsLive() || (typeof this.getDuration() === 'number' && this.getDuration() > 0)) && this.getTitle()
+    if (this.options['forceInit']) allParamsReady = false
     if (allParamsReady && !this._adapter.flags.isInited && !this.isInitiated) { //start
       this._send(Constants.WillSendEvent.WILL_SEND_START, Constants.Service.START, params)
       this._adSavedError()
@@ -5842,6 +6295,7 @@ var PluginContentMixin = {
     var params = e.data.params || {}
     this._send(Constants.WillSendEvent.WILL_SEND_RESUME, Constants.Service.RESUME, params)
     Log.notice(Constants.Service.RESUME + ' ' + params.pauseDuration + 'ms')
+    this._adapter.chronos.pause.reset()
   },
 
   _seekBeginListener: function (e) {
@@ -5915,7 +6369,7 @@ module.exports = PluginContentMixin
 
 
 /***/ }),
-/* 45 */
+/* 48 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var YouboraObject = __webpack_require__(1)
@@ -5962,7 +6416,7 @@ module.exports = PlaybackChronos
 
 
 /***/ }),
-/* 46 */
+/* 49 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var YouboraObject = __webpack_require__(1)
@@ -6015,7 +6469,7 @@ module.exports = PlaybackFlags
 
 
 /***/ }),
-/* 47 */
+/* 50 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var Util = __webpack_require__(2)
@@ -6433,6 +6887,15 @@ var PluginGetterMixin = {
   },
 
   /**
+ * Returns AnonymousUser
+ *
+ * @memberof youbora.Plugin.prototype
+ */
+  getAnonymousUser: function () {
+    return this.options['anonymousUser']
+  },
+
+  /**
    * Get URL referer.
    *
    * @memberof youbora.Plugin.prototype
@@ -6444,6 +6907,30 @@ var PluginGetterMixin = {
       ret = window.location.href
     }
     return ret
+  },
+
+  /**
+ * Get URL referral.
+ *
+ * @memberof youbora.Plugin.prototype
+ */
+  getReferral: function () {
+    if (typeof window !== 'undefined' && window.document) {
+      return window.document.referrer
+    }
+    return null
+  },
+
+  /**
+* Get Browser language
+*
+* @memberof youbora.Plugin.prototype
+*/
+  getLanguage: function () {
+    if (typeof navigator !== "undefined") {
+      return navigator.language
+    }
+    return null
   },
 
   /**
@@ -6494,6 +6981,14 @@ var PluginGetterMixin = {
   getExperiments: function () {
     if (this.options['experiments'].length > 0) return this.options['experiments']
     return null
+  },
+
+  getFingerprint: function () {
+    return this.fingerprint.getKey()
+  },
+
+  getIsInfinity: function () {
+    return this.options["isInfinity"]
   }
 }
 
@@ -6501,7 +6996,7 @@ module.exports = PluginGetterMixin
 
 
 /***/ }),
-/* 48 */
+/* 51 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var Log = __webpack_require__(0)
@@ -6539,6 +7034,7 @@ var PluginContentGetterMixin = {
     if (this._adapter) {
       try {
         ret = this._adapter.getPlayrate()
+        if (this._adapter.flags && this._adapter.flags.isPaused) ret = 0
       } catch (err) {
         Log.warn('An error occured while calling getPlayrate', err)
       }
@@ -7064,7 +7560,7 @@ module.exports = PluginContentGetterMixin
 
 
 /***/ }),
-/* 49 */
+/* 52 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var Log = __webpack_require__(0)
@@ -7146,6 +7642,10 @@ var PluginAdsMixin = {
     if (this._adapter) {
       this._adapter.fireBufferEnd()
       this._adapter.fireSeekEnd()
+      if (!this._adapter.flags.isInited && !this._adapter.flags.isStarted) this._adapter.fireStart()
+      if (this._adapter.flags.isPaused) this._adapter.chronos.pause.reset()
+    } else {
+      this.fireInit()
     }
     this.adInitSent = true
     var params = e.data.params || {}
@@ -7164,6 +7664,8 @@ var PluginAdsMixin = {
       this._adapter.fireSeekEnd()
       if (!this._adapter.flags.isInited && !this._adapter.flags.isStarted) this._adapter.fireStart()
       if (this._adapter.flags.isPaused) this._adapter.chronos.pause.reset()
+    } else {
+      this.fireInit()
     }
 
     var params = e.data.params || {}
@@ -7173,8 +7675,7 @@ var PluginAdsMixin = {
       params.adNumber = this.requestBuilder.lastSent.adNumber
     }
     if (!this.options['ad.ignore']) {
-      var allParamsReady = ((!!this._adsAdapter.getResource() || !!this._adsAdapter.getTitle())
-        && typeof this._adsAdapter.getDuration() === 'number')
+      var allParamsReady = (this.getAdResource() || this.getAdTitle()) && typeof this.getAdDuration() === 'number'
       if (allParamsReady) {
         this.adStartSent = true
         this._send(Constants.WillSendEvent.WILL_SEND_AD_START, Constants.Service.AD_START, params)
@@ -7266,7 +7767,7 @@ var PluginAdsMixin = {
   _adErrorListener: function (e) {
     var params = e.data.params || {}
     if (this._adapter && !this._adapter.flags.isStarted && !this._adapter.flags.isInited && !this.isInitiated) {
-      this._savedAdError = e;
+      this._savedAdError = e
       return null // Ignore ad errors before content
     }
     if (this._blockAdError(e.data.params)) return null
@@ -7318,7 +7819,7 @@ module.exports = PluginAdsMixin
 
 
 /***/ }),
-/* 50 */
+/* 53 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var Log = __webpack_require__(0)
@@ -7560,7 +8061,7 @@ module.exports = PluginAdsGettersMixin
 
 
 /***/ }),
-/* 51 */
+/* 54 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var Log = __webpack_require__(0)
@@ -7643,13 +8144,13 @@ module.exports = PluginPingMixin
 
 
 /***/ }),
-/* 52 */
+/* 55 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var Log = __webpack_require__(0)
 var Util = __webpack_require__(2)
 var Constants = __webpack_require__(3)
-var RequestBuilder = __webpack_require__(15)
+var RequestBuilder = __webpack_require__(14)
 var Transform = __webpack_require__(6)
 
 // This file is designed to add extra functionalities to Plugin class
@@ -7762,15 +8263,6 @@ var PluginFireMixin = {
       params.end = undefined
       this.options['ad.afterStop'] = 0
     }
-    if (this._adapter) {
-      this._adapter.flags.isEnded = true
-      if (this._adapter.flags.isPaused) {
-        if (!params) {
-          params = {}
-        }
-        params.pauseDuration = this._adapter.chronos.pause.getDeltaTime()
-      }
-    }
     if (!this._adsAdapter) {
       this.options['ad.afterStop'] = 0
     }
@@ -7819,7 +8311,10 @@ var PluginFireMixin = {
       if (bodyAndId[0] === null) break
       var newViewCode = this.viewTransform.nextView()
       var body = bodyAndId[0].replace(/CODE_PLACEHOLDER/g, newViewCode.toString())
-        .replace(/,"sessionId":"SESSION_PLACEHOLDER"/g, "") // modify to support offline+infinity
+        .replace(/,"sessionId":"SESSION_PLACEHOLDER"/g, "") // this.viewTransform.getSessionId()
+        .replace(/,"sessionRoot":"ROOT_PLACEHOLDER"/g, "") // this.viewTransform.getSessionRoot()
+        .replace(/,"parentId":"PARENT_PLACEHOLDER"/g, "") // this.viewTransform.getParentId()
+      // modify to support offline+infinity
       this._send(Constants.WillSendEvent.WILL_SEND_OFFLINE_EVENTS, Constants.Service.OFFLINE_EVENTS,
         params, body, "POST", function (a, callbackParams) {
           this.offlineStorage.removeView(callbackParams['offlineId'])
@@ -7834,14 +8329,14 @@ module.exports = PluginFireMixin
 
 
 /***/ }),
-/* 53 */
+/* 56 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var Constants = __webpack_require__(3)
 var Log = __webpack_require__(0)
 var YBRequest = __webpack_require__(5)
 
-var YouboraInfinity = __webpack_require__(16)
+var YouboraInfinity = __webpack_require__(15)
 
 // This file is designed to add extra functionalities to Plugin class
 
@@ -7906,7 +8401,7 @@ var PluginInfinityMixin = {
     )
 
     // stop beats
-    if (!this._beat.isRunning) this._beat.stop()
+    if (this._beat.isRunning) this._beat.stop()
 
     Log.notice(Constants.Service.SESSION_STOP + ' ' + params.route)
   },
@@ -7932,6 +8427,9 @@ var PluginInfinityMixin = {
     }
 
     this._sendInfinity(Constants.WillSendEvent.WILL_SEND_BEAT, Constants.Service.BEAT, params)
+    if (this.infinity) {
+      this.infinity._setLastActive()
+    }
     Log.verbose(Constants.Service.BEAT)
   }
 }
@@ -7940,22 +8438,50 @@ module.exports = PluginInfinityMixin
 
 
 /***/ }),
-/* 54 */
+/* 57 */
 /***/ (function(module, exports) {
 
 // This file is designed to add extra functionalities to Plugin class
 
 var PluginInfinityGettersMixin = {
-  getSessionId: function () {
-    return this.storage.getLocal('session')
-  },
-
   getContext: function () {
     return this.storage.getSession('context')
   },
 
+  getSessionId: function () {
+    return this.storage.getSession('session') || this.storage.getLocal('session')
+  },
+
   getStoredData: function () {
-    return this.storage.getSession('data')
+    return this.storage.getSession('data') || this.storage.getLocal('data')
+  },
+
+  getDataTime: function () {
+    return this.storage.getSession('dataTime') || this.storage.getLocal('dataTime')
+  },
+
+  getLastActive: function () {
+    return this.storage.getSession('lastactive') || this.storage.getLocal('lastactive')
+  },
+
+  setStoredData: function (data) {
+    this.storage.setLocal('data', data)
+    this.storage.setSession('data', data)
+  },
+
+  setSessionId: function (session) {
+    this.storage.setLocal('session', session)
+    this.storage.setSession('session', session)
+  },
+
+  setDataTime: function (time) {
+    this.storage.setLocal('dataTime', time)
+    this.storage.setSession('dataTime', time)
+  },
+
+  setLastActive: function (last) {
+    this.storage.setLocal('lastactive', last)
+    this.storage.setSession('lastactive', last)
   },
 
   getPageName: function () {
@@ -7965,15 +8491,13 @@ var PluginInfinityGettersMixin = {
   },
 
   getIsSessionExpired: function () {
-    var time = this.storage.getSession('lastactive') + this.options['session.expire']
     var now = new Date().getTime()
-    return !(this.getSessionId() && (time > now))
+    return !this.getSessionId() || (this.infinity.getFirstActive() < now - this.sessionExpire)
   },
 
   getIsDataExpired: function () {
-    var time = this.storage.getSession('lastactive') + this.options['session.expire']
     var now = new Date().getTime()
-    return !(this.getStoredData() && (time > now))
+    return !this.getStoredData() || (this.infinity.getFirstActive() < now - this.sessionExpire)
   }
 }
 
@@ -7981,7 +8505,7 @@ module.exports = PluginInfinityGettersMixin
 
 
 /***/ }),
-/* 55 */
+/* 58 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var Adapter = __webpack_require__(9)
@@ -8086,7 +8610,7 @@ module.exports = StandardAdapter
 
 
 /***/ }),
-/* 56 */
+/* 59 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -8097,11 +8621,11 @@ Object.defineProperty(exports, "__esModule", {
 });
 exports.YouboraAdapter = undefined;
 
-var _youboralib = __webpack_require__(11);
+var _youboralib = __webpack_require__(17);
 
 var _youboralib2 = _interopRequireDefault(_youboralib);
 
-var _playkitJs = __webpack_require__(10);
+var _playkitJs = __webpack_require__(16);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
@@ -8138,7 +8662,7 @@ var YouboraAdapter = _youboralib2.default.StandardAdapter.extend({
   getBitrate: function getBitrate() {
     var activeVideo = this.player.getActiveTracks().video;
     if (activeVideo && activeVideo.bandwidth) {
-      return activeVideo.bandwidth;
+      return isNaN(activeVideo.bandwidth) ? null : activeVideo.bandwidth;
     }
     return null;
   },
@@ -8147,6 +8671,9 @@ var YouboraAdapter = _youboralib2.default.StandardAdapter.extend({
   getRendition: function getRendition() {
     var activeVideo = this.player.getActiveTracks().video;
     if (activeVideo) {
+      if (isNaN(activeVideo.bandwidth)) {
+        return null;
+      }
       return _youboralib2.default.Util.buildRenditionString(activeVideo.width, activeVideo.height, activeVideo.bandwidth);
     }
     return null;
@@ -8212,6 +8739,7 @@ var YouboraAdapter = _youboralib2.default.StandardAdapter.extend({
 
   /** @returns {void} - Listener for 'play' event. */
   playListener: function playListener() {
+    if (this.blockedByError) return;
     if (!this.flags.isStarted) {
       this.plugin.options['content.isLive.noSeek'] = !this.player.isDvr();
       this.initialPlayhead = this.getPlayhead();
@@ -8233,12 +8761,26 @@ var YouboraAdapter = _youboralib2.default.StandardAdapter.extend({
   },
 
   /** @returns {void}
-   * @param {Object} e - object with payload including severity, code and data.
+   * @param {Object} error - object with payload including severity, code and data.
    * - The name of the plugin.- Listener for 'error' event. */
-  errorListener: function errorListener(e) {
-    if (e.payload.severity === _playkitJs.Error.Severity.CRITICAL) {
-      this.fireError(e.payload.code, e.payload.data);
+  errorListener: function errorListener(error) {
+    if (this.blockedByError) return;
+    if (error.payload.severity === _playkitJs.Error.Severity.CRITICAL) {
+      var categoryName = '';
+      var codeName = '';
+      for (var k in _playkitJs.Error.Category) {
+        if (_playkitJs.Error.Category[k] === error.payload.category) {
+          categoryName = k;
+        }
+      }
+      for (var _k in _playkitJs.Error.Code) {
+        if (_playkitJs.Error.Code[_k] === error.payload.code) {
+          codeName = _k;
+        }
+      }
+      this.fireError(error.payload.code, { data: error.payload.data, msg: categoryName + ' ' + codeName });
       this.fireStop();
+      this.blockedByError = true;
     }
   },
 
@@ -8289,13 +8831,14 @@ var YouboraAdapter = _youboralib2.default.StandardAdapter.extend({
   reset: function reset() {
     this.stopBlockedByAds = false;
     this.initialPlayhead = null;
+    this.blockedByError = false;
   }
 });
 
 exports.YouboraAdapter = YouboraAdapter;
 
 /***/ }),
-/* 57 */
+/* 60 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -8306,7 +8849,7 @@ Object.defineProperty(exports, "__esModule", {
 });
 exports.NativeAdsAdapter = undefined;
 
-var _youboralib = __webpack_require__(11);
+var _youboralib = __webpack_require__(17);
 
 var _youboralib2 = _interopRequireDefault(_youboralib);
 
