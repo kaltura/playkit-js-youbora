@@ -1,15 +1,14 @@
 //@flow
-import { BasePlugin } from 'playkit-js'
-import youbora from 'youboralib'
-import { YouboraAdapter } from './adapter/adapter'
-import { NativeAdsAdapter } from './adapter/ads/nativeads'
+import {BasePlugin} from '@playkit-js/playkit-js';
+import youbora from 'youboralib';
+import {YouboraAdapter} from './adapter/adapter';
+import {NativeAdsAdapter} from './adapter/ads/nativeads';
 
 /**
  * Youbora plugin for analytics.
  * @classdesc
  */
-export default class Youbora extends BasePlugin {
-
+class Youbora extends BasePlugin {
   /**
    * The default configuration of the plugin.
    * @type {Object}
@@ -24,7 +23,7 @@ export default class Youbora extends BasePlugin {
    * @returns {boolean} - Whether the plugin is valid or not.
    * @static
    */
-  static isValid (): boolean {
+  static isValid(): boolean {
     return true;
   }
 
@@ -37,8 +36,8 @@ export default class Youbora extends BasePlugin {
   constructor(name: string, player: Player, config: Object) {
     super(name, player, config);
     this._youbora = new youbora.Plugin(this.config.options);
-    this._youbora.setAdapter(new YouboraAdapter(player, config))
-    this._youbora.setAdsAdapter(new NativeAdsAdapter(player))
+    this._youbora.setAdapter(new YouboraAdapter(player, config));
+    this._youbora.setAdsAdapter(new NativeAdsAdapter(player));
     this._addBindings();
   }
 
@@ -48,7 +47,7 @@ export default class Youbora extends BasePlugin {
    * @override
    * @returns {void}
    */
-  updateConfig (update: Object): void {
+  updateConfig(update: Object): void {
     super.updateConfig(update);
     this._youbora.setOptions(update.options);
     if (this._youbora.getAdapter()) {
@@ -61,8 +60,8 @@ export default class Youbora extends BasePlugin {
    * Reset the plugin
    * @return {void}
    */
-  reset (): void {
-    this._youbora.fireStop()
+  reset(): void {
+    this._youbora.fireStop();
   }
 
   /**
@@ -71,9 +70,9 @@ export default class Youbora extends BasePlugin {
    * @private
    * @returns {void}
    */
-  _addPlayerMetadata (): void {
+  _addPlayerMetadata(): void {
     this._youbora.setOptions({
-      properties: {
+      'content.metadata': {
         kalturaInfo: {
           entryId: this.config.entryId,
           sessionId: this.config.sessionId,
@@ -89,7 +88,7 @@ export default class Youbora extends BasePlugin {
    * @private
    * @returns {void}
    */
-  _addBindings (): void {
+  _addBindings(): void {
     // Bind the plugin logger to the youbora sdk logger
     this._youbora.getAdapter().bindLogger(this.logger);
   }
@@ -100,7 +99,9 @@ export default class Youbora extends BasePlugin {
    * @public
    * @returns {void}
    */
-  destroy (): void {
-    this._youbora.fireStop()
+  destroy(): void {
+    this._youbora.fireStop();
   }
 }
+
+export {Youbora};

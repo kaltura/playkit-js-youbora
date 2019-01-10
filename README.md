@@ -1,25 +1,27 @@
 # PlayKit JS Youbora - [Youbora analytics SDK] plugin for the [PlayKit JS Player]
 
 [![Build Status](https://travis-ci.org/kaltura/playkit-js-youbora.svg?branch=master)](https://travis-ci.org/kaltura/playkit-js-youbora)
+[![code style: prettier](https://img.shields.io/badge/code_style-prettier-ff69b4.svg?style=flat-square)](https://github.com/prettier/prettier)
 
 PlayKit JS Youbora plugin integrates [Youbora analytics SDK] with the [PlayKit JS Player].
 
 PlayKit JS Youbora is written in [ECMAScript6], statically analysed using [Flow] and transpiled in ECMAScript5 using [Babel].
 
-[Youbora analytics SDK]: https://nicepeopleatwork.com/youbora/
-[NPAW developer portal]: http://developer.nicepeopleatwork.com/
-[Flow]: https://flow.org/
-[ECMAScript6]: https://github.com/ericdouglas/ES6-Learning#articles--tutorials
-[Babel]: https://babeljs.io
+[youbora analytics sdk]: https://nicepeopleatwork.com/youbora/
+[npaw developer portal]: http://developer.nicepeopleatwork.com/
+[flow]: https://flow.org/
+[ecmascript6]: https://github.com/ericdouglas/ES6-Learning#articles--tutorials
+[babel]: https://babeljs.io
 
 ## Getting Started
 
 ### Prerequisites
+
 The plugin requires [PlayKit JS Player] to be loaded first.
 
 The plugin uses the [Youbora analytics SDK] for HTML5.
 
-[Playkit JS Player]: https://github.com/kaltura/playkit-js
+[playkit js player]: https://github.com/kaltura/playkit-js
 
 ### Installing
 
@@ -77,12 +79,14 @@ For full Youbora options see: http://developer.nicepeopleatwork.com/apidocs/js6/
 
 Tests can be run locally via [Karma], which will run on Chrome, Firefox and Safari
 
-[Karma]: https://karma-runner.github.io/1.0/index.html
+[karma]: https://karma-runner.github.io/1.0/index.html
+
 ```
 yarn run test
 ```
 
 You can test individual browsers:
+
 ```
 yarn run test:chrome
 yarn run test:firefox
@@ -96,7 +100,6 @@ We use ESLint [recommended set](http://eslint.org/docs/rules/) with some additio
 See [ESLint config](.eslintrc.json) for full configuration.
 
 We also use [.editorconfig](.editorconfig) to maintain consistent coding styles and settings, please make sure you comply with the styling.
-
 
 ## Compatibility
 
