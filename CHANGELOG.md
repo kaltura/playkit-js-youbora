@@ -2,6 +2,16 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+<a name="1.1.0"></a>
+# [1.1.0](https://github.com/kaltura/playkit-js-youbora/compare/v0.4.2...v1.1.0) (2019-01-30)
+
+
+### Features
+
+* youbora v6 plugin update ([#19](https://github.com/kaltura/playkit-js-youbora/issues/19)) ([715ce34](https://github.com/kaltura/playkit-js-youbora/commit/715ce34))
+
+
+
 <a name="0.4.2"></a>
 ## [0.4.2](https://github.com/kaltura/playkit-js-youbora/compare/v0.4.1...v0.4.2) (2018-07-02)
 
