@@ -62,6 +62,10 @@ class Youbora extends BasePlugin {
    */
   reset(): void {
     this._youbora.fireStop();
+    const adsAdapter = this._youbora.getAdsAdapter();
+    if (adsAdapter) {
+      adsAdapter.fireStop();
+    }
   }
 
   /**
@@ -100,7 +104,7 @@ class Youbora extends BasePlugin {
    * @returns {void}
    */
   destroy(): void {
-    this._youbora.fireStop();
+    this.reset();
   }
 }
 
