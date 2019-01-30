@@ -1,6 +1,9 @@
 // @flow
 import youbora from 'youboralib';
 
+declare var __VERSION__: string;
+declare var __NAME__: string;
+
 let NativeAdsAdapter = youbora.StandardAdapter.extend({
   /**  @returns {String} - current plugin version */
   getVersion: function() {
