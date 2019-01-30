@@ -1,18 +1,23 @@
 //eslint-disable-next-line no-unused-vars
-import '../../src';
-import $YB from '../../src/youbora.lib.min';
-import {loadPlayer} from 'playkit-js';
-import * as TestUtils from 'playkit-js/test/src/utils/test-utils';
-import * as pkg from '../../package.json';
+import youbora from '../../src';
+//import { youbora as yblib } from 'youboralib'
+import {loadPlayer} from '@playkit-js/playkit-js';
 
 describe('YouboraAdapter', function() {
   let player, sandbox, sendSpy, config, CMconfig;
-
   const playerName = 'player test';
   const playerVersion = '1.2.3';
   const system = 'powerdev';
   const user = 'user-id';
+  const householdId = 'householdCode';
   const resource = 'https://www.w3schools.com/tags/movie.mp4';
+
+  function removeVideoElementsFromTestPage() {
+    let element = document.getElementsByTagName('video');
+    for (let i = element.length - 1; i >= 0; i--) {
+      element[i].parentNode.removeChild(element[i]);
+    }
+  }
 
   /**
    * @function getJsonFromUrl
@@ -36,25 +41,23 @@ describe('YouboraAdapter', function() {
    * @return {void}
    */
   function verifyStartProperties(analyticsParams) {
-    analyticsParams.system.should.equal(system);
+    analyticsParams.accountCode.should.equal(system);
     analyticsParams.player.should.equal(playerName);
-    analyticsParams.user.should.equal(user);
-    analyticsParams.hashTitle.should.equal('true');
+    analyticsParams.username.should.equal(user);
     (analyticsParams.referer === document.referrer || analyticsParams.referer === location.href).should.be.true;
-    analyticsParams.pluginVersion.should.equal($YB.version + '-' + pkg.version + '-' + playerName);
-    analyticsParams.playerVersion.should.equal(playerName + '-' + playerVersion);
-    analyticsParams.resource.should.equal(resource);
-    analyticsParams.duration.should.equal('13');
+    analyticsParams.pluginVersion.should.equal('6.3.2' + '-' + __VERSION__ + '-' + __NAME__);
+    analyticsParams.playerVersion.should.equal(playerVersion);
+    analyticsParams.mediaResource.should.equal(resource);
+    analyticsParams.mediaDuration.should.equal('13');
     analyticsParams.live.should.equal('false');
     analyticsParams.rendition.should.equal('200x100@10Kbps');
     analyticsParams.title.should.equal('entry name');
+    analyticsParams.householdId.should.equal('householdCode');
     analyticsParams.properties.should.equal(
       '{"test":"test","kalturaInfo":{"entryId":"1_rwbj3j0a","sessionId":"7296b4fd-3fcb-666d-51fc-34065579334c","uiConfId":123456}}'
     );
     analyticsParams.param1.should.equal('param-1');
     analyticsParams.param3.should.equal('param-3');
-    analyticsParams.adsExpected.should.equal('false');
-    analyticsParams.pingTime.should.equal('5');
   }
 
   /**
@@ -63,25 +66,23 @@ describe('YouboraAdapter', function() {
    * @return {void}
    */
   function verifyCMStartProperties(analyticsParams) {
-    analyticsParams.system.should.equal(system);
+    analyticsParams.accountCode.should.equal(system);
     analyticsParams.player.should.equal(playerName);
-    analyticsParams.user.should.equal(user);
-    analyticsParams.hashTitle.should.equal('true');
+    analyticsParams.username.should.equal(user);
     (analyticsParams.referer === document.referrer || analyticsParams.referer === location.href).should.be.true;
-    analyticsParams.pluginVersion.should.equal($YB.version + '-' + pkg.version + '-' + playerName);
-    analyticsParams.playerVersion.should.equal(playerName + '-' + playerVersion);
-    analyticsParams.resource.should.equal(resource);
-    analyticsParams.duration.should.equal('13');
-    analyticsParams.live.should.equal('true');
+    analyticsParams.pluginVersion.should.equal('6.3.2' + '-' + __VERSION__ + '-' + __NAME__);
+    analyticsParams.playerVersion.should.equal(playerVersion);
+    analyticsParams.mediaResource.should.equal(resource);
+    analyticsParams.mediaDuration.should.equal('13');
+    analyticsParams.live.should.equal('false');
     analyticsParams.rendition.should.equal('400x200@20Kbps');
     analyticsParams.title.should.equal('change media');
+    analyticsParams.householdId.should.equal('householdCode');
     analyticsParams.properties.should.equal(
       '{"test":"test change media","kalturaInfo":{"entryId":"34584t5874","sessionId":"6017d4cc-81a5-f21c-81da-f709f64ef558","uiConfId":654321}}'
     );
     analyticsParams.param2.should.equal('param-2');
     analyticsParams.param4.should.equal('param-4');
-    analyticsParams.adsExpected.should.equal('false');
-    analyticsParams.pingTime.should.equal('5');
   }
 
   /**
@@ -89,7 +90,9 @@ describe('YouboraAdapter', function() {
    * @return {void}
    */
   function verifyPingProperties(analyticsParams) {
-    analyticsParams.bitrate.should.equal('20000');
+    analyticsParams.playrate.should.equal('1');
+    analyticsParams.pingTime.should.equal('5');
+    // no bitrate, safari limitation
   }
 
   before(function() {
@@ -107,22 +110,22 @@ describe('YouboraAdapter', function() {
         ]
       },
       playback: {
-        preload: 'auto'
+        preload: 'auto',
+        autoplay: true
       },
       plugins: {
         youbora: {
           playerVersion: playerVersion,
           playerName: playerName,
+          householdId: householdId,
           options: {
             accountCode: system,
             username: user,
-            properties: {
+            'content.metadata': {
               test: 'test'
             },
-            extraParams: {
-              param1: 'param-1',
-              param3: 'param-3'
-            }
+            'extraparam.1': 'param-1',
+            'extraparam.3': 'param-3'
           }
         }
       }
@@ -147,21 +150,20 @@ describe('YouboraAdapter', function() {
         youbora: {
           entryId: '34584t5874',
           entryName: 'change media',
-          entryType: 'Live',
+          entryType: 'Vod',
           sessionId: '6017d4cc-81a5-f21c-81da-f709f64ef558',
           uiConfId: 654321,
           playerVersion: playerVersion,
           playerName: playerName,
+          householdId: householdId,
           options: {
             accountCode: system,
             username: user,
-            properties: {
+            'content.metadata': {
               test: 'test change media'
             },
-            extraParams: {
-              param2: 'param-2',
-              param4: 'param-4'
-            }
+            'extraparam.2': 'param-2',
+            'extraparam.4': 'param-4'
           }
         }
       }
@@ -177,7 +179,10 @@ describe('YouboraAdapter', function() {
           entryName: 'entry name',
           entryType: 'vod',
           sessionId: '7296b4fd-3fcb-666d-51fc-34065579334c',
-          uiConfId: 123456
+          uiConfId: 123456,
+          playerVersion: playerVersion,
+          playerName: playerName,
+          householdId: householdId
         }
       }
     });
@@ -188,33 +193,43 @@ describe('YouboraAdapter', function() {
   afterEach(function() {
     sandbox.restore();
     player.destroy();
-    TestUtils.removeVideoElementsFromTestPage();
+    removeVideoElementsFromTestPage();
   });
 
-  it('should send start, join, stop, start and ping for change media', done => {
+  it('should send init, start, join, stop, start and ping for change media', done => {
     setTimeout(() => {
       player.addEventListener(player.Event.CHANGE_SOURCE_ENDED, () => {
         setTimeout(() => {
-          let startParams = getJsonFromUrl(sendSpy.getCall(0).thisValue.responseURL);
+          var positionIncrease = 0;
+          if (sendSpy.getCall(0).thisValue.responseURL.includes('/init')) {
+            positionIncrease += 1;
+          }
+          let startParams = getJsonFromUrl(sendSpy.getCall(0 + positionIncrease).thisValue.responseURL);
           verifyStartProperties(startParams);
-          let joinRequest = sendSpy.getCall(1).thisValue.responseURL;
+          let joinRequest = sendSpy.getCall(1 + positionIncrease).thisValue.responseURL;
           (joinRequest.indexOf('join') > -1).should.be.true;
-          let stopRequest = sendSpy.getCall(2).thisValue.responseURL;
+          if (sendSpy.getCall(2 + positionIncrease).thisValue.responseURL.includes('/pause')) {
+            positionIncrease += 1;
+          }
+          let stopRequest = sendSpy.getCall(2 + positionIncrease).thisValue.responseURL;
           (stopRequest.indexOf('stop') > -1).should.be.true;
-          let CMstartParams = getJsonFromUrl(sendSpy.getCall(3).thisValue.responseURL);
+          if (sendSpy.getCall(3 + positionIncrease).thisValue.responseURL.includes('/init')) {
+            positionIncrease += 1;
+          }
+          let CMstartParams = getJsonFromUrl(sendSpy.getCall(3 + positionIncrease).thisValue.responseURL);
           verifyCMStartProperties(CMstartParams);
           setTimeout(() => {
             let pingParams = getJsonFromUrl(sendSpy.lastCall.thisValue.responseURL);
             verifyPingProperties(pingParams);
             done();
           }, 5000);
-        }, 1000);
+        }, 2000);
         player.ready().then(() => {
           player.play();
         });
       });
       player.configure(CMconfig);
-    }, 1000);
+    }, 2850);
     player.ready().then(() => {
       player.play();
     });

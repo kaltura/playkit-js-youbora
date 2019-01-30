@@ -1,4 +1,4 @@
 // @flow
-declare module '@playkit-js/playkit-js' {
+declare module 'youboralib' {
   declare module.exports: any;
 }

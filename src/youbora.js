@@ -1,6 +1,8 @@
 //@flow
-import {BasePlugin} from 'playkit-js';
-import YouboraAdapter from './youbora-adapter';
+import {BasePlugin} from '@playkit-js/playkit-js';
+import youbora from 'youboralib';
+import {YouboraAdapter} from './adapter/adapter';
+import {NativeAdsAdapter} from './adapter/ads/nativeads';
 
 /**
  * Youbora plugin for analytics.
@@ -13,9 +15,7 @@ class Youbora extends BasePlugin {
    * @static
    */
   static defaultConfig: Object = {
-    options: {
-      haltOnError: false
-    }
+    options: {}
   };
 
   /**
@@ -35,9 +35,10 @@ class Youbora extends BasePlugin {
    */
   constructor(name: string, player: Player, config: Object) {
     super(name, player, config);
-    this._youbora = new YouboraAdapter(this.player, this.config);
+    this._youbora = new youbora.Plugin(this.config.options);
+    this._youbora.setAdapter(new YouboraAdapter(player, config));
+    this._youbora.setAdsAdapter(new NativeAdsAdapter(player));
     this._addBindings();
-    this._setup();
   }
 
   /**
@@ -49,6 +50,9 @@ class Youbora extends BasePlugin {
   updateConfig(update: Object): void {
     super.updateConfig(update);
     this._youbora.setOptions(update.options);
+    if (this._youbora.getAdapter()) {
+      this._youbora.getAdapter().config = update;
+    }
     this._addPlayerMetadata();
   }
 
@@ -57,8 +61,10 @@ class Youbora extends BasePlugin {
    * @return {void}
    */
   reset(): void {
-    if (this._youbora) {
-      this._youbora.reset();
+    this._youbora.fireStop();
+    const adsAdapter = this._youbora.getAdsAdapter();
+    if (adsAdapter) {
+      adsAdapter.fireStop();
     }
   }
 
@@ -70,7 +76,7 @@ class Youbora extends BasePlugin {
    */
   _addPlayerMetadata(): void {
     this._youbora.setOptions({
-      properties: {
+      'content.metadata': {
         kalturaInfo: {
           entryId: this.config.entryId,
           sessionId: this.config.sessionId,
@@ -88,17 +94,7 @@ class Youbora extends BasePlugin {
    */
   _addBindings(): void {
     // Bind the plugin logger to the youbora sdk logger
-    YouboraAdapter.bindLogger(this.logger);
-  }
-
-  /**
-   * Plugin setup operations.
-   * @function
-   * @private
-   * @returns {void}
-   */
-  _setup(): void {
-    this._youbora.registerListeners();
+    this._youbora.getAdapter().bindLogger(this.logger);
   }
 
   /**
@@ -108,9 +104,7 @@ class Youbora extends BasePlugin {
    * @returns {void}
    */
   destroy(): void {
-    if (this._youbora) {
-      this._youbora.endedHandler();
-    }
+    this.reset();
   }
 }
 

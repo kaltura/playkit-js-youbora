@@ -1,6 +1,6 @@
 {
   "name": "@playkit-js/playkit-js-youbora",
-  "version": "0.4.3",
+  "version": "1.0.0",
   "main": "dist/playkit-youbora.js",
   "scripts": {
     "clean": "rm -rf ./dist",
@@ -29,6 +29,7 @@
     "access": "public"
   },
   "devDependencies": {
+    "@playkit-js/playkit-js": "^0.44.1",
     "babel-cli": "^6.18.0",
     "babel-core": "^6.18.2",
     "babel-eslint": "^7.1.1",
@@ -66,7 +67,6 @@
     "lint-staged": "^7.2.0",
     "mocha": "^3.2.0",
     "mocha-cli": "^1.0.1",
-    "playkit-js": "https://github.com/kaltura/playkit-js.git#v0.31.2",
     "prettier": "^1.13.7",
     "sinon": "^2.0.0",
     "sinon-chai": "^2.8.0",
@@ -74,10 +74,11 @@
     "style-loader": "^0.18.2",
     "uglifyjs-webpack-plugin": "^0.4.3",
     "webpack": "latest",
-    "webpack-dev-server": "latest"
+    "webpack-dev-server": "latest",
+    "youboralib": "6.3.2"
   },
   "peerDependencies": {
-    "playkit-js": "https://github.com/kaltura/playkit-js.git#v0.31.2"
+    "@playkit-js/playkit-js": "^0.44.1"
   },
   "keywords": [
     "kaltura",
