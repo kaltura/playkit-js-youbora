@@ -2,6 +2,9 @@
 import youbora from 'youboralib';
 import {Error, MediaType} from '@playkit-js/playkit-js';
 
+declare var __VERSION__: string;
+declare var __NAME__: string;
+
 let YouboraAdapter = youbora.StandardAdapter.extend({
   constructor: function(player, config) {
     this.config = config;
