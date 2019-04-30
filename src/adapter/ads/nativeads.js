@@ -56,6 +56,7 @@ let NativeAdsAdapter = youbora.StandardAdapter.extend({
       {
         events: {
           [Event.AD_LOADED]: this.loadedAdListener,
+          [Event.AD_BREAK_START]: this.startBreakAdListener,
           [Event.AD_STARTED]: this.startAdListener,
           [Event.AD_RESUMED]: this.resumeAdListener,
           [Event.AD_PAUSED]: this.pauseAdListener,
@@ -70,9 +71,12 @@ let NativeAdsAdapter = youbora.StandardAdapter.extend({
     ];
   },
 
+  startBreakAdListener: function(e) {
+    this.adPosition = e.payload.adBreak.type;
+  },
+
   loadedAdListener: function(e) {
-    this.adObject = e.payload.extraAdData;
-    this.adPosition = e.payload.adType;
+    this.adObject = e.payload.ad;
   },
 
   startAdListener: function() {
