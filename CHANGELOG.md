@@ -2,6 +2,16 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+<a name="1.1.1"></a>
+## [1.1.1](https://github.com/kaltura/playkit-js-youbora/compare/v1.1.0...v1.1.1) (2019-05-01)
+
+
+### Bug Fixes
+
+* **FEC-9048:** ad start is not sent for IMA DAI ([#30](https://github.com/kaltura/playkit-js-youbora/issues/30)) ([c2d3231](https://github.com/kaltura/playkit-js-youbora/commit/c2d3231))
+
+
+
 <a name="1.1.0"></a>
 # [1.1.0](https://github.com/kaltura/playkit-js-youbora/compare/v0.4.2...v1.1.0) (2019-01-30)
 
