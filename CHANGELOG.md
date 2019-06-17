@@ -2,6 +2,67 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+<a name="1.1.1"></a>
+## [1.1.1](https://github.com/kaltura/playkit-js-youbora/compare/v1.1.0...v1.1.1) (2019-05-01)
+
+
+### Bug Fixes
+
+* **FEC-9048:** ad start is not sent for IMA DAI ([#30](https://github.com/kaltura/playkit-js-youbora/issues/30)) ([c2d3231](https://github.com/kaltura/playkit-js-youbora/commit/c2d3231))
+
+
+
+<a name="1.1.0"></a>
+# [1.1.0](https://github.com/kaltura/playkit-js-youbora/compare/v0.4.2...v1.1.0) (2019-01-30)
+
+
+### Features
+
+* youbora v6 plugin update ([#19](https://github.com/kaltura/playkit-js-youbora/issues/19)) ([715ce34](https://github.com/kaltura/playkit-js-youbora/commit/715ce34))
+
+
+
+<a name="0.4.2"></a>
+## [0.4.2](https://github.com/kaltura/playkit-js-youbora/compare/v0.4.1...v0.4.2) (2018-07-02)
+
+
+### Bug Fixes
+
+* **FEC-8190:** stop tracking on critical error ([#23](https://github.com/kaltura/playkit-js-youbora/issues/23)) ([c24c24d](https://github.com/kaltura/playkit-js-youbora/commit/c24c24d))
+
+
+
+<a name="0.4.1"></a>
+## [0.4.1](https://github.com/kaltura/playkit-js-youbora/compare/v0.4.0...v0.4.1) (2018-05-21)
+
+
+### Bug Fixes
+
+* **FEC-8227:** report only critical errors ([#21](https://github.com/kaltura/playkit-js-youbora/issues/21)) ([7b739ee](https://github.com/kaltura/playkit-js-youbora/commit/7b739ee))
+
+
+
+<a name="0.4.0"></a>
+# [0.4.0](https://github.com/kaltura/playkit-js-youbora/compare/v0.3.3...v0.4.0) (2018-05-10)
+
+
+### Features
+
+* serve youbora as external bundle ([#20](https://github.com/kaltura/playkit-js-youbora/issues/20)) ([ca1c85b](https://github.com/kaltura/playkit-js-youbora/commit/ca1c85b))
+
+
+
+<a name="0.3.3"></a>
+## [0.3.3](https://github.com/kaltura/playkit-js-youbora/compare/v0.3.1...v0.3.3) (2018-02-06)
+
+
+### Bug Fixes
+
+* update env (docs and namespace) ([45a111c](https://github.com/kaltura/playkit-js-youbora/commit/45a111c))
+* **webpack:** playkit core externals root value ([#18](https://github.com/kaltura/playkit-js-youbora/issues/18)) ([a7fb0bd](https://github.com/kaltura/playkit-js-youbora/commit/a7fb0bd))
+
+
+
 <a name="0.3.2"></a>
 ## [0.3.2](https://github.com/kaltura/playkit-js-youbora/compare/v0.3.1...v0.3.2) (2018-01-10)
 

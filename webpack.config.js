@@ -1,8 +1,8 @@
 'use strict';
 
-const webpack = require("webpack");
-const path = require("path");
-const packageData = require("./package.json");
+const webpack = require('webpack');
+const path = require('path');
+const packageData = require('./package.json');
 
 let plugins = [
   new webpack.DefinePlugin({
@@ -12,14 +12,14 @@ let plugins = [
 ];
 
 module.exports = {
-  context: __dirname + "/src",
-  entry: {"playkit-youbora": "index.js"},
+  context: __dirname + '/src',
+  entry: {'playkit-youbora': 'index.js'},
   output: {
-    path: __dirname + "/dist",
+    path: __dirname + '/dist',
     filename: '[name].js',
-    library: ["playkit", "plugins", "youbora"],
-    libraryTarget: "umd",
-    devtoolModuleFilenameTemplate: "./plugins/youbora/[resource-path]",
+    library: ['playkit', 'plugins', 'youbora'],
+    libraryTarget: 'umd',
+    devtoolModuleFilenameTemplate: './plugins/youbora/[resource-path]'
   },
   devtool: 'source-map',
   plugins: plugins,
@@ -34,20 +34,17 @@ module.exports = {
     }]
   },
   devServer: {
-    contentBase: __dirname + "/src"
+    contentBase: __dirname + '/src'
   },
   resolve: {
-    modules: [
-      path.resolve(__dirname, "src"),
-      "node_modules"
-    ]
+    modules: [path.resolve(__dirname, 'src'), 'node_modules']
   },
   externals: {
-    "playkit-js": {
-      commonjs: "playkit-js",
-      commonjs2: "playkit-js",
-      amd: "playkit-js",
-      root: ["playkit", "core"]
+    '@playkit-js/playkit-js': {
+      commonjs: '@playkit-js/playkit-js',
+      commonjs2: '@playkit-js/playkit-js',
+      amd: '@playkit-js/playkit-js',
+      root: ['playkit', 'core']
     }
   }
 };
