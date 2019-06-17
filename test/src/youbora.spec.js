@@ -186,7 +186,7 @@ describe('YouboraAdapter', function() {
         }
       }
     });
-    sandbox = sinon.sandbox.create();
+    sandbox = sinon.createSandbox();
     sendSpy = sandbox.spy(XMLHttpRequest.prototype, 'send');
   });
 
