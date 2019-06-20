@@ -28,8 +28,8 @@ jspm_packages
 .npm
  # Optional REPL history
 .node_repl_history
- .idea
- .git
+.idea
+.git
 .gitattributes
 .gitignore
 .github
