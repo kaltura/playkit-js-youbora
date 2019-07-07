@@ -19,7 +19,7 @@ module.exports = {
     filename: '[name].js',
     library: ['playkit', 'plugins', 'youbora'],
     libraryTarget: 'umd',
-    devtoolModuleFilenameTemplate: './plugins/youbora/[resource-path]'
+    devtoolModuleFilenameTemplate: './playkit/plugins/youbora/[resource-path]'
   },
   devtool: 'source-map',
   plugins: plugins,
