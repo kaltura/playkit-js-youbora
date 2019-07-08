@@ -108,4 +108,4 @@ class Youbora extends BasePlugin {
   }
 }
 
-export {Youbora as Plugin};
+export {Youbora};
