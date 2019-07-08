@@ -1,6 +1,6 @@
 // @flow
 import {registerPlugin} from '@playkit-js/playkit-js';
-import {Plugin} from './youbora';
+import {Youbora as Plugin} from './youbora';
 
 declare var __VERSION__: string;
 declare var __NAME__: string;
