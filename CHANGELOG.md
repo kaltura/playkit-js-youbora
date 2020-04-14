@@ -2,6 +2,21 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+<a name="1.1.4"></a>
+## [1.1.4](https://github.com/kaltura/playkit-js-youbora/compare/v1.1.3...v1.1.4) (2020-02-24)
+
+
+
+<a name="1.1.3"></a>
+## [1.1.3](https://github.com/kaltura/playkit-js-youbora/compare/v1.1.2...v1.1.3) (2020-02-24)
+
+
+### Bug Fixes
+
+* **FEC-9651:** enable using playkit-js-youbora with requireJS ([#38](https://github.com/kaltura/playkit-js-youbora/issues/38)) ([d0aad8d](https://github.com/kaltura/playkit-js-youbora/commit/d0aad8d))
+
+
+
 <a name="1.1.2"></a>
 ## [1.1.2](https://github.com/kaltura/playkit-js-youbora/compare/v1.1.1...v1.1.2) (2019-11-03)
 

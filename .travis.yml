@@ -36,8 +36,7 @@ jobs:
       env: TRAVIS_MODE=release
       deploy:
         - provider: releases
-          api_key:
-            secure: $GH_TOKEN
+          api_key: $GH_TOKEN
           file_glob: true
           file: dist/*
           prerelease: true
@@ -46,6 +45,7 @@ jobs:
             branch: master
             tags: true
         - provider: npm
+          edge: true
           api_key: $NPM_TOKEN
           email: $NPM_EMAIL
           skip_cleanup: true
@@ -60,6 +60,7 @@ jobs:
       env: TRAVIS_MODE=releaseCanary
       deploy:
         provider: npm
+        edge: true
         api_key: $NPM_TOKEN
         email: $NPM_EMAIL
         skip_cleanup: true
