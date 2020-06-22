@@ -6652,6 +6652,7 @@ yeast@0.1.2:
   version "0.1.2"
   resolved "https://registry.yarnpkg.com/yeast/-/yeast-0.1.2.tgz#008e06d8094320c372dbc2f8ed76a0ca6c8ac419"
 
-youboralib@6.3.2:
-  version "6.3.2"
-  resolved "https://registry.yarnpkg.com/youboralib/-/youboralib-6.3.2.tgz#fc780fbdd8d22b03ce50b28da9de613747b07a01"
+youboralib@6.7.10:
+  version "6.7.10"
+  resolved "https://registry.yarnpkg.com/youboralib/-/youboralib-6.7.10.tgz#0cd59d205006cba3c808e3483b9359da1fb8fdb5"
+  integrity sha512-wusds9JIpDimHR4iljAGIFKenEC2IwRvtnWb5dv2iZ71MMzspV3uj4vccsF7KBu5pm0IoR9BoRQRgSrfPhZTpg==
