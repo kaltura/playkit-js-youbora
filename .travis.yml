@@ -1,6 +1,6 @@
 conditions: v1
 sudo: required
-dist: trusty
+dist: xenial
 language: node_js
 node_js:
   - "node"
@@ -8,6 +8,8 @@ node_js:
 addons:
   chrome: stable
 
+services:
+  - xvfb
 cache:
   yarn: true
   directories:
@@ -15,7 +17,6 @@ cache:
 
 before_install:
  - export DISPLAY=:99.0
- - sh -e /etc/init.d/xvfb start
  - chmod +x ./scripts/travis.sh
 
 script: ./scripts/travis.sh
@@ -35,8 +36,7 @@ jobs:
       env: TRAVIS_MODE=release
       deploy:
         - provider: releases
-          api_key:
-            secure: $GH_TOKEN
+          api_key: $GH_TOKEN
           file_glob: true
           file: dist/*
           prerelease: true
@@ -45,18 +45,23 @@ jobs:
             branch: master
             tags: true
         - provider: npm
+          edge: true
           api_key: $NPM_TOKEN
           email: $NPM_EMAIL
           skip_cleanup: true
           on:
             tags: true
             branch: master
+      after_deploy:
+        - chmod +x ./scripts/after_deploy.sh
+        - ./scripts/after_deploy.sh "youbora" "$TRAVIS_TAG" "$JENKINS_TAG_TOKEN"
     # publish canary package if on master
     - stage: Release canary
       if: (branch = master) AND (type != pull_request) AND commit_message !~ /^chore\(release\)/
       env: TRAVIS_MODE=releaseCanary
       deploy:
         provider: npm
+        edge: true
         api_key: $NPM_TOKEN
         email: $NPM_EMAIL
         skip_cleanup: true
@@ -64,6 +69,11 @@ jobs:
         on:
           tags: false
           branch: master
+      after_deploy:
+        - currentVersion=$(npx -c 'echo "$npm_package_version"')
+        - echo $currentVersion
+        - chmod +x ./scripts/after_deploy.sh
+        - ./scripts/after_deploy.sh "youbora" "$currentVersion" "$JENKINS_CANARY_TOKEN"
     # Required tests
     - stage: Tests
       if: (branch = master) OR (tag IS present) OR (type = pull_request)

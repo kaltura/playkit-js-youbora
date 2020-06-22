@@ -54,6 +54,7 @@ let NativeAdsAdapter = youbora.Adapter.extend({
     const Event = this.player.Event;
     this.references = {
       [Event.AD_LOADED]: this.loadedAdListener.bind(this),
+      [Event.AD_BREAK_START]: this.startBreakAdListener.bind(this),
       [Event.AD_STARTED]: this.startAdListener.bind(this),
       [Event.AD_RESUMED]: this.resumeAdListener.bind(this),
       [Event.AD_PAUSED]: this.pauseAdListener.bind(this),
@@ -81,9 +82,12 @@ let NativeAdsAdapter = youbora.Adapter.extend({
     delete this.references;
   },
 
+  startBreakAdListener: function(e) {
+    this.adPosition = e.payload.adBreak.type;
+  },
+
   loadedAdListener: function(e) {
-    this.adObject = e.payload.extraAdData;
-    this.adPosition = e.payload.adType;
+    this.adObject = e.payload.ad;
   },
 
   startAdListener: function() {

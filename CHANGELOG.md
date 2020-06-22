@@ -2,6 +2,46 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+<a name="1.1.4"></a>
+## [1.1.4](https://github.com/kaltura/playkit-js-youbora/compare/v1.1.3...v1.1.4) (2020-02-24)
+
+
+
+<a name="1.1.3"></a>
+## [1.1.3](https://github.com/kaltura/playkit-js-youbora/compare/v1.1.2...v1.1.3) (2020-02-24)
+
+
+### Bug Fixes
+
+* **FEC-9651:** enable using playkit-js-youbora with requireJS ([#38](https://github.com/kaltura/playkit-js-youbora/issues/38)) ([d0aad8d](https://github.com/kaltura/playkit-js-youbora/commit/d0aad8d))
+
+
+
+<a name="1.1.2"></a>
+## [1.1.2](https://github.com/kaltura/playkit-js-youbora/compare/v1.1.1...v1.1.2) (2019-11-03)
+
+
+
+<a name="1.1.1"></a>
+## [1.1.1](https://github.com/kaltura/playkit-js-youbora/compare/v1.1.0...v1.1.1) (2019-05-01)
+
+
+### Bug Fixes
+
+* **FEC-9048:** ad start is not sent for IMA DAI ([#30](https://github.com/kaltura/playkit-js-youbora/issues/30)) ([c2d3231](https://github.com/kaltura/playkit-js-youbora/commit/c2d3231))
+
+
+
+<a name="1.1.0"></a>
+# [1.1.0](https://github.com/kaltura/playkit-js-youbora/compare/v0.4.2...v1.1.0) (2019-01-30)
+
+
+### Features
+
+* youbora v6 plugin update ([#19](https://github.com/kaltura/playkit-js-youbora/issues/19)) ([715ce34](https://github.com/kaltura/playkit-js-youbora/commit/715ce34))
+
+
+
 <a name="0.4.2"></a>
 ## [0.4.2](https://github.com/kaltura/playkit-js-youbora/compare/v0.4.1...v0.4.2) (2018-07-02)
 
