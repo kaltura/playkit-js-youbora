@@ -4,7 +4,7 @@ import youbora from 'youboralib';
 declare var __VERSION__: string;
 declare var __NAME__: string;
 
-let NativeAdsAdapter = youbora.StandardAdapter.extend({
+let NativeAdsAdapter = youbora.Adapter.extend({
   /**  @returns {String} - current plugin version */
   getVersion: function() {
     return youbora.VERSION + '-' + __VERSION__ + '-' + __NAME__ + '-ads';
@@ -49,25 +49,36 @@ let NativeAdsAdapter = youbora.StandardAdapter.extend({
     return returnValue;
   },
 
-  /**  @returns {void} - Return a list of events and methods to suscribe from this.player. */
-  getListenersList: function() {
+  /**  @returns {void} - Register listeners to this.player. */
+  registerListeners: function() {
     const Event = this.player.Event;
-    return [
-      {
-        events: {
-          [Event.AD_LOADED]: this.loadedAdListener,
-          [Event.AD_STARTED]: this.startAdListener,
-          [Event.AD_RESUMED]: this.resumeAdListener,
-          [Event.AD_PAUSED]: this.pauseAdListener,
-          [Event.AD_CLICKED]: this.clickAdListener,
-          [Event.AD_SKIPPED]: this.skipAdListener,
-          [Event.AD_COMPLETED]: this.stopAdListener,
-          [Event.AD_ERROR]: this.errorAdListener,
-          [Event.AD_PROGRESS]: this.progressAdListener,
-          [Event.ALL_ADS_COMPLETED]: this.allAdsCompletedListener
-        }
+    this.references = {
+      [Event.AD_LOADED]: this.loadedAdListener.bind(this),
+      [Event.AD_STARTED]: this.startAdListener.bind(this),
+      [Event.AD_RESUMED]: this.resumeAdListener.bind(this),
+      [Event.AD_PAUSED]: this.pauseAdListener.bind(this),
+      [Event.AD_CLICKED]: this.clickAdListener.bind(this),
+      [Event.AD_SKIPPED]: this.skipAdListener.bind(this),
+      [Event.AD_COMPLETED]: this.stopAdListener.bind(this),
+      [Event.AD_ERROR]: this.errorAdListener.bind(this),
+      [Event.AD_PROGRESS]: this.progressAdListener.bind(this),
+      [Event.ALL_ADS_COMPLETED]: this.allAdsCompletedListener.bind(this)
+    };
+
+    for (let key in this.references) {
+      this.player.addEventListener(key, this.references[key]);
+    }
+  },
+
+  /**  @returns {void} - Unregister listeners to this.player. */
+  unregisterListeners: function() {
+    // unregister listeners
+    if (this.player && this.references) {
+      for (let key in this.references) {
+        this.player.removeEventListener(key, this.references[key]);
       }
-    ];
+    }
+    delete this.references;
   },
 
   loadedAdListener: function(e) {

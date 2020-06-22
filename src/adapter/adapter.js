@@ -5,7 +5,7 @@ import {Error, MediaType} from '@playkit-js/playkit-js';
 declare var __VERSION__: string;
 declare var __NAME__: string;
 
-let YouboraAdapter = youbora.StandardAdapter.extend({
+let YouboraAdapter = youbora.Adapter.extend({
   constructor: function(player, config) {
     this.config = config;
     YouboraAdapter.__super__.constructor.call(this, player);
@@ -82,25 +82,36 @@ let YouboraAdapter = youbora.StandardAdapter.extend({
     return this.config.householdId;
   },
 
-  /**  @returns {void} - Return a list of events and methods to suscribe from this.player. */
-  getListenersList: function() {
+  /**  @returns {void} - Register listeners to this.player. */
+  registerListeners: function() {
     const Event = this.player.Event;
-    return [
-      {
-        events: {
-          [Event.PLAY]: this.playListener,
-          [Event.LOAD_START]: this.loadListener,
-          [Event.PAUSE]: this.pauseListener,
-          [Event.PLAYING]: this.playingListener,
-          [Event.ERROR]: this.errorListener,
-          [Event.SEEKING]: this.seekingListener,
-          [Event.SEEKED]: this.seekedListener,
-          [Event.PLAYER_STATE_CHANGED]: this.stateChangeListener,
-          [Event.ENDED]: this.endedListener,
-          [Event.CHANGE_SOURCE_STARTED]: this.forceEndedListener
-        }
+    this.references = {
+      [Event.PLAY]: this.playListener.bind(this),
+      [Event.LOAD_START]: this.loadListener.bind(this),
+      [Event.PAUSE]: this.pauseListener.bind(this),
+      [Event.PLAYING]: this.playingListener.bind(this),
+      [Event.ERROR]: this.errorListener.bind(this),
+      [Event.SEEKING]: this.seekingListener.bind(this),
+      [Event.SEEKED]: this.seekedListener.bind(this),
+      [Event.PLAYER_STATE_CHANGED]: this.stateChangeListener.bind(this),
+      [Event.ENDED]: this.endedListener.bind(this),
+      [Event.CHANGE_SOURCE_STARTED]: this.forceEndedListener.bind(this)
+    };
+
+    for (let key in this.references) {
+      this.player.addEventListener(key, this.references[key]);
+    }
+  },
+
+  /**  @returns {void} - Unregister listeners to this.player. */
+  unregisterListeners: function() {
+    // unregister listeners
+    if (this.player && this.references) {
+      for (let key in this.references) {
+        this.player.removeEventListener(key, this.references[key]);
       }
-    ];
+    }
+    delete this.references;
   },
 
   /** @returns {void}
