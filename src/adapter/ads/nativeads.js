@@ -110,11 +110,11 @@ let NativeAdsAdapter = youbora.Adapter.extend({
   },
 
   clickAdListener: function() {
-    this.fireClick({adUrl: this.adObject.clickThroughUrl});
+    this.fireClick(this.adObject.clickThroughUrl);
   },
 
   skipAdListener: function() {
-    this.fireStop({skipped: true});
+    this.fireSkip();
     this.resetFlags();
   },
 
@@ -122,7 +122,7 @@ let NativeAdsAdapter = youbora.Adapter.extend({
     this.fireError(e.payload.error.code, e.payload.error.message);
     if (this.getPosition() === youbora.Adapter.AdPosition.POSTROLL) {
       this.plugin.getAdapter().stopBlockedByAds = false;
-      this.plugin.getAdapter().fireStop();
+      this.plugin.fireStop();
     }
   },
 
