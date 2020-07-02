@@ -37,7 +37,7 @@ class Youbora extends BasePlugin {
     super(name, player, config);
     this._youbora = new youbora.Plugin(this.config.options);
     this._youbora.setAdapter(new YouboraAdapter(player, config));
-    this._youbora.setAdsAdapter(new NativeAdsAdapter(player));
+    this._youbora.setAdsAdapter(config.customAdsAdapter || new NativeAdsAdapter(player));
     this._addBindings();
   }
 
@@ -52,6 +52,9 @@ class Youbora extends BasePlugin {
     this._youbora.setOptions(update.options);
     if (this._youbora.getAdapter()) {
       this._youbora.getAdapter().config = update;
+    }
+    if (update.options.customAdsAdapter){
+      this._youbora.setAdsAdapter(config.customAdsAdapter);
     }
     this._addPlayerMetadata();
   }
