@@ -53,7 +53,7 @@ class Youbora extends BasePlugin {
     if (this._youbora.getAdapter()) {
       this._youbora.getAdapter().config = update;
     }
-    if (update.options.customAdsAdapter){
+    if (update.options.customAdsAdapter) {
       this._youbora.setAdsAdapter(config.customAdsAdapter);
     }
     this._addPlayerMetadata();
