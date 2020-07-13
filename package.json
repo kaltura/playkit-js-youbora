@@ -70,7 +70,7 @@
     "prettier": "^1.13.7",
     "sinon": "^2.0.0",
     "sinon-chai": "^2.8.0",
-    "standard-version": "^4.2.0",
+    "standard-version": "^8.0.1",
     "style-loader": "^0.18.2",
     "uglifyjs-webpack-plugin": "^0.4.3",
     "webpack": "latest",
