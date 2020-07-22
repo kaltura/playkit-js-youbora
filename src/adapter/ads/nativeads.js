@@ -6,26 +6,26 @@ declare var __NAME__: string;
 
 let NativeAdsAdapter = youbora.StandardAdapter.extend({
   /**  @returns {String} - current plugin version */
-  getVersion: function() {
+  getVersion: function () {
     return youbora.VERSION + '-' + __VERSION__ + '-' + __NAME__ + '-ads';
   },
 
   /**  @returns {Number} - current playhead of the video */
-  getPlayhead: function() {
+  getPlayhead: function () {
     return this.currentTime;
   },
 
   /**  @returns {Number} - video duration */
-  getDuration: function() {
+  getDuration: function () {
     return this.adObject.duration;
   },
 
-  getTitle: function() {
+  getTitle: function () {
     return this.adObject.title;
   },
 
   /**  @returns {String} - current ad position (only ads) */
-  getPosition: function() {
+  getPosition: function () {
     let returnValue = youbora.Adapter.AdPosition.MIDROLL;
     switch (this.adPosition) {
       case 'preroll':
@@ -50,7 +50,7 @@ let NativeAdsAdapter = youbora.StandardAdapter.extend({
   },
 
   /**  @returns {void} - Return a list of events and methods to suscribe from this.player. */
-  getListenersList: function() {
+  getListenersList: function () {
     const Event = this.player.Event;
     return [
       {
@@ -71,44 +71,44 @@ let NativeAdsAdapter = youbora.StandardAdapter.extend({
     ];
   },
 
-  startBreakAdListener: function(e) {
+  startBreakAdListener: function (e) {
     this.adPosition = e.payload.adBreak.type;
   },
 
-  loadedAdListener: function(e) {
+  loadedAdListener: function (e) {
     this.adObject = e.payload.ad;
   },
 
-  startAdListener: function() {
+  startAdListener: function () {
     this.plugin.getAdapter().stopBlockedByAds = true;
     if (this.adPosition !== 'overlay') {
       this.fireStart();
     }
   },
 
-  stopAdListener: function() {
+  stopAdListener: function () {
     this.fireStop();
     this.resetFlags();
   },
 
-  resumeAdListener: function() {
+  resumeAdListener: function () {
     this.fireResume();
   },
 
-  pauseAdListener: function() {
+  pauseAdListener: function () {
     this.firePause();
   },
 
-  clickAdListener: function() {
+  clickAdListener: function () {
     this.fireClick({adUrl: this.adObject.clickThroughUrl});
   },
 
-  skipAdListener: function() {
+  skipAdListener: function () {
     this.fireStop({skipped: true});
     this.resetFlags();
   },
 
-  errorAdListener: function(e) {
+  errorAdListener: function (e) {
     this.fireError(e.payload.error.code, e.payload.error.message);
     if (this.getPosition() === youbora.Adapter.AdPosition.POSTROLL) {
       this.plugin.getAdapter().stopBlockedByAds = false;
@@ -116,19 +116,19 @@ let NativeAdsAdapter = youbora.StandardAdapter.extend({
     }
   },
 
-  allAdsCompletedListener: function() {
+  allAdsCompletedListener: function () {
     this.fireStop();
     this.plugin.getAdapter().stopBlockedByAds = false;
     if (this.getPosition() === youbora.Adapter.AdPosition.POSTROLL) this.plugin.getAdapter().fireStop();
     this.adPosition = null;
   },
 
-  progressAdListener: function(e) {
+  progressAdListener: function (e) {
     this.currentTime = e.payload.adProgress.currentTime;
     this.fireJoin();
   },
 
-  resetFlags: function() {
+  resetFlags: function () {
     this.currentTime = null;
     this.adObject = null;
     if (this.getPosition() === youbora.Adapter.AdPosition.POSTROLL) {

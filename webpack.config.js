@@ -12,10 +12,6 @@ let plugins = [
   })
 ];
 
-if (PROD) {
-  plugins.push(new webpack.optimize.UglifyJsPlugin({sourceMap: true}));
-}
-
 module.exports = {
   context: __dirname + '/src',
   entry: {'playkit-youbora': 'index.js'},
@@ -70,5 +66,8 @@ module.exports = {
       amd: '@playkit-js/playkit-js',
       root: ['KalturaPlayer', 'core']
     }
+  },
+  optimization: {
+    minimize: PROD
   }
 };

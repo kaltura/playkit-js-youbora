@@ -6,3 +6,4 @@ yarn-error.log
 LICENSE
 /samples
 src/youbora.lib.min.js
+coverage

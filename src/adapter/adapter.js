@@ -6,33 +6,33 @@ declare var __VERSION__: string;
 declare var __NAME__: string;
 
 let YouboraAdapter = youbora.StandardAdapter.extend({
-  constructor: function(player, config) {
+  constructor: function (player, config) {
     this.config = config;
     YouboraAdapter.__super__.constructor.call(this, player);
   },
 
   /**  @returns {String} - current plugin version */
-  getVersion: function() {
+  getVersion: function () {
     return youbora.VERSION + '-' + __VERSION__ + '-' + __NAME__;
   },
 
   /**  @returns {Number} - current playhead of the video */
-  getPlayhead: function() {
+  getPlayhead: function () {
     return this.player.currentTime;
   },
 
   /**  @returns {Number} - current playrate */
-  getPlayrate: function() {
+  getPlayrate: function () {
     return this.player.playbackRate;
   },
 
   /**  @returns {Number} - video duration */
-  getDuration: function() {
+  getDuration: function () {
     return this.player.duration || null;
   },
 
   /**  @returns {Number} - current bitrate */
-  getBitrate: function() {
+  getBitrate: function () {
     let activeVideo = this.player.getActiveTracks().video;
     if (activeVideo && activeVideo.bandwidth) {
       return isNaN(activeVideo.bandwidth) ? null : activeVideo.bandwidth;
@@ -41,7 +41,7 @@ let YouboraAdapter = youbora.StandardAdapter.extend({
   },
 
   /**  @returns {String} - rendition */
-  getRendition: function() {
+  getRendition: function () {
     let activeVideo = this.player.getActiveTracks().video;
     if (activeVideo) {
       if (isNaN(activeVideo.bandwidth)) {
@@ -53,37 +53,37 @@ let YouboraAdapter = youbora.StandardAdapter.extend({
   },
 
   /**  @returns {String} - title */
-  getTitle: function() {
+  getTitle: function () {
     return this.config.entryName;
   },
 
   /**  @returns {Boolean} - true if live and false if VOD */
-  getIsLive: function() {
+  getIsLive: function () {
     return this.config.entryType === MediaType.LIVE;
   },
 
   /**  @returns {String} - resource URL. */
-  getResource: function() {
+  getResource: function () {
     return this.player.src;
   },
 
   /**  @returns {String} - player version */
-  getPlayerVersion: function() {
+  getPlayerVersion: function () {
     return this.config.playerVersion;
   },
 
   /**  @returns {String} - player's name */
-  getPlayerName: function() {
+  getPlayerName: function () {
     return this.config.playerName;
   },
 
   /** @returns {String} - Household identifier */
-  getHouseholdId: function() {
+  getHouseholdId: function () {
     return this.config.householdId;
   },
 
   /**  @returns {void} - Return a list of events and methods to suscribe from this.player. */
-  getListenersList: function() {
+  getListenersList: function () {
     const Event = this.player.Event;
     return [
       {
@@ -106,23 +106,23 @@ let YouboraAdapter = youbora.StandardAdapter.extend({
   /** @returns {void}
    * @param {Object} logger - playkit logger object.
    * - Bind youbora logs to playkit ones */
-  bindLogger: function(logger) {
+  bindLogger: function (logger) {
     youbora.Log.error = logger.error.bind(logger);
     youbora.Log.notice = logger.info.bind(logger);
     youbora.Log.warn = logger.warn.bind(logger);
     youbora.Log.debug = logger.debug.bind(logger);
-    youbora.Log.verbose = function() {};
+    youbora.Log.verbose = function () {};
   },
 
   /** @returns {void} - Listener for 'load_start' event. */
-  loadListener: function() {
+  loadListener: function () {
     if (this.player.config.playback.preload !== 'auto') {
       this.playListener();
     }
   },
 
   /** @returns {void} - Listener for 'play' event. */
-  playListener: function() {
+  playListener: function () {
     if (this.blockedByError) return;
     if (!this.flags.isStarted) {
       this.plugin.options['content.isLive.noSeek'] = !this.player.isDvr();
@@ -132,12 +132,12 @@ let YouboraAdapter = youbora.StandardAdapter.extend({
   },
 
   /** @returns {void} - Listener for 'pause' event. */
-  pauseListener: function() {
+  pauseListener: function () {
     this.firePause();
   },
 
   /** @returns {void} - Listener for 'playing' event. */
-  playingListener: function() {
+  playingListener: function () {
     this.fireResume();
     this.fireSeekEnd();
     this.fireBufferEnd();
@@ -147,7 +147,7 @@ let YouboraAdapter = youbora.StandardAdapter.extend({
   /** @returns {void}
    * @param {Object} error - object with payload including severity, code and data.
    * - The name of the plugin.- Listener for 'error' event. */
-  errorListener: function(error) {
+  errorListener: function (error) {
     if (this.blockedByError) return;
     if (error.payload.severity === Error.Severity.CRITICAL) {
       let categoryName = '';
@@ -169,21 +169,21 @@ let YouboraAdapter = youbora.StandardAdapter.extend({
   },
 
   /** @returns {void} - Listener for 'seeking' event. */
-  seekingListener: function() {
+  seekingListener: function () {
     if (!this.flags.isBuffering && this.initialPlayhead !== this.getPlayhead()) {
       this.fireSeekBegin();
     }
   },
 
   /** @returns {void} - Listener for 'seeked' event. */
-  seekedListener: function() {
+  seekedListener: function () {
     this.fireSeekEnd();
   },
 
   /** @returns {void}
    * @param {Object} e - object with the payload with states.
    * - Listener for 'player_state_changed' event. */
-  stateChangeListener: function(e) {
+  stateChangeListener: function (e) {
     if (e.payload.newState.type === this.player.State.BUFFERING) {
       if (this.initialPlayhead !== this.getPlayhead()) {
         if (!this.player.isDvr() && this.getIsLive() && this.flags.isPaused) {
@@ -198,7 +198,7 @@ let YouboraAdapter = youbora.StandardAdapter.extend({
   },
 
   /** @returns {void} - Listener for 'ended' event. */
-  endedListener: function() {
+  endedListener: function () {
     if (!this.stopBlockedByAds) {
       this.fireStop();
       this.reset();
@@ -206,13 +206,13 @@ let YouboraAdapter = youbora.StandardAdapter.extend({
   },
 
   /** @returns {void} - Listener for 'ended' event. */
-  forceEndedListener: function() {
+  forceEndedListener: function () {
     this.fireStop();
     this.reset();
   },
 
   /** @returns {void} - Restores initial values to start new views */
-  reset: function() {
+  reset: function () {
     this.stopBlockedByAds = false;
     this.initialPlayhead = null;
     this.blockedByError = false;
