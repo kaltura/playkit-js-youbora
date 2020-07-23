@@ -50,7 +50,7 @@ let NativeAdsAdapter = youbora.Adapter.extend({
     return returnValue;
   },
 
-  /** @returns {object} - given ad structure (list with number of pre, mid, and post breaks) */
+  /** @returns {Number} - the number of ad breaks included in the view */
   getGivenBreaks: function() {
     return this.adBreaks ? this.adBreaks.length : null;
   },
