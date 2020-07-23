@@ -1,6 +1,6 @@
 //eslint-disable-next-line no-unused-vars
 import youbora from '../../src';
-//import { youbora as yblib } from 'youboralib'
+import youboralib from 'youboralib';
 import {loadPlayer} from '@playkit-js/playkit-js';
 
 describe('YouboraAdapter', function () {
@@ -45,7 +45,7 @@ describe('YouboraAdapter', function () {
     analyticsParams.player.should.equal(playerName);
     analyticsParams.username.should.equal(user);
     (analyticsParams.referer === document.referrer || analyticsParams.referer === location.href).should.be.true;
-    analyticsParams.pluginVersion.should.equal('6.3.2' + '-' + __VERSION__ + '-' + __NAME__);
+    analyticsParams.pluginVersion.should.equal('6.7.11' + '-' + __VERSION__ + '-' + __NAME__);
     analyticsParams.playerVersion.should.equal(playerVersion);
     analyticsParams.mediaResource.should.equal(resource);
     analyticsParams.mediaDuration.should.equal('13');
@@ -54,7 +54,7 @@ describe('YouboraAdapter', function () {
     analyticsParams.title.should.equal('entry name');
     analyticsParams.householdId.should.equal('householdCode');
     analyticsParams.properties.should.equal(
-      '{"test":"test","kalturaInfo":{"entryId":"1_rwbj3j0a","sessionId":"7296b4fd-3fcb-666d-51fc-34065579334c","uiConfId":123456}}'
+      '{"kalturaInfo":{"entryId":"1_rwbj3j0a","sessionId":"7296b4fd-3fcb-666d-51fc-34065579334c","uiConfId":123456}}'
     );
     analyticsParams.param1.should.equal('param-1');
     analyticsParams.param3.should.equal('param-3');
@@ -70,7 +70,7 @@ describe('YouboraAdapter', function () {
     analyticsParams.player.should.equal(playerName);
     analyticsParams.username.should.equal(user);
     (analyticsParams.referer === document.referrer || analyticsParams.referer === location.href).should.be.true;
-    analyticsParams.pluginVersion.should.equal('6.3.2' + '-' + __VERSION__ + '-' + __NAME__);
+    analyticsParams.pluginVersion.should.equal('6.7.11' + '-' + __VERSION__ + '-' + __NAME__);
     analyticsParams.playerVersion.should.equal(playerVersion);
     analyticsParams.mediaResource.should.equal(resource);
     analyticsParams.mediaDuration.should.equal('13');
@@ -79,7 +79,7 @@ describe('YouboraAdapter', function () {
     analyticsParams.title.should.equal('change media');
     analyticsParams.householdId.should.equal('householdCode');
     analyticsParams.properties.should.equal(
-      '{"test":"test change media","kalturaInfo":{"entryId":"34584t5874","sessionId":"6017d4cc-81a5-f21c-81da-f709f64ef558","uiConfId":654321}}'
+      '{"kalturaInfo":{"entryId":"34584t5874","sessionId":"6017d4cc-81a5-f21c-81da-f709f64ef558","uiConfId":654321}}'
     );
     analyticsParams.param2.should.equal('param-2');
     analyticsParams.param4.should.equal('param-4');
@@ -194,6 +194,30 @@ describe('YouboraAdapter', function () {
     sandbox.restore();
     player.destroy();
     removeVideoElementsFromTestPage();
+  });
+
+  it('should set a custom ads adapter, on the fly', done => {
+    let adapter = new youboralib.Adapter();
+    player.configure(CMconfig);
+    player.configure({
+      plugins: {
+        youbora: {
+          customAdsAdapter: adapter
+        }
+      }
+    });
+
+    setTimeout(() => {
+      let req0 = sendSpy.getCall(0).thisValue.responseURL;
+      let req1 = sendSpy.getCall(1).thisValue.responseURL;
+      if (req0.includes('/init') && req1.includes('/ad')) {
+        done();
+      }
+    }, 2000);
+
+    player.ready().then(() => {
+      adapter.fireStart();
+    });
   });
 
   it('should send init, start, join, stop, start and ping for change media', done => {
