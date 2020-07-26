@@ -21,7 +21,7 @@ let NativeAdsAdapter = youbora.Adapter.extend({
   },
 
   /** @returns {String} - title of the ad */
-  getTitle: function() {
+  getTitle: function () {
     return this.adObject.title;
   },
 
@@ -51,12 +51,12 @@ let NativeAdsAdapter = youbora.Adapter.extend({
   },
 
   /** @returns {Number} - the number of ad breaks included in the view */
-  getGivenBreaks: function() {
+  getGivenBreaks: function () {
     return this.adBreaks ? this.adBreaks.length : null;
   },
 
   /** @returns {Array} - a list of playheads of ad breaks begin time */
-  getBreaksTime: function() {
+  getBreaksTime: function () {
     let ret = this.adBreaks;
     if (ret) {
       let len = ret.length;
@@ -68,39 +68,39 @@ let NativeAdsAdapter = youbora.Adapter.extend({
   },
 
   /** @returns {Number} - the number of ads given for the break */
-  getGivenAds: function() {
+  getGivenAds: function () {
     return this.numAds;
   },
 
   /** @returns {Boolean} - if the ad is being shown in the screen or not
    * The standard definition is: more than 50% of the pixels of the ad are on the screen
    */
-  getIsVisible: function() {
+  getIsVisible: function () {
     return youbora.Util.calculateAdViewability(this.player.getVideoElement());
   },
 
   /** @returns {Boolean} - if the audio is enabled when the ad begins */
-  getAudioEnabled: function() {
+  getAudioEnabled: function () {
     return !this.player.muted;
   },
 
   /** @returns {Boolean} - if the ad is skippable */
-  getIsSkippable: function() {
+  getIsSkippable: function () {
     return typeof this.adObject.skipOffset !== 'undefined' && this.adObject.skipOffset > -1;
   },
 
   /** @returns {Boolean} - if the player is in fullscreen mode when the ad begins */
-  getIsFullscreen: function() {
+  getIsFullscreen: function () {
     return this.fullscreen || false;
   },
 
   /** @returns {String} - ad creative id */
-  getCreativeId: function() {
+  getCreativeId: function () {
     return this.adObject.id;
   },
 
   /**  @returns {void} - Register listeners to this.player. */
-  registerListeners: function() {
+  registerListeners: function () {
     const Event = this.player.Event;
     this.references = {
       [Event.AD_LOADED]: this.loadedAdListener.bind(this),
@@ -127,7 +127,7 @@ let NativeAdsAdapter = youbora.Adapter.extend({
   },
 
   /**  @returns {void} - Unregister listeners to this.player. */
-  unregisterListeners: function() {
+  unregisterListeners: function () {
     // unregister listeners
     if (this.player && this.references) {
       for (let key in this.references) {
@@ -143,7 +143,7 @@ let NativeAdsAdapter = youbora.Adapter.extend({
     this.fireBreakStart();
   },
 
-  endBreakAdListener: function() {
+  endBreakAdListener: function () {
     this.fireBreakEnd();
   },
 
@@ -171,11 +171,11 @@ let NativeAdsAdapter = youbora.Adapter.extend({
     this.firePause();
   },
 
-  clickAdListener: function() {
+  clickAdListener: function () {
     this.fireClick(this.adObject.clickThroughUrl);
   },
 
-  skipAdListener: function() {
+  skipAdListener: function () {
     this.fireSkip();
     this.resetFlags();
   },
@@ -188,33 +188,33 @@ let NativeAdsAdapter = youbora.Adapter.extend({
     }
   },
 
-  manifestLoaded: function(e) {
+  manifestLoaded: function (e) {
     if (e && e.payload && e.payload.adBreaksPosition) {
       this.adBreaks = e.payload.adBreaksPosition;
     }
   },
 
-  firstQuartileListener: function() {
+  firstQuartileListener: function () {
     this.fireQuartile(1);
   },
 
-  midpointListener: function() {
+  midpointListener: function () {
     this.fireQuartile(2);
   },
 
-  thirdQuartileListener: function() {
+  thirdQuartileListener: function () {
     this.fireQuartile(3);
   },
 
-  enterFullscreenListener: function() {
+  enterFullscreenListener: function () {
     this.fullscreen = true;
   },
 
-  exitFullscreenListener: function() {
+  exitFullscreenListener: function () {
     this.fullscreen = false;
   },
 
-  allAdsCompletedListener: function() {
+  allAdsCompletedListener: function () {
     this.fireStop();
     this.plugin.getAdapter().stopBlockedByAds = false;
     if (this.getPosition() === youbora.Adapter.AdPosition.POSTROLL) this.plugin.getAdapter().fireStop();

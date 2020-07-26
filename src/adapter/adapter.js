@@ -6,7 +6,7 @@ declare var __VERSION__: string;
 declare var __NAME__: string;
 
 let YouboraAdapter = youbora.Adapter.extend({
-  constructor: function(player, config) {
+  constructor: function (player, config) {
     this.config = config;
     YouboraAdapter.__super__.constructor.call(this, player);
   },
@@ -83,7 +83,7 @@ let YouboraAdapter = youbora.Adapter.extend({
   },
 
   /**  @returns {void} - Register listeners to this.player. */
-  registerListeners: function() {
+  registerListeners: function () {
     this.monitorPlayhead(true, false);
     const Event = this.player.Event;
     this.references = {
@@ -105,7 +105,7 @@ let YouboraAdapter = youbora.Adapter.extend({
   },
 
   /**  @returns {void} - Unregister listeners to this.player. */
-  unregisterListeners: function() {
+  unregisterListeners: function () {
     if (this.monitor) this.monitor.stop();
     // unregister listeners
     if (this.player && this.references) {
