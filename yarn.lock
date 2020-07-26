@@ -8213,7 +8213,7 @@ yeast@0.1.2:
   resolved "https://registry.yarnpkg.com/yeast/-/yeast-0.1.2.tgz#008e06d8094320c372dbc2f8ed76a0ca6c8ac419"
   integrity sha1-AI4G2AlDIMNy28L47XagymyKxBk=
 
-youboralib@6.3.2:
-  version "6.3.2"
-  resolved "https://registry.yarnpkg.com/youboralib/-/youboralib-6.3.2.tgz#fc780fbdd8d22b03ce50b28da9de613747b07a01"
-  integrity sha1-/HgPvdjSKwPOULKNqd5hN0ewegE=
+youboralib@6.7.11:
+  version "6.7.11"
+  resolved "https://registry.yarnpkg.com/youboralib/-/youboralib-6.7.11.tgz#1590b51683a699a5e249d92b5a72f93a5d78775a"
+  integrity sha512-WzeaC70WFpjxMA3T4NwxM5p2Wbu7J/FeocE5stCOQqR84bUKELGmuGl9BeRABE/SIt/BLNv6OrRSsBVJakTkUg==
