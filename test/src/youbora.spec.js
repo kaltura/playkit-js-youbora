@@ -3,7 +3,7 @@ import youbora from '../../src';
 import youboralib from 'youboralib';
 import {loadPlayer} from '@playkit-js/playkit-js';
 
-describe('YouboraAdapter', function() {
+describe('YouboraAdapter', function () {
   let player, sandbox, sendSpy, config, CMconfig;
   const playerName = 'player test';
   const playerVersion = '1.2.3';
@@ -29,7 +29,7 @@ describe('YouboraAdapter', function() {
     url
       .replace('?', '&')
       .split('&')
-      .forEach(function(part) {
+      .forEach(function (part) {
         let item = part.split('=');
         result[item[0]] = decodeURIComponent(item[1]);
       });
@@ -95,7 +95,7 @@ describe('YouboraAdapter', function() {
     // no bitrate, safari limitation
   }
 
-  before(function() {
+  before(function () {
     config = {
       sources: {
         progressive: [
@@ -170,7 +170,7 @@ describe('YouboraAdapter', function() {
     };
   });
 
-  beforeEach(function() {
+  beforeEach(function () {
     player = loadPlayer(config);
     player.configure({
       plugins: {
@@ -186,11 +186,11 @@ describe('YouboraAdapter', function() {
         }
       }
     });
-    sandbox = sinon.sandbox.create();
+    sandbox = sinon.createSandbox();
     sendSpy = sandbox.spy(XMLHttpRequest.prototype, 'send');
   });
 
-  afterEach(function() {
+  afterEach(function () {
     sandbox.restore();
     player.destroy();
     removeVideoElementsFromTestPage();

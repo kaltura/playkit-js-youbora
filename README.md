@@ -53,23 +53,24 @@ Finally, add the bundle as a script tag in your page, and initialize the player
 <script type="text/javascript" src="/PATH/TO/FILE/playkit.js"></script>
 <script type="text/javascript" src="/PATH/TO/FILE/playkit-youbora.js"></script>
 <div id="player-placeholder" style="height:360px; width:640px">
-<script type="text/javascript">
-var playerContainer = document.querySelector("#player-placeholder");
-var config = {
- ...
- plugins: {
-   youbora: {
-     options: {
-       accountCode: "YOUR_ACCOUNT_CODE"
+  <script type="text/javascript">
+    var playerContainer = document.querySelector("#player-placeholder");
+    var config = {
+     ...
+     plugins: {
+       youbora: {
+         options: {
+           accountCode: "YOUR_ACCOUNT_CODE"
+         }
+       }
      }
-   }
- }
- ...
-};
-var player = playkit.core.loadPlayer(config);
-playerContainer.appendChild(player.getView());
-player.play();
-</script>
+     ...
+    };
+    var player = playkit.core.loadPlayer(config);
+    playerContainer.appendChild(player.getView());
+    player.play();
+  </script>
+</div>
 ```
 
 ## Configuration
