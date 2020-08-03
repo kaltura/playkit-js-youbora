@@ -1,6 +1,7 @@
 // @flow
 import youbora from 'youboralib';
-import {Error, MediaType} from '@playkit-js/playkit-js';
+import {core} from 'kaltura-player-js';
+const {Error, MediaType} = core;
 
 declare var __VERSION__: string;
 declare var __NAME__: string;

@@ -1,7 +1,10 @@
 //eslint-disable-next-line no-unused-vars
 import youbora from '../../src';
 import youboralib from 'youboralib';
-import {loadPlayer} from '@playkit-js/playkit-js';
+import {setup} from 'kaltura-player-js';
+import * as TestUtils from './utils/test-utils';
+
+const targetId = 'player-placeholder_youbora.spec';
 
 describe('YouboraAdapter', function () {
   let player, sandbox, sendSpy, config, CMconfig;
@@ -11,13 +14,6 @@ describe('YouboraAdapter', function () {
   const user = 'user-id';
   const householdId = 'householdCode';
   const resource = 'https://www.w3schools.com/tags/movie.mp4';
-
-  function removeVideoElementsFromTestPage() {
-    let element = document.getElementsByTagName('video');
-    for (let i = element.length - 1; i >= 0; i--) {
-      element[i].parentNode.removeChild(element[i]);
-    }
-  }
 
   /**
    * @function getJsonFromUrl
@@ -96,7 +92,10 @@ describe('YouboraAdapter', function () {
   }
 
   before(function () {
+    TestUtils.createElement('DIV', targetId);
     config = {
+      targetId,
+      provider: {},
       sources: {
         progressive: [
           {
@@ -171,7 +170,7 @@ describe('YouboraAdapter', function () {
   });
 
   beforeEach(function () {
-    player = loadPlayer(config);
+    player = setup(config);
     player.configure({
       plugins: {
         youbora: {
@@ -193,10 +192,10 @@ describe('YouboraAdapter', function () {
   afterEach(function () {
     sandbox.restore();
     player.destroy();
-    removeVideoElementsFromTestPage();
+    TestUtils.removeVideoElementsFromTestPage();
   });
 
-  it('should set a custom ads adapter, on the fly', done => {
+  it.skip('should set a custom ads adapter, on the fly', done => {
     let adapter = new youboralib.Adapter();
     player.configure(CMconfig);
     player.configure({

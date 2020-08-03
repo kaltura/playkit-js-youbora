@@ -1,3 +1,3 @@
-import * as Playkit from '@playkit-js/playkit-js';
+import {core as Playkit} from 'kaltura-player-js';
 
 window.Playkit = Playkit;
