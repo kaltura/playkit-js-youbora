@@ -2,7 +2,6 @@
 
 const webpack = require('webpack');
 const path = require('path');
-const TEST = process.env.NODE_ENV === 'test';
 const packageData = require('./package.json');
 
 let plugins = [
@@ -23,7 +22,7 @@ module.exports = {
     umdNamedDefine: true,
     devtoolModuleFilenameTemplate: './youbora/[resource-path]'
   },
-  devtool: TEST ? 'inline-source-map' : 'source-map',
+  devtool: 'source-map',
   plugins: plugins,
   module: {
     rules: [
@@ -57,21 +56,14 @@ module.exports = {
     contentBase: __dirname + '/src'
   },
   resolve: {
-    alias: TEST
-      ? {
-          'kaltura-player-js': path.resolve('./node_modules/kaltura-player-js/dist/kaltura-ovp-player')
-        }
-      : {},
     modules: [path.resolve(__dirname, 'src'), 'node_modules']
   },
-  externals: TEST
-    ? {}
-    : {
-        'kaltura-player-js': {
-          commonjs: 'kaltura-player-js',
-          commonjs2: 'kaltura-player-js',
-          amd: 'kaltura-player-js',
-          root: ['KalturaPlayer']
-        }
-      }
+  externals: {
+    'kaltura-player-js': {
+      commonjs: 'kaltura-player-js',
+      commonjs2: 'kaltura-player-js',
+      amd: 'kaltura-player-js',
+      root: ['KalturaPlayer']
+    }
+  }
 };
