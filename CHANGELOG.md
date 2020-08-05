@@ -1,6 +1,23 @@
-# Change Log
+# Changelog
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
+
+## [1.2.0](https://github.com/kaltura/playkit-js-youbora/compare/v1.1.4...v1.2.0) (2020-08-05)
+
+
+### Build System
+
+* **FEC-9495:** update after deploy stage to ping Jenkins ([#36](https://github.com/kaltura/playkit-js-youbora/issues/36)) ([149edce](https://github.com/kaltura/playkit-js-youbora/commit/149edce))
+* github bad certificate ([#40](https://github.com/kaltura/playkit-js-youbora/issues/40)) ([466e2f7](https://github.com/kaltura/playkit-js-youbora/commit/466e2f7))
+
+
+### Features
+
+* **FEC-10057:** move the plugin manager to kaltura player ([#48](https://github.com/kaltura/playkit-js-youbora/issues/48)) ([5c3be1b](https://github.com/kaltura/playkit-js-youbora/commit/5c3be1b))
+* **FEC-10240:** external ads adapter feature, lib update ([#44](https://github.com/kaltura/playkit-js-youbora/issues/44)) ([9493568](https://github.com/kaltura/playkit-js-youbora/commit/9493568))
+* **FEC-10290:** upgrade NPM packages ([#46](https://github.com/kaltura/playkit-js-youbora/issues/46)) ([122677f](https://github.com/kaltura/playkit-js-youbora/commit/122677f))
+
+
 
 <a name="1.1.4"></a>
 ## [1.1.4](https://github.com/kaltura/playkit-js-youbora/compare/v1.1.3...v1.1.4) (2020-02-24)
