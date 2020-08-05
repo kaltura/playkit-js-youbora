@@ -1,4 +1,4 @@
 // @flow
-declare module '@playkit-js/playkit-js' {
+declare module 'kaltura-player-js' {
   declare module.exports: any;
 }

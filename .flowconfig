@@ -3,4 +3,5 @@
 [include]
 [libs]
 node_modules/@playkit-js/playkit-js/flow-typed/
+node_modules/kaltura-player-js/flow-typed/
 [options]
