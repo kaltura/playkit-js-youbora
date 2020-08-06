@@ -53,8 +53,9 @@ jobs:
             tags: true
             branch: master
       after_deploy:
+        - currentVersion=$(npx -c 'echo "$npm_package_version"')
         - chmod +x ./scripts/after_deploy.sh
-        - ./scripts/after_deploy.sh "youbora" "$TRAVIS_TAG" "$JENKINS_TAG_TOKEN"
+        - ./scripts/after_deploy.sh "youbora" "$currentVersion" "$JENKINS_TAG_TOKEN"
     # publish canary package if on master
     - stage: Release canary
       if: (branch = master) AND (type != pull_request) AND commit_message !~ /^chore\(release\)/
