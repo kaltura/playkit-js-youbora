@@ -84,7 +84,6 @@ let YouboraAdapter = youbora.Adapter.extend({
 
   /**  @returns {void} - Register listeners to this.player. */
   registerListeners: function() {
-    this.monitorPlayhead(true, false);
     const Event = this.player.Event;
     this.references = {
       [Event.PLAY]: this.playListener.bind(this),
@@ -106,7 +105,6 @@ let YouboraAdapter = youbora.Adapter.extend({
 
   /**  @returns {void} - Unregister listeners to this.player. */
   unregisterListeners: function() {
-    if (this.monitor) this.monitor.stop();
     // unregister listeners
     if (this.player && this.references) {
       for (let key in this.references) {

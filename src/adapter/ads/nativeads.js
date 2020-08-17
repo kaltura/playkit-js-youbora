@@ -102,6 +102,7 @@ let NativeAdsAdapter = youbora.Adapter.extend({
   /**  @returns {void} - Register listeners to this.player. */
   registerListeners: function() {
     const Event = this.player.Event;
+    this.monitorPlayhead(true, false);
     this.references = {
       [Event.AD_LOADED]: this.loadedAdListener.bind(this),
       [Event.AD_STARTED]: this.startAdListener.bind(this),
@@ -128,6 +129,7 @@ let NativeAdsAdapter = youbora.Adapter.extend({
 
   /**  @returns {void} - Unregister listeners to this.player. */
   unregisterListeners: function() {
+    if (this.monitor) this.monitor.stop();
     // unregister listeners
     if (this.player && this.references) {
       for (let key in this.references) {
