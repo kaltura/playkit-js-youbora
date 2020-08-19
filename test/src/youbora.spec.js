@@ -1,7 +1,12 @@
 //eslint-disable-next-line no-unused-vars
 import youbora from '../../src';
 import youboralib from 'youboralib';
+//eslint-disable-next-line no-unused-vars
 import {loadPlayer} from '@playkit-js/playkit-js';
+import {setup} from 'kaltura-player-js';
+import * as TestUtils from './utils/test-utils';
+
+const targetId = 'player-placeholder_youbora.spec';
 
 describe('YouboraAdapter', function() {
   let player, sandbox, sendSpy, config, CMconfig;
@@ -11,13 +16,6 @@ describe('YouboraAdapter', function() {
   const user = 'user-id';
   const householdId = 'householdCode';
   const resource = 'https://www.w3schools.com/tags/movie.mp4';
-
-  function removeVideoElementsFromTestPage() {
-    let element = document.getElementsByTagName('video');
-    for (let i = element.length - 1; i >= 0; i--) {
-      element[i].parentNode.removeChild(element[i]);
-    }
-  }
 
   /**
    * @function getJsonFromUrl
@@ -96,7 +94,10 @@ describe('YouboraAdapter', function() {
   }
 
   before(function() {
+    TestUtils.createElement('DIV', targetId);
     config = {
+      targetId,
+      provider: {},
       sources: {
         progressive: [
           {
@@ -171,7 +172,7 @@ describe('YouboraAdapter', function() {
   });
 
   beforeEach(function() {
-    player = loadPlayer(config);
+    player = setup(config);
     player.configure({
       plugins: {
         youbora: {
@@ -186,14 +187,38 @@ describe('YouboraAdapter', function() {
         }
       }
     });
-    sandbox = sinon.sandbox.create();
+    sandbox = sinon.createSandbox();
     sendSpy = sandbox.spy(XMLHttpRequest.prototype, 'send');
   });
 
   afterEach(function() {
     sandbox.restore();
     player.destroy();
-    removeVideoElementsFromTestPage();
+    TestUtils.removeVideoElementsFromTestPage();
+  });
+
+  it.skip('should set a custom ads adapter, on the fly', done => {
+    let adapter = new youboralib.Adapter();
+    player.configure(CMconfig);
+    player.configure({
+      plugins: {
+        youbora: {
+          customAdsAdapter: adapter
+        }
+      }
+    });
+
+    setTimeout(() => {
+      let req0 = sendSpy.getCall(0).thisValue.responseURL;
+      let req1 = sendSpy.getCall(1).thisValue.responseURL;
+      if (req0.includes('/init') && req1.includes('/ad')) {
+        done();
+      }
+    }, 2000);
+
+    player.ready().then(() => {
+      adapter.fireStart();
+    });
   });
 
   it('should set a custom ads adapter, on the fly', done => {

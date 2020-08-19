@@ -1,6 +1,7 @@
 // @flow
 import youbora from 'youboralib';
-import {Error, MediaType} from '@playkit-js/playkit-js';
+import {core} from 'kaltura-player-js';
+const {Error, MediaType} = core;
 
 declare var __VERSION__: string;
 declare var __NAME__: string;
@@ -84,6 +85,7 @@ let YouboraAdapter = youbora.Adapter.extend({
 
   /**  @returns {void} - Register listeners to this.player. */
   registerListeners: function() {
+    this.monitorPlayhead(true, false);
     const Event = this.player.Event;
     this.references = {
       [Event.PLAY]: this.playListener.bind(this),
