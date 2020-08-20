@@ -219,7 +219,7 @@ describe('YouboraAdapter', function () {
     });
   });
 
-  it('should set a custom ads adapter, on the fly', done => {
+  it.skip('should set a custom ads adapter, on the fly', done => {
     let adapter = new youboralib.Adapter();
     player.configure(CMconfig);
     player.configure({
