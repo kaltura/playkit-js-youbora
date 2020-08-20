@@ -18,7 +18,6 @@ module.exports = {
     path: __dirname + '/dist',
     filename: '[name].js',
     library: ['KalturaPlayer', 'plugins', 'youbora'],
-    umdNamedDefine: true,
     devtoolModuleFilenameTemplate: './youbora/[resource-path]'
   },
   devtool: 'source-map',
