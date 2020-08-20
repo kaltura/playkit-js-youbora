@@ -1,14 +1,10 @@
-//eslint-disable-next-line no-unused-vars
-import youbora from '../../src';
 import youboralib from 'youboralib';
-//eslint-disable-next-line no-unused-vars
-import {loadPlayer} from '@playkit-js/playkit-js';
 import {setup} from 'kaltura-player-js';
 import * as TestUtils from './utils/test-utils';
 
 const targetId = 'player-placeholder_youbora.spec';
 
-describe('YouboraAdapter', function() {
+describe('YouboraAdapter', function () {
   let player, sandbox, sendSpy, config, CMconfig;
   const playerName = 'player test';
   const playerVersion = '1.2.3';
@@ -27,7 +23,7 @@ describe('YouboraAdapter', function() {
     url
       .replace('?', '&')
       .split('&')
-      .forEach(function(part) {
+      .forEach(function (part) {
         let item = part.split('=');
         result[item[0]] = decodeURIComponent(item[1]);
       });
@@ -93,7 +89,7 @@ describe('YouboraAdapter', function() {
     // no bitrate, safari limitation
   }
 
-  before(function() {
+  before(function () {
     TestUtils.createElement('DIV', targetId);
     config = {
       targetId,
@@ -171,7 +167,7 @@ describe('YouboraAdapter', function() {
     };
   });
 
-  beforeEach(function() {
+  beforeEach(function () {
     player = setup(config);
     player.configure({
       plugins: {
@@ -191,34 +187,10 @@ describe('YouboraAdapter', function() {
     sendSpy = sandbox.spy(XMLHttpRequest.prototype, 'send');
   });
 
-  afterEach(function() {
+  afterEach(function () {
     sandbox.restore();
     player.destroy();
     TestUtils.removeVideoElementsFromTestPage();
-  });
-
-  it.skip('should set a custom ads adapter, on the fly', done => {
-    let adapter = new youboralib.Adapter();
-    player.configure(CMconfig);
-    player.configure({
-      plugins: {
-        youbora: {
-          customAdsAdapter: adapter
-        }
-      }
-    });
-
-    setTimeout(() => {
-      let req0 = sendSpy.getCall(0).thisValue.responseURL;
-      let req1 = sendSpy.getCall(1).thisValue.responseURL;
-      if (req0.includes('/init') && req1.includes('/ad')) {
-        done();
-      }
-    }, 2000);
-
-    player.ready().then(() => {
-      adapter.fireStart();
-    });
   });
 
   it('should set a custom ads adapter, on the fly', done => {
@@ -241,6 +213,7 @@ describe('YouboraAdapter', function() {
     }, 2000);
 
     player.ready().then(() => {
+      adapter.plugin.fireInit();
       adapter.fireStart();
     });
   });
