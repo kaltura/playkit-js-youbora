@@ -120,7 +120,8 @@ let NativeAdsAdapter = youbora.Adapter.extend({
       [Event.AD_THIRD_QUARTILE]: this.thirdQuartileListener.bind(this),
       [Event.ENTER_FULLSCREEN]: this.enterFullscreenListener.bind(this),
       [Event.EXIT_FULLSCREEN]: this.exitFullscreenListener.bind(this),
-      [Event.AD_MANIFEST_LOADED]: this.manifestLoaded.bind(this)
+      [Event.AD_MANIFEST_LOADED]: this.manifestLoaded.bind(this),
+      [Event.AD_BREAK_START]: this.startBreakAdListener.bind(this)
     };
 
     for (let key in this.references) {
@@ -140,7 +141,7 @@ let NativeAdsAdapter = youbora.Adapter.extend({
   },
 
   startBreakAdListener: function (e) {
-    this.adPosition = e.payload.adBreak.type || this.adPosition;
+    this.adPosition = e.payload.adBreak.type;
     this.numAds = e.payload.adBreak.numAds;
     this.fireBreakStart();
   },
@@ -151,7 +152,6 @@ let NativeAdsAdapter = youbora.Adapter.extend({
 
   loadedAdListener: function (e) {
     this.adObject = e.payload.ad;
-    this.adPosition = e.payload.adType;
   },
 
   startAdListener: function () {
