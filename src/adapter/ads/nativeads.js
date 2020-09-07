@@ -28,24 +28,26 @@ let NativeAdsAdapter = youbora.Adapter.extend({
   /**  @returns {String} - current ad position (only ads) */
   getPosition: function () {
     let returnValue = youbora.Adapter.AdPosition.MIDROLL;
-    switch (this.adPosition) {
-      case 'preroll':
-        returnValue = youbora.Adapter.AdPosition.PREROLL;
-        break;
-      case 'postroll':
-        returnValue = youbora.Adapter.AdPosition.POSTROLL;
-        break;
-      case 'midroll':
-        break;
-      case 'overlay':
-        returnValue = 'overlay';
-        break;
-      default:
-        if (!this.plugin.getAdapter().flags.isJoined) {
+    if (this.adPosition) {
+      switch (this.adPosition) {
+        case 'preroll':
           returnValue = youbora.Adapter.AdPosition.PREROLL;
-        } else if (!this.plugin.getAdapter().getIsLive() && this.plugin.getAdapter().getPlayhead() > this.plugin.getAdapter().getDuration() - 1) {
+          break;
+        case 'postroll':
           returnValue = youbora.Adapter.AdPosition.POSTROLL;
-        }
+          break;
+        case 'midroll':
+          break;
+        case 'overlay':
+          returnValue = 'overlay';
+          break;
+      }
+    } else {
+      if (!this.plugin.getAdapter().flags.isJoined) {
+        returnValue = youbora.Adapter.AdPosition.PREROLL;
+      } else if (!this.plugin.getIsLive() && this.plugin.getPlayhead() > this.plugin.getDuration() - 1) {
+        returnValue = youbora.Adapter.AdPosition.POSTROLL;
+      }
     }
     return returnValue;
   },
@@ -138,7 +140,7 @@ let NativeAdsAdapter = youbora.Adapter.extend({
   },
 
   startBreakAdListener: function (e) {
-    this.adPosition = e.payload.adBreak.type;
+    this.adPosition = e.payload.adBreak.type || this.adPosition;
     this.numAds = e.payload.adBreak.numAds;
     this.fireBreakStart();
   },
@@ -149,6 +151,7 @@ let NativeAdsAdapter = youbora.Adapter.extend({
 
   loadedAdListener: function (e) {
     this.adObject = e.payload.ad;
+    this.adPosition = e.payload.adType;
   },
 
   startAdListener: function () {
