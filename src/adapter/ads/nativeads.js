@@ -28,26 +28,24 @@ let NativeAdsAdapter = youbora.Adapter.extend({
   /**  @returns {String} - current ad position (only ads) */
   getPosition: function () {
     let returnValue = youbora.Constants.AdPosition.Midroll;
-    if (this.adPosition) {
-      switch (this.adPosition) {
-        case 'preroll':
-          returnValue = youbora.Constants.AdPosition.Preroll;
-          break;
-        case 'postroll':
-          returnValue = youbora.Constants.AdPosition.Postroll;
-          break;
-        case 'midroll':
-          break;
-        case 'overlay':
-          returnValue = 'overlay';
-          break;
-      }
-    } else {
-      if (!this.plugin.getAdapter().flags.isJoined) {
+    switch (this.adPosition) {
+      case 'preroll':
         returnValue = youbora.Constants.AdPosition.Preroll;
-      } else if (!this.plugin.getIsLive() && this.plugin.getPlayhead() > this.plugin.getDuration() - 1) {
+        break;
+      case 'postroll':
         returnValue = youbora.Constants.AdPosition.Postroll;
-      }
+        break;
+      case 'midroll':
+        break;
+      case 'overlay':
+        returnValue = 'overlay';
+        break;
+      default:
+        if (!this.plugin.getAdapter().flags.isJoined) {
+          returnValue = youbora.Constants.AdPosition.Preroll;
+        } else if (!this.plugin.getIsLive() && this.plugin.getPlayhead() > this.plugin.getDuration() - 1) {
+          returnValue = youbora.Constants.AdPosition.Postroll;
+        }
     }
     return returnValue;
   },
