@@ -146,10 +146,6 @@ let NativeAdsAdapter = youbora.Adapter.extend({
     this.fireBreakStart();
   },
 
-  endBreakAdListener: function () {
-    this.fireBreakEnd();
-  },
-
   loadedAdListener: function (e) {
     this.adObject = e.payload.ad;
   },
