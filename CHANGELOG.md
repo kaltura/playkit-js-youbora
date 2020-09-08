@@ -2,6 +2,20 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [2.0.0](https://github.com/kaltura/playkit-js-youbora/compare/v1.2.1...v2.0.0) (2020-09-08)
+
+
+### Features
+
+* **FEC-10347:** expose kaltura player as a global variable instead of UMD ([#50](https://github.com/kaltura/playkit-js-youbora/issues/50)) ([32e9e70](https://github.com/kaltura/playkit-js-youbora/commit/32e9e70))
+
+
+### BREAKING CHANGES
+
+* **FEC-10347:** This package is not UMD anymore
+
+
+
 ### [1.2.1](https://github.com/kaltura/playkit-js-youbora/compare/v1.2.0...v1.2.1) (2020-09-08)
 
 
