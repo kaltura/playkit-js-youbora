@@ -27,13 +27,13 @@ let NativeAdsAdapter = youbora.Adapter.extend({
 
   /**  @returns {String} - current ad position (only ads) */
   getPosition: function () {
-    let returnValue = youbora.Adapter.AdPosition.MIDROLL;
+    let returnValue = youbora.Constants.AdPosition.Midroll;
     switch (this.adPosition) {
       case 'preroll':
-        returnValue = youbora.Adapter.AdPosition.PREROLL;
+        returnValue = youbora.Constants.AdPosition.Preroll;
         break;
       case 'postroll':
-        returnValue = youbora.Adapter.AdPosition.POSTROLL;
+        returnValue = youbora.Constants.AdPosition.Postroll;
         break;
       case 'midroll':
         break;
@@ -42,9 +42,9 @@ let NativeAdsAdapter = youbora.Adapter.extend({
         break;
       default:
         if (!this.plugin.getAdapter().flags.isJoined) {
-          returnValue = youbora.Adapter.AdPosition.PREROLL;
-        } else if (!this.plugin.getAdapter().getIsLive() && this.plugin.getAdapter().getPlayhead() > this.plugin.getAdapter().getDuration() - 1) {
-          returnValue = youbora.Adapter.AdPosition.POSTROLL;
+          returnValue = youbora.Constants.AdPosition.Preroll;
+        } else if (!this.plugin.getIsLive() && this.plugin.getPlayhead() > this.plugin.getDuration() - 1) {
+          returnValue = youbora.Constants.AdPosition.Postroll;
         }
     }
     return returnValue;
@@ -102,6 +102,7 @@ let NativeAdsAdapter = youbora.Adapter.extend({
   /**  @returns {void} - Register listeners to this.player. */
   registerListeners: function () {
     const Event = this.player.Event;
+    this.monitorPlayhead(true, false);
     this.references = {
       [Event.AD_LOADED]: this.loadedAdListener.bind(this),
       [Event.AD_STARTED]: this.startAdListener.bind(this),
@@ -118,7 +119,8 @@ let NativeAdsAdapter = youbora.Adapter.extend({
       [Event.AD_THIRD_QUARTILE]: this.thirdQuartileListener.bind(this),
       [Event.ENTER_FULLSCREEN]: this.enterFullscreenListener.bind(this),
       [Event.EXIT_FULLSCREEN]: this.exitFullscreenListener.bind(this),
-      [Event.AD_MANIFEST_LOADED]: this.manifestLoaded.bind(this)
+      [Event.AD_MANIFEST_LOADED]: this.manifestLoaded.bind(this),
+      [Event.AD_BREAK_START]: this.startBreakAdListener.bind(this)
     };
 
     for (let key in this.references) {
@@ -128,6 +130,7 @@ let NativeAdsAdapter = youbora.Adapter.extend({
 
   /**  @returns {void} - Unregister listeners to this.player. */
   unregisterListeners: function () {
+    if (this.monitor) this.monitor.stop();
     // unregister listeners
     if (this.player && this.references) {
       for (let key in this.references) {
@@ -141,10 +144,6 @@ let NativeAdsAdapter = youbora.Adapter.extend({
     this.adPosition = e.payload.adBreak.type;
     this.numAds = e.payload.adBreak.numAds;
     this.fireBreakStart();
-  },
-
-  endBreakAdListener: function () {
-    this.fireBreakEnd();
   },
 
   loadedAdListener: function (e) {
@@ -182,7 +181,7 @@ let NativeAdsAdapter = youbora.Adapter.extend({
 
   errorAdListener: function (e) {
     this.fireError(e.payload.error.code, e.payload.error.message);
-    if (this.getPosition() === youbora.Adapter.AdPosition.POSTROLL) {
+    if (this.getPosition() === youbora.Constants.AdPosition.Postroll) {
       this.plugin.getAdapter().stopBlockedByAds = false;
       this.plugin.fireStop();
     }
@@ -217,7 +216,7 @@ let NativeAdsAdapter = youbora.Adapter.extend({
   allAdsCompletedListener: function () {
     this.fireStop();
     this.plugin.getAdapter().stopBlockedByAds = false;
-    if (this.getPosition() === youbora.Adapter.AdPosition.POSTROLL) this.plugin.getAdapter().fireStop();
+    if (this.getPosition() === youbora.Constants.AdPosition.Postroll) this.plugin.getAdapter().fireStop();
     this.adPosition = null;
   },
 
@@ -229,7 +228,7 @@ let NativeAdsAdapter = youbora.Adapter.extend({
   resetFlags: function () {
     this.currentTime = null;
     this.adObject = null;
-    if (this.getPosition() === youbora.Adapter.AdPosition.POSTROLL) {
+    if (this.getPosition() === youbora.Constants.AdPosition.Postroll) {
       this.adPosition = null;
     }
   }

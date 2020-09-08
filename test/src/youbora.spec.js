@@ -219,6 +219,30 @@ describe('YouboraAdapter', function () {
     });
   });
 
+  it.skip('should set a custom ads adapter, on the fly', done => {
+    let adapter = new youboralib.Adapter();
+    player.configure(CMconfig);
+    player.configure({
+      plugins: {
+        youbora: {
+          customAdsAdapter: adapter
+        }
+      }
+    });
+
+    setTimeout(() => {
+      let req0 = sendSpy.getCall(0).thisValue.responseURL;
+      let req1 = sendSpy.getCall(1).thisValue.responseURL;
+      if (req0.includes('/init') && req1.includes('/ad')) {
+        done();
+      }
+    }, 2000);
+
+    player.ready().then(() => {
+      adapter.fireStart();
+    });
+  });
+
   it('should send init, start, join, stop, start and ping for change media', done => {
     setTimeout(() => {
       player.addEventListener(player.Event.CHANGE_SOURCE_ENDED, () => {

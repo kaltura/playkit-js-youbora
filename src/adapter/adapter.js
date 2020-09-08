@@ -107,7 +107,6 @@ let YouboraAdapter = youbora.Adapter.extend({
 
   /**  @returns {void} - Unregister listeners to this.player. */
   unregisterListeners: function () {
-    if (this.monitor) this.monitor.stop();
     // unregister listeners
     if (this.player && this.references) {
       for (let key in this.references) {
