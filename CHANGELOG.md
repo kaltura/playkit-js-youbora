@@ -2,6 +2,26 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [1.2.1](https://github.com/kaltura/playkit-js-youbora/compare/v1.2.0...v1.2.1) (2020-09-08)
+
+
+### Bug Fixes
+
+* **FEC-10471:** adPosition getter returns preroll for mid and post rolls ([#56](https://github.com/kaltura/playkit-js-youbora/issues/56)) ([b70634b](https://github.com/kaltura/playkit-js-youbora/commit/b70634b))
+* ads adapter upgrade fixes ([#52](https://github.com/kaltura/playkit-js-youbora/issues/52)) ([6195cf2](https://github.com/kaltura/playkit-js-youbora/commit/6195cf2))
+
+
+### Build System
+
+* **FEC-10064:** add automatic release notes ([#55](https://github.com/kaltura/playkit-js-youbora/issues/55)) ([c9d82bb](https://github.com/kaltura/playkit-js-youbora/commit/c9d82bb))
+
+
+### Tests
+
+* faster unit tests ([#54](https://github.com/kaltura/playkit-js-youbora/issues/54)) ([d4dd539](https://github.com/kaltura/playkit-js-youbora/commit/d4dd539))
+
+
+
 ## [1.2.0](https://github.com/kaltura/playkit-js-youbora/compare/v1.1.4...v1.2.0) (2020-08-05)
 
 
