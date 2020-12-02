@@ -235,6 +235,7 @@ let YouboraAdapter = youbora.Adapter.extend({
     this.stopBlockedByAds = false;
     this.initialPlayhead = null;
     this.blockedByError = false;
+    this.stopMonitor();
   }
 });
 
