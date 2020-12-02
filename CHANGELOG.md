@@ -2,6 +2,15 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [2.0.2](https://github.com/kaltura/playkit-js-youbora/compare/v2.0.1...v2.0.2) (2020-12-02)
+
+
+### Bug Fixes
+
+* **FEC-10740:** buffer begin reported from Youbora SDK on live dash content ([#59](https://github.com/kaltura/playkit-js-youbora/issues/59)) ([1688e23](https://github.com/kaltura/playkit-js-youbora/commit/1688e23))
+
+
+
 ### [2.0.1](https://github.com/kaltura/playkit-js-youbora/compare/v2.0.0...v2.0.1) (2020-11-03)
 
 
