@@ -85,7 +85,6 @@ let YouboraAdapter = youbora.Adapter.extend({
 
   /**  @returns {void} - Register listeners to this.player. */
   registerListeners: function () {
-    this.monitorPlayhead(true, false);
     const Event = this.player.Event;
     this.references = {
       [Event.PLAY]: this.playListener.bind(this),
@@ -97,11 +96,18 @@ let YouboraAdapter = youbora.Adapter.extend({
       [Event.SEEKED]: this.seekedListener.bind(this),
       [Event.PLAYER_STATE_CHANGED]: this.stateChangeListener.bind(this),
       [Event.ENDED]: this.endedListener.bind(this),
-      [Event.CHANGE_SOURCE_STARTED]: this.forceEndedListener.bind(this)
+      [Event.CHANGE_SOURCE_STARTED]: this.forceEndedListener.bind(this),
+      [Event.SOURCE_SELECTED]: this.sourceSelectedListener.bind(this)
     };
 
     for (let key in this.references) {
       this.player.addEventListener(key, this.references[key]);
+    }
+  },
+
+  sourceSelectedListener: function () {
+    if (!this.player.isLive()) {
+      this.monitorPlayhead(true, false);
     }
   },
 
