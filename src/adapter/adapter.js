@@ -107,7 +107,7 @@ let YouboraAdapter = youbora.Adapter.extend({
 
   sourceSelectedListener: function () {
     if (!this.player.isLive()) {
-      this.monitorPlayhead(true, false);
+      this.monitorPlayhead(true, false, this.config.playheadMonitorInterval);
     }
   },
 
