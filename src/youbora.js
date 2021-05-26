@@ -15,7 +15,8 @@ class Youbora extends BasePlugin {
    * @static
    */
   static defaultConfig: Object = {
-    options: {}
+    options: {},
+    playheadMonitorInterval: NaN
   };
 
   /**
