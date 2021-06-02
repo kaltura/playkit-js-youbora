@@ -1,73 +1,14 @@
-# Changelog
+# Change Log
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
-### [2.0.2](https://github.com/kaltura/playkit-js-youbora/compare/v2.0.1...v2.0.2) (2020-12-02)
+<a name="2.0.3"></a>
+## [2.0.3](https://github.com/kaltura/playkit-js-youbora/compare/v2.0.2...v2.0.3) (2021-06-02)
 
 
 ### Bug Fixes
 
-* **FEC-10740:** buffer begin reported from Youbora SDK on live dash content ([#59](https://github.com/kaltura/playkit-js-youbora/issues/59)) ([1688e23](https://github.com/kaltura/playkit-js-youbora/commit/1688e23))
-
-
-
-### [2.0.1](https://github.com/kaltura/playkit-js-youbora/compare/v2.0.0...v2.0.1) (2020-11-03)
-
-
-### Build System
-
-* remove plugins that already exist on preset-env ([#58](https://github.com/kaltura/playkit-js-youbora/issues/58)) ([0f064ec](https://github.com/kaltura/playkit-js-youbora/commit/0f064ec))
-
-
-
-## [2.0.0](https://github.com/kaltura/playkit-js-youbora/compare/v1.2.1...v2.0.0) (2020-09-08)
-
-
-### Features
-
-* **FEC-10347:** expose kaltura player as a global variable instead of UMD ([#50](https://github.com/kaltura/playkit-js-youbora/issues/50)) ([32e9e70](https://github.com/kaltura/playkit-js-youbora/commit/32e9e70))
-
-
-### BREAKING CHANGES
-
-* **FEC-10347:** This package is not UMD anymore
-
-
-
-### [1.2.1](https://github.com/kaltura/playkit-js-youbora/compare/v1.2.0...v1.2.1) (2020-09-08)
-
-
-### Bug Fixes
-
-* **FEC-10471:** adPosition getter returns preroll for mid and post rolls ([#56](https://github.com/kaltura/playkit-js-youbora/issues/56)) ([b70634b](https://github.com/kaltura/playkit-js-youbora/commit/b70634b))
-* ads adapter upgrade fixes ([#52](https://github.com/kaltura/playkit-js-youbora/issues/52)) ([6195cf2](https://github.com/kaltura/playkit-js-youbora/commit/6195cf2))
-
-
-### Build System
-
-* **FEC-10064:** add automatic release notes ([#55](https://github.com/kaltura/playkit-js-youbora/issues/55)) ([c9d82bb](https://github.com/kaltura/playkit-js-youbora/commit/c9d82bb))
-
-
-### Tests
-
-* faster unit tests ([#54](https://github.com/kaltura/playkit-js-youbora/issues/54)) ([d4dd539](https://github.com/kaltura/playkit-js-youbora/commit/d4dd539))
-
-
-
-## [1.2.0](https://github.com/kaltura/playkit-js-youbora/compare/v1.1.4...v1.2.0) (2020-08-05)
-
-
-### Build System
-
-* **FEC-9495:** update after deploy stage to ping Jenkins ([#36](https://github.com/kaltura/playkit-js-youbora/issues/36)) ([149edce](https://github.com/kaltura/playkit-js-youbora/commit/149edce))
-* github bad certificate ([#40](https://github.com/kaltura/playkit-js-youbora/issues/40)) ([466e2f7](https://github.com/kaltura/playkit-js-youbora/commit/466e2f7))
-
-
-### Features
-
-* **FEC-10057:** move the plugin manager to kaltura player ([#48](https://github.com/kaltura/playkit-js-youbora/issues/48)) ([5c3be1b](https://github.com/kaltura/playkit-js-youbora/commit/5c3be1b))
-* **FEC-10240:** external ads adapter feature, lib update ([#44](https://github.com/kaltura/playkit-js-youbora/issues/44)) ([9493568](https://github.com/kaltura/playkit-js-youbora/commit/9493568))
-* **FEC-10290:** upgrade NPM packages ([#46](https://github.com/kaltura/playkit-js-youbora/issues/46)) ([122677f](https://github.com/kaltura/playkit-js-youbora/commit/122677f))
+* **CELEXT-191:** youbora reporting buffering while playback ([#70](https://github.com/kaltura/playkit-js-youbora/issues/70)) ([3077e7b](https://github.com/kaltura/playkit-js-youbora/commit/3077e7b))
 
 
 
