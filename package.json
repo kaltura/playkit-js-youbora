@@ -96,7 +96,7 @@
     "webpack": "^4.43.0",
     "webpack-cli": "^3.3.12",
     "webpack-dev-server": "^3.11.0",
-    "youboralib": "6.7.11"
+    "youboralib": "6.7.35"
   },
   "peerDependencies": {
     "@playkit-js/playkit-js": "0.63.0",
