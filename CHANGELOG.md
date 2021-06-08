@@ -1,6 +1,20 @@
-# Change Log
+# Changelog
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
+
+## [2.1.0](https://github.com/kaltura/playkit-js-youbora/compare/v2.0.3...v2.1.0) (2021-06-08)
+
+
+### Build System
+
+* **FEC-10700:** Improvement for CI/CD ([#72](https://github.com/kaltura/playkit-js-youbora/issues/72)) ([4719555](https://github.com/kaltura/playkit-js-youbora/commit/4719555))
+
+
+### Features
+
+* **FEC-11283:** upgrading the Youbora Library to 6.7.35 ([#73](https://github.com/kaltura/playkit-js-youbora/issues/73)) ([631057a](https://github.com/kaltura/playkit-js-youbora/commit/631057a))
+
+
 
 <a name="2.0.3"></a>
 ## [2.0.3](https://github.com/kaltura/playkit-js-youbora/compare/v2.0.2...v2.0.3) (2021-06-02)
