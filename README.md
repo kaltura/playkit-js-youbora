@@ -76,7 +76,7 @@ Finally, add the bundle as a script tag in your page, and initialize the player
 ## Configuration
 
 This plugin configuration reflects Youbora options,
-For full Youbora options see: http://developer.nicepeopleatwork.com/apidocs/js6/youbora.Options.html
+For full Youbora options see: https://developer.nicepeopleatwork.com/apidocs/js6/Options.html
 
 ## Running the tests
 
