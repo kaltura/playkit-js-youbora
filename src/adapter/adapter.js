@@ -106,10 +106,10 @@ let YouboraAdapter = youbora.Adapter.extend({
   },
 
   sourceSelectedListener: function () {
-    if (!this.player.isLive()) {
-      this.monitorPlayhead(true, false, this.config.playheadMonitorInterval);
-    } else {
+    if (this.player.isLive()) {
       this.plugin.options['forceInit'] = true;
+    } else {
+      this.monitorPlayhead(true, false, this.config.playheadMonitorInterval);
     }
   },
 
