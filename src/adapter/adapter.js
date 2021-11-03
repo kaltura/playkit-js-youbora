@@ -106,11 +106,10 @@ let YouboraAdapter = youbora.Adapter.extend({
   },
 
   sourceSelectedListener: function () {
-    if (this.player.isLive()) {
-      this.plugin.options['forceInit'] = true;
-    } else {
+    if (!this.player.isLive()) {
       this.monitorPlayhead(true, false, this.config.playheadMonitorInterval);
     }
+    this.plugin.options['forceInit'] = this.player.isLive();
   },
 
   /**  @returns {void} - Unregister listeners to this.player. */
