@@ -8800,7 +8800,7 @@ yeast@0.1.2:
   resolved "https://registry.yarnpkg.com/yeast/-/yeast-0.1.2.tgz#008e06d8094320c372dbc2f8ed76a0ca6c8ac419"
   integrity sha1-AI4G2AlDIMNy28L47XagymyKxBk=
 
-youboralib@6.7.35:
-  version "6.7.35"
-  resolved "https://registry.yarnpkg.com/youboralib/-/youboralib-6.7.35.tgz#6560216880ce85e35ec52cf7a466e4a41f9e7c6e"
-  integrity sha512-OevoxhuVRIwAHD3E1rUPsXhhzk9ciXD47uO6orvxESKvpDMcqhH1G6V4r5a4Oh22zoCdjKEFstmnekNRyKZpsw==
+youboralib@6.7.42:
+  version "6.7.42"
+  resolved "https://registry.yarnpkg.com/youboralib/-/youboralib-6.7.42.tgz#b167af9194da72ffeada245d4bb606ef8ddb967c"
+  integrity sha512-9/E2e7DcbL/ObEbNbz2SvmAHx4SUOZv2phbRgd8r5vm/WlDeKMH91T6jNcudLKsnMyiXW9q/ZObEjXL5zWlXaQ==
