@@ -41,7 +41,7 @@ describe('YouboraAdapter', function () {
     analyticsParams.player.should.equal(playerName);
     analyticsParams.username.should.equal(user);
     (analyticsParams.referer === document.referrer || analyticsParams.referer === location.href).should.be.true;
-    analyticsParams.pluginVersion.should.equal('6.7.35' + '-' + __VERSION__ + '-' + __NAME__);
+    analyticsParams.pluginVersion.endsWith('-' + __VERSION__ + '-' + __NAME__).should.be.true;
     analyticsParams.playerVersion.should.equal(playerVersion);
     analyticsParams.mediaResource.should.equal(resource);
     analyticsParams.mediaDuration.should.equal('13');
@@ -66,7 +66,7 @@ describe('YouboraAdapter', function () {
     analyticsParams.player.should.equal(playerName);
     analyticsParams.username.should.equal(user);
     (analyticsParams.referer === document.referrer || analyticsParams.referer === location.href).should.be.true;
-    analyticsParams.pluginVersion.should.equal('6.7.35' + '-' + __VERSION__ + '-' + __NAME__);
+    analyticsParams.pluginVersion.endsWith('-' + __VERSION__ + '-' + __NAME__).should.be.true;
     analyticsParams.playerVersion.should.equal(playerVersion);
     analyticsParams.mediaResource.should.equal(resource);
     analyticsParams.mediaDuration.should.equal('13');
