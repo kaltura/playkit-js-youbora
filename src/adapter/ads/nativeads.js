@@ -180,7 +180,7 @@ let NativeAdsAdapter = youbora.Adapter.extend({
   },
 
   errorAdListener: function (e) {
-    this.fireError(e.payload.error.code, e.payload.error.message);
+    this.fireError(e.payload.code, e.payload.message);
     if (this.getPosition() === youbora.Constants.AdPosition.Postroll) {
       this.plugin.getAdapter().stopBlockedByAds = false;
       this.plugin.fireStop();
