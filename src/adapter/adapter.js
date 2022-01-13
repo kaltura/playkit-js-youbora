@@ -111,7 +111,7 @@ let YouboraAdapter = youbora.Adapter.extend({
     }
     this.plugin.options['forceInit'] = this.player.isLive();
 
-    if(this.player.drmInfo().keySystem) {
+    if (this.player.drmInfo().keySystem) {
       this.plugin.options['content.drm'] = this.player.drmInfo().keySystem;
     }
   },
