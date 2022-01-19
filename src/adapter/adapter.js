@@ -110,10 +110,6 @@ let YouboraAdapter = youbora.Adapter.extend({
       this.monitorPlayhead(true, false, this.config.playheadMonitorInterval);
     }
     this.plugin.options['forceInit'] = this.player.isLive();
-
-    if (this.player.drmInfo().keySystem) {
-      this.plugin.options['content.drm'] = this.player.drmInfo().keySystem;
-    }
   },
 
   /**  @returns {void} - Unregister listeners to this.player. */
@@ -162,6 +158,9 @@ let YouboraAdapter = youbora.Adapter.extend({
 
   /** @returns {void} - Listener for 'playing' event. */
   playingListener: function () {
+    if (this.player.drmInfo().scheme) {
+      this.plugin.options['content.drm'] = this.player.drmInfo().scheme;
+    }
     this.fireResume();
     this.fireSeekEnd();
     this.fireBufferEnd();
