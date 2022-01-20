@@ -5,8 +5,8 @@ const {Error, MediaType, DrmScheme} = core;
 
 const DrmSchemeName = {
   FAIRPLAY: 'FairPlay',
-  PLAYREADY: 'PlayReadyClassic',
-  WIDEVINE: 'WidevineClassic'
+  PLAYREADY: 'PlayReady',
+  WIDEVINE: 'Widevine'
 };
 
 declare var __VERSION__: string;
