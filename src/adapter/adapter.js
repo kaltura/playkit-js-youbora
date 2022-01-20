@@ -158,7 +158,7 @@ let YouboraAdapter = youbora.Adapter.extend({
 
   /** @returns {void} - Listener for 'playing' event. */
   playingListener: function () {
-    if (this.player.drmInfo().scheme) {
+    if (this.player.drmInfo()) {
       this.plugin.options['content.drm'] = this.player.drmInfo().scheme;
     }
     this.fireResume();
