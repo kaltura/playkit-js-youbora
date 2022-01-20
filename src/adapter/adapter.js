@@ -1,7 +1,13 @@
 // @flow
 import youbora from 'youboralib';
 import {core} from 'kaltura-player-js';
-const {Error, MediaType} = core;
+const {Error, MediaType, DrmScheme} = core;
+
+const DrmSchemeName = {
+  FAIRPLAY: 'FairPlay',
+  PLAYREADY: 'PlayReadyClassic',
+  WIDEVINE: 'WidevineClassic'
+};
 
 declare var __VERSION__: string;
 declare var __NAME__: string;
@@ -156,11 +162,18 @@ let YouboraAdapter = youbora.Adapter.extend({
     this.firePause();
   },
 
+  getDrmSchemeName: function (drmScheme: string) {
+    for (const [key, value] of Object.entries(DrmScheme)) {
+      if (DrmScheme[key] === drmScheme) {
+        return DrmSchemeName[key];
+      }
+    }
+  },
+
   /** @returns {void} - Listener for 'playing' event. */
   playingListener: function () {
-    if (this.player.drmInfo()) {
-      this.plugin.options['content.drm'] = this.player.drmInfo().scheme;
-    }
+    let drmSchemeName: string = this.player.drmInfo() ? this.getDrmSchemeName(this.player.drmInfo().scheme) : 'Clear';
+    this.plugin.options['content.drm'] = drmSchemeName;
     this.fireResume();
     this.fireSeekEnd();
     this.fireBufferEnd();
