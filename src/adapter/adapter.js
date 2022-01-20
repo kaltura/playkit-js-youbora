@@ -163,9 +163,9 @@ let YouboraAdapter = youbora.Adapter.extend({
   },
 
   getDrmSchemeName: function (drmScheme: string) {
-    for (const [key, value] of Object.entries(DrmScheme)) {
-      if (DrmScheme[key] === drmScheme) {
-        return DrmSchemeName[key];
+    for (const [drmKey, drmSchemeName] of Object.entries(DrmScheme)) {
+      if (drmSchemeName === drmScheme) {
+        return DrmSchemeName[drmKey];
       }
     }
   },
