@@ -35,6 +35,7 @@
     "pushTaggedRelease": "git push --follow-tags --no-verify origin master",
     "release": "standard-version",
     "test": "NODE_ENV=test karma start --color --mode development",
+    "test:watch": "NODE_ENV=test karma start --browsers=Chrome --single-run=false --auto-watch",
     "watch": "webpack --progress --colors --watch --mode development"
   },
   "lint-staged": {
@@ -55,7 +56,6 @@
     "@babel/preset-env": "^7.10.4",
     "@babel/preset-flow": "^7.10.4",
     "@babel/register": "^7.10.5",
-    "@playkit-js/playkit-js": "0.63.0",
     "babel-eslint": "^10.1.0",
     "babel-loader": "^8.1.0",
     "babel-plugin-istanbul": "^6.0.0",
@@ -72,7 +72,8 @@
     "flow-bin": "^0.129.0",
     "husky": "^4.2.5",
     "istanbul": "^0.4.5",
-    "kaltura-player-js": "https://github.com/kaltura/kaltura-player-js.git#v1.0.0",
+    "kaltura-player-js": "kaltura/kaltura-player-js#master",
+    "@playkit-js/playkit-js": "canary",
     "karma": "^5.1.0",
     "karma-chai": "^0.1.0",
     "karma-chrome-launcher": "^3.1.0",
@@ -99,8 +100,8 @@
     "youboralib": "6.7.42"
   },
   "peerDependencies": {
-    "@playkit-js/playkit-js": "0.63.0",
-    "kaltura-player-js": "https://github.com/kaltura/kaltura-player-js.git#v1.0.0"
+    "kaltura-player-js": "kaltura/kaltura-player-js#master",
+    "@playkit-js/playkit-js": "canary"
   },
   "publishConfig": {
     "access": "public"

@@ -1,7 +1,14 @@
 // @flow
 import youbora from 'youboralib';
 import {core} from 'kaltura-player-js';
-const {Error, MediaType} = core;
+const {Error, MediaType, DrmScheme} = core;
+
+const DrmSchemeTitle = {
+  FAIRPLAY: 'FairPlay',
+  PLAYREADY: 'PlayReadyCENC',
+  WIDEVINE: 'WidevineCENC',
+  UNKNOWN: 'Clear'
+};
 
 declare var __VERSION__: string;
 declare var __NAME__: string;
@@ -83,6 +90,19 @@ let YouboraAdapter = youbora.Adapter.extend({
     return this.config.householdId;
   },
 
+  /**  @returns {String} - active drm scheme */
+  getDrmScheme: function (): string {
+    const activeDrmScheme: ?string = this.player.getDrmInfo()?.scheme;
+    if (activeDrmScheme) {
+      for (const [key, value] of Object.entries(DrmScheme)) {
+        if (value === activeDrmScheme) {
+          return DrmSchemeTitle[key];
+        }
+      }
+    }
+    return DrmSchemeTitle.UNKNOWN;
+  },
+
   /**  @returns {void} - Register listeners to this.player. */
   registerListeners: function () {
     const Event = this.player.Event;
@@ -158,6 +178,7 @@ let YouboraAdapter = youbora.Adapter.extend({
 
   /** @returns {void} - Listener for 'playing' event. */
   playingListener: function () {
+    this.plugin.options['content.drm'] = this.getDrmScheme();
     this.fireResume();
     this.fireSeekEnd();
     this.fireBufferEnd();
