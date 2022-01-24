@@ -90,6 +90,19 @@ let YouboraAdapter = youbora.Adapter.extend({
     return this.config.householdId;
   },
 
+  /**  @returns {String} - active drm scheme */
+  getDrmScheme: function (): string {
+    const activeDrmScheme: ?string = this.player.getDrmInfo()?.scheme;
+    if (activeDrmScheme) {
+      for (const [key, value] of Object.entries(DrmScheme)) {
+        if (value === activeDrmScheme) {
+          return DrmSchemeTitle[key];
+        }
+      }
+    }
+    return DrmSchemeTitle.UNKNOWN;
+  },
+
   /**  @returns {void} - Register listeners to this.player. */
   registerListeners: function () {
     const Event = this.player.Event;
@@ -161,18 +174,6 @@ let YouboraAdapter = youbora.Adapter.extend({
   /** @returns {void} - Listener for 'pause' event. */
   pauseListener: function () {
     this.firePause();
-  },
-
-  getDrmScheme: function (): string {
-    const activeDrmScheme: ?string = this.player.getDrmInfo()?.scheme;
-    if (activeDrmScheme) {
-      for (const [key, value] of Object.entries(DrmScheme)) {
-        if (value === activeDrmScheme) {
-          return DrmSchemeTitle[key];
-        }
-      }
-    }
-    return DrmSchemeTitle.UNKNOWN;
   },
 
   /** @returns {void} - Listener for 'playing' event. */
