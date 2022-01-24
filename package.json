@@ -73,7 +73,7 @@
     "husky": "^4.2.5",
     "istanbul": "^0.4.5",
     "kaltura-player-js": "kaltura/kaltura-player-js#master",
-    "@playkit-js/playkit-js": "kaltura/playkit-js#master",
+    "@playkit-js/playkit-js": "canary",
     "karma": "^5.1.0",
     "karma-chai": "^0.1.0",
     "karma-chrome-launcher": "^3.1.0",
@@ -101,7 +101,7 @@
   },
   "peerDependencies": {
     "kaltura-player-js": "kaltura/kaltura-player-js#master",
-    "@playkit-js/playkit-js": "kaltura/playkit-js#master"
+    "@playkit-js/playkit-js": "canary"
   },
   "publishConfig": {
     "access": "public"
