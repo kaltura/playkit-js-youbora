@@ -1032,9 +1032,10 @@
     js-logger "^1.6.0"
     ua-parser-js "1.0.2"
 
-"@playkit-js/playkit-js@kaltura/playkit-js#master":
-  version "0.77.0"
-  resolved "https://codeload.github.com/kaltura/playkit-js/tar.gz/8e0d03225420f2d876202ab25f821804046be6d2"
+"@playkit-js/playkit-js@canary":
+  version "0.77.1-canary.8e0d032"
+  resolved "https://registry.yarnpkg.com/@playkit-js/playkit-js/-/playkit-js-0.77.1-canary.8e0d032.tgz#3afdf976483300853d475d6332440f1531b289cd"
+  integrity sha512-Wp56wvqB/jV2qvubSEKL7PE1B8iWsCuumKMpRm9Xph0FkLX36RxhQLD5C8RlF3HpJXscZGF8LujzqGUQlXZLHw==
   dependencies:
     js-logger "^1.6.0"
     ua-parser-js "1.0.2"
