@@ -5,8 +5,8 @@ const {Error, MediaType, DrmScheme} = core;
 
 const DrmSchemeTitle = {
   FAIRPLAY: 'FairPlay',
-  PLAYREADY: 'PlayReady',
-  WIDEVINE: 'Widevine',
+  PLAYREADY: 'PlayReadyCENC',
+  WIDEVINE: 'WidevineCENC',
   UNKNOWN: 'Clear'
 };
 
