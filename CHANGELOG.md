@@ -2,6 +2,15 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [2.3.0](https://github.com/kaltura/playkit-js-youbora/compare/v2.2.1...v2.3.0) (2022-02-16)
+
+
+### Features
+
+* **FEC-11785:** [Youbora] - update youbora options for drm system that is used by the player ([#82](https://github.com/kaltura/playkit-js-youbora/issues/82)) ([66166df](https://github.com/kaltura/playkit-js-youbora/commit/66166df)), closes [kaltura/kaltura-player-js#515](https://github.com/kaltura/playkit-js-youbora/issues/515) [kaltura/playkit-js#624](https://github.com/kaltura/playkit-js-youbora/issues/624) [kaltura/playkit-js-dash#175](https://github.com/kaltura/playkit-js-youbora/issues/175)
+
+
+
 ### [2.2.1](https://github.com/kaltura/playkit-js-youbora/compare/v2.2.0...v2.2.1) (2022-01-19)
 
 
