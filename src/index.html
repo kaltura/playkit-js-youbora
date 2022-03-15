@@ -3,32 +3,30 @@
 <head>
   <meta charset="UTF-8">
   <title>Title</title>
+  <script src="https://cdnapisec.kaltura.com/p/2215841/embedPlaykitJs/uiconf_id/42237501/"></script>
   <script src="./playkit-youbora.js"></script>
 </head>
 <body>
-<div id="player-placeholder"></div>
+<div id="player-placeholder" style="width: 640px; height: 360px;"></div>
 <script>
-  window.p = Playkit.loadPlayer('player-placeholder', {
-    sources: {
-      "progressive": [
-        {
-          "url": "http://deslasexta.antena3.com/mp_series1/2012/09/10/00001.mp4",
-          "mimetype": "video/mp4",
-          "id": "id1",
-          "width": 200,
-          "height": 100,
-          "bandwidth": 100000,
-          "label": "label1"
-        }
-      ]
+  const config = {
+    logLevel: "DEBUG",
+    targetId: "player-placeholder",
+    provider: {
+      partnerId: "2215841"
     },
     plugins: {
       youbora: {
-        'accountCode': 'powerdev'
+        options: {
+          'accountCode': "kalturatest",
+          'user.name': 'yoni'
+        }
       }
     }
-  });
-  window.p.play();
+  }
+
+  const player = KalturaPlayer.setup(config);
+  player.loadMedia({entryId: "1_ebs5e9cy"});
 </script>
 </body>
 </html>

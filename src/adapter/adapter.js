@@ -52,10 +52,9 @@ let YouboraAdapter = youbora.Adapter.extend({
   getRendition: function () {
     let activeVideo = this.player.getActiveTracks().video;
     if (activeVideo) {
-      if (isNaN(activeVideo.bandwidth)) {
-        return null;
-      }
-      return youbora.Util.buildRenditionString(activeVideo.width, activeVideo.height, activeVideo.bandwidth);
+      const videoWidth = activeVideo.width || this.player.videoWidth;
+      const videoHeight = activeVideo.height || this.player.videoHeight;
+      return youbora.Util.buildRenditionString(videoWidth, videoHeight, activeVideo.bandwidth);
     }
     return null;
   },
