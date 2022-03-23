@@ -2,6 +2,15 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [2.3.1](https://github.com/kaltura/playkit-js-youbora/compare/v2.3.0...v2.3.1) (2022-03-23)
+
+
+### Bug Fixes
+
+* **FEC-12059:** [Youbora] Rendition values have a high number of "Undefined data" records ([#90](https://github.com/kaltura/playkit-js-youbora/issues/90)) ([4ecf73e](https://github.com/kaltura/playkit-js-youbora/commit/4ecf73e))
+
+
+
 ## [2.3.0](https://github.com/kaltura/playkit-js-youbora/compare/v2.2.1...v2.3.0) (2022-02-16)
 
 
