@@ -50,7 +50,7 @@ describe('YouboraAdapter', function () {
     analyticsParams.title.should.equal('entry name');
     analyticsParams.householdId.should.equal('householdCode');
     analyticsParams.properties.should.equal(
-      '{"kalturaInfo":{"entryId":"1_rwbj3j0a","sessionId":"7296b4fd-3fcb-666d-51fc-34065579334c","uiConfId":123456}}'
+      '{"test":"test","kalturaInfo":{"entryId":"1_rwbj3j0a","sessionId":"7296b4fd-3fcb-666d-51fc-34065579334c","uiConfId":123456}}'
     );
     analyticsParams.param1.should.equal('param-1');
     analyticsParams.param3.should.equal('param-3');
@@ -75,7 +75,7 @@ describe('YouboraAdapter', function () {
     analyticsParams.title.should.equal('change media');
     analyticsParams.householdId.should.equal('householdCode');
     analyticsParams.properties.should.equal(
-      '{"kalturaInfo":{"entryId":"34584t5874","sessionId":"6017d4cc-81a5-f21c-81da-f709f64ef558","uiConfId":654321}}'
+      '{"test":"test change media","kalturaInfo":{"entryId":"34584t5874","sessionId":"6017d4cc-81a5-f21c-81da-f709f64ef558","uiConfId":654321}}'
     );
     analyticsParams.param2.should.equal('param-2');
     analyticsParams.param4.should.equal('param-4');
