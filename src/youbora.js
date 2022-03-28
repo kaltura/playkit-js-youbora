@@ -80,8 +80,7 @@ class Youbora extends BasePlugin {
    */
   _addPlayerMetadata(): void {
     const currentMetadata = this._youbora.options['content.metadata'] || {};
-
-    const kalturaInfo =  {
+    const kalturaInfo = {
       entryId: this.config.entryId,
       sessionId: this.config.sessionId,
       uiConfId: this.config.uiConfId
