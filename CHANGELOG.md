@@ -2,6 +2,15 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [2.3.3](https://github.com/kaltura/playkit-js-youbora/compare/v2.3.2...v2.3.3) (2022-05-12)
+
+
+### Build System
+
+* use node_js 17 in travis ([c6e366a](https://github.com/kaltura/playkit-js-youbora/commit/c6e366a))
+
+
+
 ### [2.3.2](https://github.com/kaltura/playkit-js-youbora/compare/v2.3.1...v2.3.2) (2022-05-12)
 
 
