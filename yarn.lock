@@ -9163,7 +9163,7 @@ yocto-queue@^0.1.0:
   resolved "https://registry.yarnpkg.com/yocto-queue/-/yocto-queue-0.1.0.tgz#0294eb3dee05028d31ee1a5fa2c556a6aaf10a1b"
   integrity sha512-rVksvsnNCdJ/ohGc6xgPwyN8eheCxsiLM8mxuE/t/mOVqJewPuO1miLpTHQiRgTKCLexL4MeAFVagts7HmNZ2Q==
 
-youboralib@6.7.42:
-  version "6.7.42"
-  resolved "https://registry.yarnpkg.com/youboralib/-/youboralib-6.7.42.tgz#b167af9194da72ffeada245d4bb606ef8ddb967c"
-  integrity sha512-9/E2e7DcbL/ObEbNbz2SvmAHx4SUOZv2phbRgd8r5vm/WlDeKMH91T6jNcudLKsnMyiXW9q/ZObEjXL5zWlXaQ==
+youboralib@6.8.22:
+  version "6.8.22"
+  resolved "https://registry.yarnpkg.com/youboralib/-/youboralib-6.8.22.tgz#12e5dd1fafa988bf9c5ca77401e0de4d5905cc17"
+  integrity sha512-lbEyy8kDOu7fi9++BdOflaOwie7beur4Gym7leerrCHeebDz20C9BDl363RwZvBIE4c8F9f676hyhyKrP557Qg==

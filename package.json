@@ -97,7 +97,7 @@
     "webpack": "^4.43.0",
     "webpack-cli": "^3.3.12",
     "webpack-dev-server": "^3.11.0",
-    "youboralib": "6.7.42"
+    "youboralib": "6.8.22"
   },
   "peerDependencies": {
     "kaltura-player-js": "kaltura/kaltura-player-js#master",
