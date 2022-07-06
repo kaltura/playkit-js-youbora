@@ -2,6 +2,20 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [2.3.4](https://github.com/kaltura/playkit-js-youbora/compare/v2.3.3...v2.3.4) (2022-07-06)
+
+
+### Bug Fixes
+
+* **FEC-12112:** upgrade "youboralib": "6.8.22" ([#96](https://github.com/kaltura/playkit-js-youbora/issues/96)) ([54fa19e](https://github.com/kaltura/playkit-js-youbora/commit/54fa19e))
+
+
+### Build System
+
+* set prerelease false ([cfb0276](https://github.com/kaltura/playkit-js-youbora/commit/cfb0276))
+
+
+
 ### [2.3.3](https://github.com/kaltura/playkit-js-youbora/compare/v2.3.2...v2.3.3) (2022-05-12)
 
 
