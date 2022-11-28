@@ -87,4 +87,4 @@ window.plugin.infinity.fireEvent('appEvent1');
 
 ### Example: 
 
-* [Example](https://codepen.io/yairans/pen/NWyRjmK)
+* [Example](https://codepen.io/giladna/pen/dyKjXZz)
