@@ -51,7 +51,7 @@ The Youbore plugin is tied to the player data model and the player events model,
 }
 ```
 
-* available options [options](https://bitbucket.org/npaw/lib-plugin-js/src/master/src/plugin/options.js)
+* [avaliable configuration options](https://bitbucket.org/npaw/lib-plugin-js/src/master/src/plugin/options.js)
 
 Note: `content.customDimension` are values that can be reported as extra information by application and it will be stored in the Youbora reports.
 
