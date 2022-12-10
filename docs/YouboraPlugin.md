@@ -1,4 +1,4 @@
-# Youbora Plugin integration
+# Youbora Plugin Integration
 
 
 Youbora provides a business intelligence solution for broadcasters, OTTs, telcos and media to support your business decisions and drive performance. 
