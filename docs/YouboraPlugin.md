@@ -11,11 +11,11 @@ Once you have a player instance you may want to be able to track playback behavi
 Using Youbora plugin you can achieve this easily.
 
 
-## To integrate youbora sessions follow this documentation:
+## Youbora plugin options documentation
 [Youbora Integration doc](https://documentation.npaw.com/integration-docs/docs/setting-options-and-metadata)
 
 
-When appication is integrating Youbora plugin to with Kaltura Player, it has to be aware of it's account conde on Youbora backend.
+When an appication is integrating Youbora plugin to with Kaltura Player, it has to be aware of it's account conde on Youbora backend.
 
 Without providing this account code to the pluing config, the plugin will not function as expected.
 
@@ -24,10 +24,10 @@ The Account code is the minimum config that is required by the plugin.
 
 The Youbore plugin will work with or without IMA ads and report the playback lifecycle events according to the given configuration.
 
-The Youbore plugin is tied to the player data model and the player events model, the player will send the required information to Youbora once it is reuired by the youbora events or pings.
+The Youbore plugin is tied to the player data model and the player events model, the player will send the required information to Youbora once it is reuired by the Youbora events or the Youbora pings.
 
 
-* The youbora plugin may receive many different types of configurations from the app, hence the app configuration will overide the player internal calculated data once there is conflict between the two.
+* The Youbora plugin may receive many different types of configurations from the app, hence the app configuration will overide the player internal calculated data once there is conflict between the two.
 
 
 ### Simple Example:
@@ -55,13 +55,13 @@ The Youbore plugin is tied to the player data model and the player events model,
 
 Note: `content.customDimension` are values that can be reported as extra information by application and it will be stored in the Youbora reports.
 
-Usually only 2 content.customDimension are available to use and customers can use up to 20 ustomDimension values but only with extra charge from youbora.
+Usually only 2 `content.customDimension` are available to use and customers can use up to 20 values but it may reqire extra charge from Youbora.
 
 ### Debug The events
 
-* you can track the youbora events which are fired in the dev tools on the network section by filtering the network section on `youbora` key word.
+* you can track the Youbora events which are fired in the dev tools on the network section by filtering the network section on `youbora` key word.
 
-The youbora will fire events related to player init, start, join, buffer, errors, user interactions and also keep alive pings every 5 seconds. In case IMA ads are playing it will also send ad playback related event 
+The Youbora will fire events related to player init, start, join, buffer, errors, user interactions and also keep alive pings every 5 seconds. In case IMA ads are playing it will also send ad playback related event 
 
 ### [Current Youbora library version which is in use by the kaltura player can be found here](https://github.com/kaltura/playkit-js-youbora/blob/4160a7f5990052cf3b5a05cfcbec01a62d1b26ea/package.json#L100)
 
