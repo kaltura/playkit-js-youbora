@@ -55,7 +55,7 @@ The Youbore plugin is tied to the player data model and the player events model,
 
 Note: `content.customDimension` are values that can be reported as extra information by application and it will be stored in the Youbora reports.
 
-Usually only 2 `content.customDimension` are available to use and customers can use up to 20 values but it may reqire extra charge from Youbora.
+Usually only 2 `content.customDimension` are available to use and customers can use up to 20 values but it may require extra charge from Youbora.
 
 ### Debug The events
 
