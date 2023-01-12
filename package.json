@@ -1,6 +1,6 @@
 {
   "name": "@playkit-js/playkit-js-youbora",
-  "version": "2.3.4",
+  "version": "2.3.5-dor-test.0",
   "keywords": [
     "kaltura",
     "analytics",
@@ -32,8 +32,8 @@
     "flow": "flow check",
     "precommit": "lint-staged",
     "prettier:fix": "prettier --write .",
-    "pushTaggedRelease": "git push --follow-tags --no-verify origin master",
-    "release": "standard-version",
+    "pushTaggedRelease": "git push --follow-tags --no-verify origin dor-test",
+    "release": "standard-version --prerelease dor-test",
     "test": "NODE_ENV=test karma start --color --mode development",
     "test:watch": "NODE_ENV=test karma start --browsers=Chrome --single-run=false --auto-watch",
     "watch": "webpack --progress --colors --watch --mode development"
