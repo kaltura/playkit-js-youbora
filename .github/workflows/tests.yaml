@@ -18,7 +18,9 @@ jobs:
         with:
           node-version: ${{ matrix.node-version }}
       - uses: browser-actions/setup-chrome@v1
+      - uses: browser-actions/setup-firefox@v1
       - run: chrome --version
+      - run: firefox --version
 #      - run: yarn install
 #      - run: yarn run eslint
 #      - run: yarn run flow
