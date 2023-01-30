@@ -21,10 +21,10 @@ jobs:
       - uses: browser-actions/setup-firefox@v1
       - run: chrome --version
       - run: firefox --version
-#      - run: yarn install
-#      - run: yarn run eslint
-#      - run: yarn run flow
-#      - run: yarn run test
-#        env:
-#          NODE_OPTIONS: '--openssl-legacy-provider'
+      - run: yarn install
+      - run: yarn run eslint
+      - run: yarn run flow
+      - run: yarn run test
+        env:
+          NODE_OPTIONS: '--openssl-legacy-provider'
 
