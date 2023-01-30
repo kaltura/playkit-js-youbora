@@ -6,8 +6,6 @@ on:
 
 jobs:
   tests:
-    env:
-      NODE_OPTIONS: '--openssl-legacy-provider'
     runs-on: ubuntu-latest
     strategy:
       matrix:
@@ -23,4 +21,6 @@ jobs:
       - run: yarn run eslint
       - run: yarn run flow
       - run: yarn run test
+        env:
+          NODE_OPTIONS: '--openssl-legacy-provider'
 
