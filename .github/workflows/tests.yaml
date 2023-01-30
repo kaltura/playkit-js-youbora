@@ -21,6 +21,8 @@ jobs:
         uses: actions/setup-node@v3
         with:
           node-version: ${{ matrix.node-version }}
+        env:
+          NODE_OPTIONS: "--openssl-legacy-provider"
       - uses: browser-actions/setup-chrome@v1
       - uses: browser-actions/setup-firefox@v1
       - run: chrome --version
