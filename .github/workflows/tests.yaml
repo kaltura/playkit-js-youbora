@@ -6,6 +6,8 @@ on:
 
 jobs:
   tests:
+    env:
+      NODE_OPTIONS: '--openssl-legacy-provider'
     runs-on: ubuntu-latest
     strategy:
       matrix:
