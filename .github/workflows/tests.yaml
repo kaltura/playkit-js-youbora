@@ -19,10 +19,6 @@ jobs:
           node-version: ${{ matrix.node-version }}
       - run: yarn install
       - run: chrome --version
-#      - run: yarn run eslint
-#      - run: yarn run flow
-#      - run: yarn run test
-#        env:
-#          NODE_OPTIONS: '--openssl-legacy-provider'
+
 
 *
