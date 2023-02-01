@@ -34,7 +34,7 @@
     "prettier:fix": "prettier --write .",
     "pushTaggedRelease": "git push --follow-tags --no-verify origin master",
     "release": "standard-version",
-    "test": "NODE_ENV=test karma start --color --mode development --browsers ChromeHeadless,FirefoxHeadless",
+    "test": "NODE_ENV=test karma start --color --mode development --browsers ChromeHeadless,FirefoxHeadless,SafariHeadless",
     "test:watch": "NODE_ENV=test karma start --browsers=Chrome --single-run=false --auto-watch",
     "watch": "webpack --progress --colors --watch --mode development"
   },
