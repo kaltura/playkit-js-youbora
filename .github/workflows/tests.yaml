@@ -4,9 +4,6 @@ on:
     branches:
       - devops-pr
 
-env:
-  DISPLAY: ':10.0'
-
 jobs:
   tests:
     strategy:
