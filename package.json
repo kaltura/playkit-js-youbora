@@ -36,7 +36,7 @@
     "release": "standard-version",
     "test": "NODE_ENV=test karma start --color --mode development",
     "test:ubuntu": "NODE_ENV=test karma start --color --mode development --browsers ChromeHeadless,FirefoxHeadless",
-    "test:macos": "NODE_ENV=test karma start --color --mode development --browsers SafariHeadless",
+    "test:macos": "NODE_ENV=test karma start --color --mode development --browsers Safari",
     "test:watch": "NODE_ENV=test karma start --browsers=Chrome --single-run=false --auto-watch",
     "watch": "webpack --progress --colors --watch --mode development"
   },
