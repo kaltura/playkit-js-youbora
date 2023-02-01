@@ -11,7 +11,7 @@ jobs:
   tests:
     strategy:
       matrix:
-        os: [ubuntu-latest, self-hosted]
+        os: [ubuntu-latest, macos-latest]
         node-version: [ 17.x ]
     runs-on: ${{ matrix.os }}
     steps:
@@ -25,7 +25,7 @@ jobs:
         if: matrix.os == 'ubuntu-latest'
       - uses: browser-actions/setup-firefox@v1
         if: matrix.os == 'ubuntu-latest'
-      - run: yarn install
+      - run: yarn install --verbose
       - run: yarn run eslint
       - run: yarn run flow
       - run: yarn run test:ubuntu
@@ -33,7 +33,7 @@ jobs:
         env:
           NODE_OPTIONS: "--openssl-legacy-provider"
       - run: yarn run test:macos
-        if: matrix.os == 'self-hosted'
+        if: matrix.os == 'macos-latest'
         env:
           NODE_OPTIONS: "--openssl-legacy-provider"
 
