@@ -11,3 +11,4 @@ jobs:
     uses: kaltura/ovp-pipelines/.github/workflows/player_run_tests.yml@player-workflows
     with:
       yarn-run-to-execute: [eslint, flow]
+
