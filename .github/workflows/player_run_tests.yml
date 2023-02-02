@@ -13,7 +13,7 @@ jobs:
       matrix:
         os: [ubuntu-latest, macos-latest]
         node-version: [ 17.x ]
-        commands: ${{ inputs.yarn-run-to-execute }}
+        commands: ${{fromJSON(inputs.yarn-run-to-execute)}}
     runs-on: ${{ matrix.os }}
     steps:
       - name: Checkout
