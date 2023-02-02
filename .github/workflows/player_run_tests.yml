@@ -3,7 +3,7 @@ on:
   workflow_call:
     inputs:
       yarn-run-to-execute:
-        description: "list of package.json scripts - example: '[eslint, flow, test]'"
+        description: "list of package.json scripts - example: 'eslint flow test'"
         required: true
         type: string
 
@@ -29,9 +29,9 @@ jobs:
         if: matrix.os == 'ubuntu-latest'
       - name: Yarn install
         run: yarn install
-      - name: Yarn run ${{fromJSON(inputs.yarn-run-to-execute)}}
+      - name: Yarn run ${{ inputs.yarn-run-to-execute }}
         run: |
-          for command in ${{fromJSON(inputs.yarn-run-to-execute)}}; do
+          for command in ${{ inputs.yarn-run-to-execute }}; do
             yarn run $command
           done
 

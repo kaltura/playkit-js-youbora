@@ -10,5 +10,5 @@ jobs:
   running-tests:
     uses: kaltura/playkit-js-youbora/.github/workflows/player_run_tests.yml@devops-tests
     with:
-      yarn-run-to-execute: "['eslint', 'flow']"
+      yarn-run-to-execute: "eslint flow"
 
