@@ -1,0 +1,35 @@
+name: Player And Plugin Tests
+on:
+  workflow_call:
+    inputs:
+      yarn-run-to-execute:
+        description: "list of package.json scripts - example: '[eslint, flow, test]'"
+        required: true
+        type: string
+
+jobs:
+  running-tests:
+    strategy:
+      matrix:
+        os: [ubuntu-latest, macos-latest]
+        node-version: [ 17.x ]
+        commands: ${{ inputs.yarn-run-to-execute }}
+    runs-on: ${{ matrix.os }}
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+      - name: Testing on Node.js ${{ matrix.node-version }}
+        uses: actions/setup-node@v3
+        with:
+          node-version: ${{ matrix.node-version }}
+      - name: Setup Chrome
+        uses: browser-actions/setup-chrome@v1
+        if: matrix.os == 'ubuntu-latest'
+      - name: Setup Firefox
+        uses: browser-actions/setup-firefox@v1
+        if: matrix.os == 'ubuntu-latest'
+      - name: Yarn install
+        run: yarn install
+      - name: Yarn run ${{ matrix.commands }}
+        run: yarn run ${{ matrix.commands }}
+
