@@ -31,5 +31,9 @@ jobs:
       - name: Yarn install
         run: yarn install
       - name: Yarn run ${{ matrix.commands }}
-        run: yarn run ${{ matrix.commands }}
+        run: |
+          for command in ${{ matrix.commands }}; do
+            yarn run $command
+          done
+
 
