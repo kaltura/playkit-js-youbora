@@ -26,6 +26,5 @@ jobs:
           for command in ${{ inputs.yarn-run-to-execute }}; do
             echo "yarn run $command"
           done
-      - name:
 
 
