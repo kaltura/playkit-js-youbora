@@ -1,0 +1,14 @@
+## CI - Release Version
+name: Release Version QA
+
+on:
+  pull_request:
+    branches:
+      - devops-pr
+
+jobs:
+  release-version-qa:
+    uses: kaltura/playkit-js-youbora/.github/workflows/upload_packages.yaml@devops-tests
+    with:
+      yarn-run-to-execute: '"eslint" "flow" "release --prerelease canary --skip.commit=true --skip.tag=true"'
+
