@@ -21,10 +21,9 @@ jobs:
         uses: actions/setup-node@v3
         with:
           node-version: ${{ matrix.node-version }}
-      - name: Yarn run ${{ inputs.yarn-run-to-execute }}
+      - name:
         run: |
-          for command in ${{ inputs.yarn-run-to-execute }}; do
-            echo "yarn run $command"
-          done
+          echo "full sha: ${GITHUB_SHA}"
+          echo "shrt sha: ${GITHUB_SHA::7}"
 
 

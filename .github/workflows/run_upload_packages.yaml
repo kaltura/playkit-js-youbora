@@ -10,5 +10,5 @@ jobs:
   release-version-qa:
     uses: kaltura/playkit-js-youbora/.github/workflows/upload_packages.yaml@devops-tests
     with:
-      yarn-run-to-execute: '"eslint" "flow" "release --prerelease canary --skip.commit=true --skip.tag=true"'
+      yarn-run-to-execute: '"release --prerelease canary --skip.commit=true --skip.tag=true" '
 
