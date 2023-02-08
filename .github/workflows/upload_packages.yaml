@@ -6,6 +6,10 @@ on:
         description: "list of package.json scripts - example: 'eslint flow test'"
         required: true
         type: string
+      npm-registry-url:
+        description: "npm registry url - example: 'https://kalturaa.jfrog.io/artifactory/api/npm/dor-test-nodejs-virtual/'"
+        required: true
+        type: string
 
 jobs:
   release-version-qa:
@@ -21,9 +25,27 @@ jobs:
         uses: actions/setup-node@v3
         with:
           node-version: ${{ matrix.node-version }}
+          registry-url: ${{ inputs.npm-registry-url }}
+      - name: Yarn install
+        run: yarn install
+      - name: Yarn run ${{ inputs.yarn-run-to-execute }}
+        run: |
+          for command in ${{ inputs.yarn-run-to-execute }}; do
+            yarn run $command
+          done
       - name:
         run: |
-          echo "full sha: ${GITHUB_SHA}"
-          echo "shrt sha: ${GITHUB_SHA::7}"
-
+          sha=$(echo "${GITHUB_SHA::7}")
+          currentVersion=$(npx -c 'echo "$npm_package_version"')
+          newVersion="${currentVersion}-${sha}"
+          echo "New version ${newVersion}"
+          sed -iE "s/${currentVersion}/${newVersion}/g" package.json
+          sed -iE "s/${currentVersion}/${newVersion}/g" CHANGELOG.md
+          rm package.jsonE
+          rm CHANGELOG.mdE
+      - name: Yarn run build
+        run: yarn run build
+      - run: yarn publish
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_JFROG_TOKEN }}
 
