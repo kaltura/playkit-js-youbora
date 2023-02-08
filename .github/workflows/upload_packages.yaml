@@ -30,6 +30,8 @@ jobs:
         run: yarn install
       - name: Yarn run ${{ inputs.yarn-run-to-execute }}
         run: |
+          git config --global user.email "ovp.cp@kaltura.com"
+          git config --global user.name "ovp-github-actions"
           for command in ${{ inputs.yarn-run-to-execute }}; do
             yarn run $command
           done
