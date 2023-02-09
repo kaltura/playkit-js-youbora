@@ -27,7 +27,6 @@ jobs:
           node-version: ${{ matrix.node-version }}
           registry-url: ${{ inputs.npm-registry-url }}
           always-auth: true
-          token: ${{ secrets.NPM_JFROG_TOKEN }}
       - name: Yarn install
         run: yarn install
       - name: Yarn run ${{ inputs.yarn-run-to-execute }}
@@ -51,6 +50,6 @@ jobs:
         run: yarn run build
         env:
           NODE_OPTIONS: "--openssl-legacy-provider"
-      - run: yarn publish
+      - run: cat ~/.npmrc
 
 
