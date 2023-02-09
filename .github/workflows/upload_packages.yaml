@@ -25,13 +25,6 @@ jobs:
         uses: actions/setup-node@v3
         with:
           node-version: ${{ matrix.node-version }}
-      - name: Setup .yarnrc.yml
-        run: |
-          yarn config set npmScopes.my-org.npmRegistryServer "${{ inputs.npm-registry-url }}"
-          yarn config set npmScopes.my-org.npmAlwaysAuth true
-          yarn config set npmScopes.my-org.npmAuthToken $NPM_AUTH_TOKEN
-        env:
-          NPM_AUTH_TOKEN: ${{ secrets.NPM_JFROG_TOKEN }}
       - name: Yarn install
         run: yarn install
       - name: Yarn run ${{ inputs.yarn-run-to-execute }}
@@ -41,7 +34,7 @@ jobs:
           for command in ${{ inputs.yarn-run-to-execute }}; do
             yarn run $command
           done
-      - name:
+      - name: Update version
         run: |
           sha=$(echo "${GITHUB_SHA::7}")
           currentVersion=$(npx -c 'echo "$npm_package_version"')
@@ -55,5 +48,11 @@ jobs:
         run: yarn run build
         env:
           NODE_OPTIONS: "--openssl-legacy-provider"
-      - run: yarn publish
+      - uses: jfrog/setup-jfrog-cli@v3
+        env:
+          JF_URL: ${{ inputs.npm-registry-url }}
+          JF_ACCESS_TOKEN: ${{ secrets.NPM_JFROG_TOKEN }}
+      - run: |
+          jf rt ping
+
 
