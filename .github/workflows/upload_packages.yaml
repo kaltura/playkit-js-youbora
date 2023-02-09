@@ -25,8 +25,13 @@ jobs:
         uses: actions/setup-node@v3
         with:
           node-version: ${{ matrix.node-version }}
-          registry-url: ${{ inputs.npm-registry-url }}
-          always-auth: true
+      - name: Setup .yarnrc.yml
+        run: |
+          yarn config set npmScopes.my-org.npmRegistryServer "${{ inputs.npm-registry-url }}"
+          yarn config set npmScopes.my-org.npmAlwaysAuth true
+          yarn config set npmScopes.my-org.npmAuthToken $NPM_AUTH_TOKEN
+        env:
+          NPM_AUTH_TOKEN: ${{ secrets.NPM_JFROG_TOKEN }}
       - name: Yarn install
         run: yarn install
       - name: Yarn run ${{ inputs.yarn-run-to-execute }}
@@ -50,7 +55,5 @@ jobs:
         run: yarn run build
         env:
           NODE_OPTIONS: "--openssl-legacy-provider"
-      - run: echo "\n_auth = ${{ secrets.NPM_JFROG_TOKEN }}" >> ${NPM_CONFIG_USERCONFIG}
-      - run: cat ${NPM_CONFIG_USERCONFIG}
       - run: yarn publish
 
