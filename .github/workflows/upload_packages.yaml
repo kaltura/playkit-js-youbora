@@ -28,8 +28,7 @@ jobs:
       - uses: jfrog/setup-jfrog-cli@v3
         env:
           JF_URL: ${{ inputs.npm-registry-url }}
-          JF_USER: ${{ secrets.NPM_JFROG_USER }}
-          JF_PASSWORD: ${{ secrets.NPM_JFROG_PASS }}
+          JF_ACCESS_TOKEN: ${{ secrets.NPM_JFROG_TOKEN }}
       - run: |
           jf rt ping
 

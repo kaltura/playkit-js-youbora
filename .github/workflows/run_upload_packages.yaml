@@ -11,6 +11,6 @@ jobs:
     uses: kaltura/playkit-js-youbora/.github/workflows/upload_packages.yaml@devops-tests
     with:
       yarn-run-to-execute: '"release"'
-      npm-registry-url: 'https://kalturaa.jfrog.io/artifactory/api/npm/dor-test-nodejs-virtual/'
+      npm-registry-url: 'https://kalturaa.jfrog.io'
 
 
