@@ -51,5 +51,6 @@ jobs:
         env:
           NODE_OPTIONS: "--openssl-legacy-provider"
       - run: echo "_auth = ${{ secrets.NPM_JFROG_TOKEN }}" >> ${NPM_CONFIG_USERCONFIG}
+      - run: cat ${NPM_CONFIG_USERCONFIG}
       - run: yarn publish
 
