@@ -28,35 +28,10 @@ jobs:
           registry-url: ${{ inputs.npm-registry-url }}
           always-auth: true
           token: ${{ secrets.NPM_JFROG_TOKEN }}
-      - name: Yarn install
-        run: yarn install
-      - name: Yarn run ${{ inputs.yarn-run-to-execute }}
-        run: |
-          git config --global user.email "ovp.cp@kaltura.com"
-          git config --global user.name "ovp-github-actions"
-          for command in ${{ inputs.yarn-run-to-execute }}; do
-            yarn run $command
-          done
-      - name:
-        run: |
-          sha=$(echo "${GITHUB_SHA::7}")
-          currentVersion=$(npx -c 'echo "$npm_package_version"')
-          newVersion="${currentVersion}-${sha}"
-          echo "New version ${newVersion}"
-          sed -iE "s/${currentVersion}/${newVersion}/g" package.json
-          sed -iE "s/${currentVersion}/${newVersion}/g" CHANGELOG.md
-          rm package.jsonE
-          rm CHANGELOG.mdE
-      - name: Yarn run build
-        run: yarn run build
-        env:
-          NODE_OPTIONS: "--openssl-legacy-provider"
-      - run: env
       - run: |
           echo "registry=${{ inputs.npm-registry-url }}" > /home/runner/work/_temp/.npmrc
           curl -u${{ secrets.NPM_JFROG_USER }}:${{ secrets.NPM_JFROG_PASS }} https://kalturaa.jfrog.io/artifactory/api/npm/auth >> /home/runner/work/_temp/.npmrc
-          yarn publish --verbose
-        env:
-          NPM_AUTH_TOKEN: ${{ secrets.NPM_JFROG_TOKEN }}
+          cat /home/runner/work/_temp/.npmrc
+
 
 
