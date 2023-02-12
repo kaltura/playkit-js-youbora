@@ -55,9 +55,9 @@ jobs:
         env:
           NODE_OPTIONS: "--openssl-legacy-provider"
       - run: |
-          echo "registry=${{ inputs.npm-registry-url }}" > /home/ubuntu/actions-runner/_work/_temp/.npmrc
-          curl -u$NPM_JFROG_FULL_CRED https://kalturaa.jfrog.io/artifactory/api/npm/auth >> /home/ubuntu/actions-runner/_work/_temp/.npmrc
-          cat /home/ubuntu/actions-runner/_work/_temp/.npmrc
+          echo "registry=${{ inputs.npm-registry-url }}" > /home/runner/work/_temp/.npmrc
+          curl -u$NPM_JFROG_FULL_CRED https://kalturaa.jfrog.io/artifactory/api/npm/auth >> /home/runner/work/_temp/.npmrc
+          cat /home/runner/work/_temp/.npmrc
           yarn publish --verbose
         env:
           NPM_JFROG_FULL_CRED: ${{ secrets.NPM_JFROG_FULL_CRED }}
