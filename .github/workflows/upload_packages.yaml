@@ -1,6 +1,9 @@
 name: Player And Plugin Release Version QA
 on:
   workflow_call:
+    secrets:
+      NPM_JFROG_FULL_CRED:
+        required: true
     inputs:
       yarn-run-to-execute:
         description: "list of package.json scripts - example: 'eslint flow test'"
