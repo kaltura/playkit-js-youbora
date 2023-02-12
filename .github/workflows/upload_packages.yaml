@@ -2,7 +2,7 @@ name: Player And Plugin Release Version QA
 on:
   workflow_call:
     secrets:
-      NPM_JFROG_FULL_CRED:
+      NPM_JFROG_TOKEN:
         required: true
     inputs:
       yarn-run-to-execute:
@@ -56,7 +56,7 @@ jobs:
           NODE_OPTIONS: "--openssl-legacy-provider"
       - run: yarn publish --verbose
         env:
-          NPM_AUTH_TOKEN: ${{ secrets.NPM_AUTH_TOKEN }}
+          NPM_AUTH_TOKEN: ${{ secrets.NPM_JFROG_TOKEN }}
 
 
 

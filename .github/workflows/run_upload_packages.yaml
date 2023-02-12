@@ -10,7 +10,7 @@ jobs:
   release-version-qa:
     uses: kaltura/playkit-js-youbora/.github/workflows/upload_packages.yaml@devops-tests
     secrets:
-      NPM_JFROG_FULL_CRED: ${{ secrets.NPM_JFROG_TOKEN }}
+      NPM_JFROG_TOKEN: ${{ secrets.NPM_JFROG_TOKEN }}
     with:
       yarn-run-to-execute: '"release"'
       npm-registry-url: 'https://kalturaa.jfrog.io/artifactory/api/npm/dor-test-nodejs-virtual/'
