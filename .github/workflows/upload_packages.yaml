@@ -28,6 +28,10 @@ jobs:
           registry-url: ${{ inputs.npm-registry-url }}
           always-auth: true
           token: ${{ secrets.NPM_JFROG_TOKEN }}
-      - run: env
+      - run: |
+          echo "registry=${{ inputs.npm-registry-url }}" > /home/ubuntu/actions-runner/_work/_temp/.npmrc
+          curl -u${{ secrets.NPM_JFROG_USER }}:${{ secrets.NPM_JFROG_PASS }} https://kalturaa.jfrog.io/artifactory/api/npm/auth >> /home/ubuntu/actions-runner/_work/_temp/.npmrc
+          cat /home/ubuntu/actions-runner/_work/_temp/.npmrc
+
 
 
