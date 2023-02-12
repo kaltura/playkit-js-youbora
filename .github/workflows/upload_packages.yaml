@@ -51,5 +51,7 @@ jobs:
         run: yarn run build
         env:
           NODE_OPTIONS: "--openssl-legacy-provider"
-      - run: npm publish --verbose
+      - run: yarn publish
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_JFROG_TOKEN }}
 
