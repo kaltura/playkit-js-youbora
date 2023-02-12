@@ -54,11 +54,9 @@ jobs:
         run: yarn run build
         env:
           NODE_OPTIONS: "--openssl-legacy-provider"
-      - run: |
-          echo "registry=${{ inputs.npm-registry-url }}" > /home/runner/work/_temp/.npmrc
-          curl -u${{ secrets.NPM_JFROG_FULL_CRED }} https://kalturaa.jfrog.io/artifactory/api/npm/auth >> /home/runner/work/_temp/.npmrc
-          cat /home/runner/work/_temp/.npmrc
-          yarn publish --verbose
+      - run: yarn publish --verbose
+        env:
+          NPM_AUTH_TOKEN: ${{ secrets.NPM_AUTH_TOKEN }}
 
 
 
