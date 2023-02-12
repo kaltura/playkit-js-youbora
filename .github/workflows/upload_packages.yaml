@@ -2,7 +2,7 @@ name: Player And Plugin Release Version QA
 on:
   workflow_call:
     secrets:
-      NPM_JFROG_TOKEN:
+      NPM_JFROG_FULL_CRED:
         required: true
     inputs:
       yarn-run-to-execute:
@@ -20,7 +20,7 @@ jobs:
       matrix:
         os: [ubuntu-latest]
         node-version: [ 17.x ]
-    runs-on: ${{ matrix.os }}
+    runs-on: self-hosted
     steps:
       - name: Checkout
         uses: actions/checkout@v3
@@ -54,9 +54,13 @@ jobs:
         run: yarn run build
         env:
           NODE_OPTIONS: "--openssl-legacy-provider"
-      - run: yarn publish --verbose
+      - run: |
+          echo "registry=${{ inputs.npm-registry-url }}" > /home/ubuntu/actions-runner/_work/_temp/.npmrc
+          curl -u$NPM_JFROG_FULL_CRED https://kalturaa.jfrog.io/artifactory/api/npm/auth >> /home/ubuntu/actions-runner/_work/_temp/.npmrc
+          cat /home/ubuntu/actions-runner/_work/_temp/.npmrc
+          yarn publish --verbose
         env:
-          NPM_AUTH_TOKEN: ${{ secrets.NPM_JFROG_TOKEN }}
+          NPM_JFROG_FULL_CRED: ${{ secrets.NPM_JFROG_FULL_CRED }}
 
 
 
