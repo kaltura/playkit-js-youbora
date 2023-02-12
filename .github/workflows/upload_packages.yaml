@@ -2,7 +2,7 @@ name: Player And Plugin Release Version QA
 on:
   workflow_call:
     secrets:
-      NPM_JFROG_FULL_CRED:
+      NPM_JFROG_TOKEN:
         required: true
     inputs:
       yarn-run-to-execute:
@@ -20,7 +20,7 @@ jobs:
       matrix:
         os: [ubuntu-latest]
         node-version: [ 17.x ]
-    runs-on: self-hosted
+    runs-on: ${{ matrix.os }}
     steps:
       - name: Checkout
         uses: actions/checkout@v3
@@ -31,10 +31,30 @@ jobs:
           registry-url: ${{ inputs.npm-registry-url }}
           always-auth: true
           token: ${{ secrets.NPM_JFROG_TOKEN }}
-      - run: |
-          echo $BLA
-          echo $NPM_JFROG_FULL_CRED > /tmp/dor
+      - name: Yarn install
+        run: yarn install
+      - name: Yarn run ${{ inputs.yarn-run-to-execute }}
+        run: |
+          git config --global user.email "ovp.cp@kaltura.com"
+          git config --global user.name "ovp-github-actions"
+          for command in ${{ inputs.yarn-run-to-execute }}; do
+            yarn run $command
+          done
+      - name:
+        run: |
+          sha=$(echo "${GITHUB_SHA::7}")
+          currentVersion=$(npx -c 'echo "$npm_package_version"')
+          newVersion="${currentVersion}-${sha}"
+          echo "New version ${newVersion}"
+          sed -iE "s/${currentVersion}/${newVersion}/g" package.json
+          sed -iE "s/${currentVersion}/${newVersion}/g" CHANGELOG.md
+          rm package.jsonE
+          rm CHANGELOG.mdE
+      - name: Yarn run build
+        run: yarn run build
         env:
-          NPM_JFROG_FULL_CRED: ${{ secrets.NPM_JFROG_FULL_CRED }}
+          NODE_OPTIONS: "--openssl-legacy-provider"
+      - run: yarn publish --verbose
+
 
 
