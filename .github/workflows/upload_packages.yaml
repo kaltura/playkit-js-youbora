@@ -25,6 +25,9 @@ jobs:
         uses: actions/setup-node@v3
         with:
           node-version: ${{ matrix.node-version }}
+          registry-url: ${{ inputs.npm-registry-url }}
+          always-auth: true
+          token: ${{ secrets.NPM_JFROG_TOKEN }}
       - name: Yarn install
         run: yarn install
       - name: Yarn run ${{ inputs.yarn-run-to-execute }}
@@ -34,13 +37,7 @@ jobs:
           for command in ${{ inputs.yarn-run-to-execute }}; do
             yarn run $command
           done
-      - uses: jfrog/setup-jfrog-cli@v3
-        env:
-          JF_URL: ${{ inputs.npm-registry-url }}
-          JF_ACCESS_TOKEN: ${{ secrets.NPM_JFROG_TOKEN }}
-      - run: |
-          jf rt ping
-      - name: Update version and publish
+      - name:
         run: |
           sha=$(echo "${GITHUB_SHA::7}")
           currentVersion=$(npx -c 'echo "$npm_package_version"')
@@ -50,11 +47,9 @@ jobs:
           sed -iE "s/${currentVersion}/${newVersion}/g" CHANGELOG.md
           rm package.jsonE
           rm CHANGELOG.mdE
-          jfrog rt npm-publish --build-name="@playkit-js/playkit-js-youbora" --build-number="${newVersion}"
       - name: Yarn run build
         run: yarn run build
         env:
           NODE_OPTIONS: "--openssl-legacy-provider"
-
-
+      - run: npm publish --verbose
 
