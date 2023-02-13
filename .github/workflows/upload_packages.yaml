@@ -4,6 +4,8 @@ on:
     secrets:
       NPM_JFROG_FULL_CRED:
         required: true
+      NPM_JFROG_TOKEN:
+        required: true
     inputs:
       yarn-run-to-execute:
         description: "list of package.json scripts - example: 'eslint flow test'"
