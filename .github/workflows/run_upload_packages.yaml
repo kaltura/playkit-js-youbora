@@ -15,4 +15,3 @@ jobs:
       yarn-run-to-execute: '"release"'
       npm-registry-url: 'https://kalturaa.jfrog.io/artifactory/api/npm/dor-test-nodejs-virtual/'
 
-
