@@ -33,6 +33,14 @@ jobs:
           registry-url: ${{ inputs.npm-registry-url }}
           always-auth: true
           token: ${{ secrets.NPM_JFROG_TOKEN }}
+      - name: Update jfrog token
+        run: |
+          echo "registry=${{ inputs.npm-registry-url }}" > ${NPM_CONFIG_USERCONFIG}
+          curl -u${NPM_JFROG_USER}:${NPM_JFROG_PASS} https://kalturaa.jfrog.io/artifactory/api/npm/auth >> ${NPM_CONFIG_USERCONFIG}
+          cat ${NPM_CONFIG_USERCONFIG}
+        env:
+          NPM_JFROG_USER: ${{ secrets.NPM_JFROG_USER }}
+          NPM_JFROG_PASS: ${{ secrets.NPM_JFROG_PASS }}
       - name: Yarn install
         run: yarn install
       - name: Yarn run ${{ inputs.yarn-run-to-execute }}
@@ -52,19 +60,11 @@ jobs:
           sed -iE "s/${currentVersion}/${newVersion}/g" CHANGELOG.md
           rm package.jsonE
           rm CHANGELOG.mdE
+      - name: Yarn publish
+        run: yarn publish
       - name: Yarn run build
         run: yarn run build
         env:
           NODE_OPTIONS: "--openssl-legacy-provider"
-      - name: Update jfrog token
-        run: |
-          echo "registry=${{ inputs.npm-registry-url }}" > ${NPM_CONFIG_USERCONFIG}
-          curl -u${NPM_JFROG_USER}:${NPM_JFROG_PASS} https://kalturaa.jfrog.io/artifactory/api/npm/auth >> ${NPM_CONFIG_USERCONFIG}
-          cat ${NPM_CONFIG_USERCONFIG}
-        env:
-          NPM_JFROG_USER: ${{ secrets.NPM_JFROG_USER }}
-          NPM_JFROG_PASS: ${{ secrets.NPM_JFROG_PASS }}
-      - name: Yarn publish
-        run: yarn publish
 
 
