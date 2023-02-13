@@ -14,3 +14,4 @@ jobs:
       S3_BUCKET_APPS: ${{ secrets.S3_BUCKET_APPS }}
     with:
       aws-secret-central: '"dor-test-github-actions"'
+
