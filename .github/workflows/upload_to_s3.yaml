@@ -38,4 +38,3 @@ jobs:
       - name: List s3
         run: aws s3 ls s3://nvd1-${{ secrets.S3_BUCKET_APPS }}/
 
-
