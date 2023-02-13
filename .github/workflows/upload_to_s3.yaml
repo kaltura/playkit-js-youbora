@@ -36,6 +36,6 @@ jobs:
           role-session-name: githubAction
           aws-region: "us-east-1"
       - name: List s3
-        run: aws s3 ls s3://nvq1-${{ secrets.S3_BUCKET_APPS }}/
+        run: aws s3 ls s3://nvd1-${{ secrets.S3_BUCKET_APPS }}/
 
 
