@@ -61,7 +61,6 @@ jobs:
           echo "registry=${{ inputs.npm-registry-url }}" > ${NPM_CONFIG_USERCONFIG}
           curl -u${NPM_JFROG_USER}:${NPM_JFROG_PASS} https://kalturaa.jfrog.io/artifactory/api/npm/auth >> ${NPM_CONFIG_USERCONFIG}
           cat ${NPM_CONFIG_USERCONFIG}
-          yarn publish --verbose
         env:
           NPM_JFROG_USER: ${{ secrets.NPM_JFROG_USER }}
           NPM_JFROG_PASS: ${{ secrets.NPM_JFROG_PASS }}
