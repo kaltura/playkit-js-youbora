@@ -39,5 +39,5 @@ jobs:
         run: |
           aws s3 ls s3://nvd1-${{ secrets.S3_BUCKET_APPS }}/
           aws_envs=$(aws secretsmanager get-secret-value --secret-id  arn:aws:secretsmanager:us-east-1:${{ secrets.CENTRAL_ACCOUNT_ID }}:secret:dor-test-github-actions-Q3jQq1 --query SecretString --output text)
-          echo $aws_envs | jq -c '.[]' | while read i; do env=$(jq -r '.env' <<< "$i"); account_id=$(jq -r '.account_id' <<< "$i"); region=$(jq -r '.region' <<< "$i"); echo echo "::add-mask::$account_id"; echo "env=$env, account_id=::add-mask::$account_id, region=$region"; done
+          echo $aws_envs | jq -c '.[]' | while read i; do env=$(jq -r '.env' <<< "$i"); account_id=$(jq -r '.account_id' <<< "$i"); region=$(jq -r '.region' <<< "$i"); echo "::add-mask::$account_id"; echo "env=$env, account_id=::add-mask::$account_id, region=$region"; done
 
