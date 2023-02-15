@@ -40,4 +40,4 @@ jobs:
           aws secretsmanager get-secret-value --secret-id  arn:aws:secretsmanager:us-east-1:${{ secrets.CENTRAL_ACCOUNT_ID }}:secret:dor-test-github-actions-Q3jQq1 --query SecretString --output text > accounts.txt
       - name: Test
         run: |
-          cat accounts.txt
+          jq -c '.[]' accounts.txt | while read i; do env=$(jq -r '.env' <<< "$i"); account_id=$(jq -r '.account_id' <<< "$i"); region=$(jq -r '.region' <<< "$i"); echo "::add-mask::$account_id"; echo "env=$env, account_id=$account_id, region=$region"; done
