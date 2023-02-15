@@ -39,7 +39,7 @@ jobs:
         id: accounts
         run: |
           aws_envs=$(aws secretsmanager get-secret-value --secret-id  arn:aws:secretsmanager:us-east-1:${{ secrets.CENTRAL_ACCOUNT_ID }}:secret:dor-test-github-actions-Q3jQq1 --query SecretString --output text)
-          echo "::set-output name=text::$aws_envs"
+          echo "::set-output name=aws_envs::$aws_envs"
       - name: Test
         run: |
           echo ${{ steps.accounts.outputs.aws_envs }}
