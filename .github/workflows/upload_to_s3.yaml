@@ -18,6 +18,7 @@ jobs:
       matrix:
         os: [ubuntu-latest]
         node-version: [ 17.x ]
+        test-map: [   {     env: nvd1,     account_id: 515842265945,     region: us-east-1   },   {     env: nvq1,     account_id: 383697330906,     region: us-east-1   } ]
     runs-on: ${{ matrix.os }}
     permissions:
       id-token: write
@@ -29,6 +30,9 @@ jobs:
         uses: actions/setup-node@v3
         with:
           node-version: ${{ matrix.node-version }}
+      - name: test map
+        run: |
+          echo "env: ${{ matrix.test-map.env }}, account_id: ${{ matrix.test-map.account_id }}, region: ${{ matrix.test-map.region }} "
       - name: Configure aws credentials
         uses: aws-actions/configure-aws-credentials@v1
         with:
