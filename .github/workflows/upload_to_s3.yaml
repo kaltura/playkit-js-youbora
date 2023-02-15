@@ -18,7 +18,6 @@ jobs:
       matrix:
         os: [ubuntu-latest]
         node-version: [ 17.x ]
-        test-map: [   {     env: nvd1,     account_id: 515842265945,     region: us-east-1   },   {     env: nvq1,     account_id: 383697330906,     region: us-east-1   } ]
     runs-on: ${{ matrix.os }}
     permissions:
       id-token: write
@@ -30,9 +29,6 @@ jobs:
         uses: actions/setup-node@v3
         with:
           node-version: ${{ matrix.node-version }}
-      - name: test map
-        run: |
-          echo "env: ${{ matrix.test-map.env }}, account_id: ${{ matrix.test-map.account_id }}, region: ${{ matrix.test-map.region }} "
       - name: Configure aws credentials
         uses: aws-actions/configure-aws-credentials@v1
         with:
@@ -40,5 +36,9 @@ jobs:
           role-session-name: githubAction
           aws-region: "us-east-1"
       - name: List s3
-        run: aws s3 ls s3://nvd1-${{ secrets.S3_BUCKET_APPS }}/
+        run: |
+          aws s3 ls s3://nvd1-${{ secrets.S3_BUCKET_APPS }}/
+          aws_envs=$(aws secretsmanager get-secret-value --secret-id  arn:aws:secretsmanager:us-east-1:${{ secrets.CENTRAL_ACCOUNT_ID }}:secret:dor-test-github-actions-Q3jQq1 --query SecretString --output text)
+          echo $aws_envs | jq -c '.[]' | while read i; do env=$(jq -r '.env' <<< "$i"); account_id=$(jq -r '.account_id' <<< "$i"); region=$(jq -r '.region' <<< "$i"); echo "env=$env, account_id=$account_id, region=$region"; done
+
 
