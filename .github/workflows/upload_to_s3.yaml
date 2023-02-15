@@ -36,10 +36,8 @@ jobs:
           role-session-name: githubAction
           aws-region: "us-east-1"
       - name: List s3
-        id: accounts
         run: |
-          aws_envs=\"$(aws secretsmanager get-secret-value --secret-id  arn:aws:secretsmanager:us-east-1:${{ secrets.CENTRAL_ACCOUNT_ID }}:secret:dor-test-github-actions-Q3jQq1 --query SecretString --output text)\"
-          echo "::set-output name=aws_envs::$aws_envs"
+          aws secretsmanager get-secret-value --secret-id  arn:aws:secretsmanager:us-east-1:${{ secrets.CENTRAL_ACCOUNT_ID }}:secret:dor-test-github-actions-Q3jQq1 --query SecretString --output text > accounts.txt
       - name: Test
         run: |
-          echo ${{ steps.accounts.outputs.aws_envs }}
+          cat accounts.txt
