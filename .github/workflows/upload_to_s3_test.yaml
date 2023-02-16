@@ -1,0 +1,28 @@
+name: Player And Plugin Release Version QA
+on:
+  workflow_call:
+    secrets:
+      CENTRAL_ACCOUNT_ID:
+        required: true
+      S3_BUCKET_APPS:
+        required: true
+    inputs:
+      aws-secret-central:
+        description: "secret in central that include all the account ids"
+        required: true
+        type: string
+
+jobs:
+  get-accounts:
+    strategy:
+      matrix:
+        test: '[{"env":"nvd1","account_id":"***","region":"us-east-1"},{"env":"nvq1","account_id":"383697330906","region":"us-east-1"}]'
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+      - name: test
+        run: |
+          echo ${{ matrix.test }}
+
+
