@@ -50,15 +50,5 @@ jobs:
             region=$(jq -r '.region' <<< "$i"); echo "::add-mask::$account_id";
             echo "env=$env, account_id=$account_id, region=$region";
           done
-  upload-to-s3:
-    strategy:
-      matrix: ${{fromJson(needs.job1.outputs.matrix)}}
-    runs-on: ubuntu-latest
-    permissions:
-      id-token: write
-      contents: read
-    steps:
-      - run: echo ${{ matrix.env }}
-      - run: echo ${{ matrix.account_id }}
-      - run: echo ${{ matrix.region }}
+
 
