@@ -16,14 +16,50 @@ jobs:
   get-accounts:
     strategy:
       matrix:
-        include:
-          - project: foo
-            config: Debug
-          - project: bar
-            config: Release
-    runs-on: ubuntu-latest
+        os: [ubuntu-latest]
+        node-version: [ 17.x ]
+    runs-on: ${{ matrix.os }}
+    permissions:
+      id-token: write
+      contents: read
+    outputs:
+      aws_envs: ${{ steps.accounts.outputs.aws_envs }}
     steps:
-      - run: echo ${{ matrix.project }}
-      - run: echo ${{ matrix.config }}
+      - name: Checkout
+        uses: actions/checkout@v3
+      - name: Node.js version ${{ matrix.node-version }}
+        uses: actions/setup-node@v3
+        with:
+          node-version: ${{ matrix.node-version }}
+      - name: Configure aws credentials
+        uses: aws-actions/configure-aws-credentials@v1
+        with:
+          role-to-assume: arn:aws:iam::${{ secrets.CENTRAL_ACCOUNT_ID }}:role/dor-test-oidc-github-actions
+          role-session-name: githubAction
+          aws-region: "us-east-1"
+      - name: List s3
+        id: accounts
+        run: |
+          aws_envs=$(aws secretsmanager get-secret-value --secret-id  arn:aws:secretsmanager:us-east-1:${{ secrets.CENTRAL_ACCOUNT_ID }}:secret:dor-test-github-actions-Q3jQq1 --query SecretString --output text | jq -c)
+          echo $aws_envs | jq -c '.[]' | while read i; do account_id=$(jq -r '.account_id' <<< "$i"); echo "::add-mask::$account_id"; done
+          echo "aws_envs={\"include\":$aws_envs}" >> $GITHUB_OUTPUT
+      - name: Test
+        run: |
+          echo '${{ steps.accounts.outputs.aws_envs }}' | jq -c '.[]' | while read i; do
+            env=$(jq -r '.env' <<< "$i"); account_id=$(jq -r '.account_id' <<< "$i");
+            region=$(jq -r '.region' <<< "$i"); echo "::add-mask::$account_id";
+            echo "env=$env, account_id=$account_id, region=$region";
+          done
+  upload-to-s3:
+    strategy:
+      matrix: ${{fromJson(needs.job1.outputs.matrix)}}
+    runs-on: ubuntu-latest
+    permissions:
+      id-token: write
+      contents: read
+    steps:
+      - run: echo ${{ matrix.env }}
+      - run: echo ${{ matrix.account_id }}
+      - run: echo ${{ matrix.region }}
 
 
