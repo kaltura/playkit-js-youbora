@@ -43,4 +43,4 @@ jobs:
           echo "aws_envs=$aws_envs" >> $GITHUB_OUTPUT
       - name: Test
         run: |
-          echo ${{ steps.accounts.outputs.aws_envs }} | jq -c '.[]' | while read i; do env=$(jq -r '.env' <<< "$i"); account_id=$(jq -r '.account_id' <<< "$i"); region=$(jq -r '.region' <<< "$i"); echo "::add-mask::$account_id"; echo "env=$env, account_id=$account_id, region=$region"; done
+          echo "${{ steps.accounts.outputs.aws_envs }}" | jq -c '.[]' | while read i; do env=$(jq -r '.env' <<< "$i"); account_id=$(jq -r '.account_id' <<< "$i"); region=$(jq -r '.region' <<< "$i"); echo "::add-mask::$account_id"; echo "env=$env, account_id=$account_id, region=$region"; done
