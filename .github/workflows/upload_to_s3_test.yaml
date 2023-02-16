@@ -16,10 +16,14 @@ jobs:
   get-accounts:
     strategy:
       matrix:
-        test: '{"include":[{"project":"foo","config":"Debug"},{"project":"bar","config":"Release"}]}'
+        include:
+          - project: foo
+            config: Debug
+          - project: bar
+            config: Release
     runs-on: ubuntu-latest
     steps:
-      - run: echo ${{ matrix.test.project }}
-      - run: echo ${{ matrix.test.config }}
+      - run: echo ${{ matrix.project }}
+      - run: echo ${{ matrix.config }}
 
 
