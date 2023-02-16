@@ -62,4 +62,3 @@ jobs:
       - run: echo ${{ matrix.account_id }}
       - run: echo ${{ matrix.region }}
 
-
