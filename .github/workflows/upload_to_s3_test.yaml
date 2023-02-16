@@ -16,13 +16,10 @@ jobs:
   get-accounts:
     strategy:
       matrix:
-        test: '[{"env":"nvd1","account_id":"***","region":"us-east-1"},{"env":"nvq1","account_id":"383697330906","region":"us-east-1"}]'
+        test: '{"include":[{"project":"foo","config":"Debug"},{"project":"bar","config":"Release"}]}'
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout
-        uses: actions/checkout@v3
-      - name: test
-        run: |
-          echo ${{ matrix.test }}
+      - run: echo ${{ matrix.project }}
+      - run: echo ${{ matrix.config }}
 
 
