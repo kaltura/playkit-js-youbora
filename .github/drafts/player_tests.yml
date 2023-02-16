@@ -1,5 +1,5 @@
-### CI - Run Tests
-#name: Run Tests
+### CI - Player Tests
+#name: Player Tests
 #
 #on:
 #  pull_request:
@@ -8,7 +8,7 @@
 #
 #jobs:
 #  running-tests:
-#    uses: kaltura/playkit-js-youbora/.github/workflows/player_run_tests.yml@devops-tests
+#    uses: kaltura/playkit-js-youbora/.github/workflows/run_player_tests.yml@devops-tests
 #    with:
 #      yarn-run-to-execute: 'eslint flow'
 #
