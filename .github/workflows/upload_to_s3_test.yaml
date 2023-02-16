@@ -43,13 +43,6 @@ jobs:
           aws_envs=$(aws secretsmanager get-secret-value --secret-id  arn:aws:secretsmanager:us-east-1:${{ secrets.CENTRAL_ACCOUNT_ID }}:secret:dor-test-github-actions-Q3jQq1 --query SecretString --output text | jq -c)
           echo $aws_envs | jq -c '.[]' | while read i; do account_id=$(jq -r '.account_id' <<< "$i"); echo "::add-mask::$account_id"; done
           echo "aws_envs={\"include\":$aws_envs}" >> $GITHUB_OUTPUT
-      - name: Test
-        run: |
-          echo '${{ steps.accounts.outputs.aws_envs }}' | jq -c '.[]' | while read i; do
-            env=$(jq -r '.env' <<< "$i"); account_id=$(jq -r '.account_id' <<< "$i");
-            region=$(jq -r '.region' <<< "$i"); echo "::add-mask::$account_id";
-            echo "env=$env, account_id=$account_id, region=$region";
-          done
   upload-to-s3:
     strategy:
       matrix: ${{fromJson(needs.job1.outputs.matrix)}}
