@@ -41,7 +41,7 @@ jobs:
         id: accounts
         run: |
           aws_envs=$(aws secretsmanager get-secret-value --secret-id  arn:aws:secretsmanager:us-east-1:${{ secrets.CENTRAL_ACCOUNT_ID }}:secret:dor-test-github-actions-Q3jQq1 --query SecretString --output text | jq -c)
-          echo $aws_envs
+          echo $aws_envs | jq -c '.include[]' | while read i; do account_id=$(jq -r '.account_id' <<< "$i"); echo "::add-mask::$account_id"; done
           echo "aws_envs=$aws_envs" >> $GITHUB_OUTPUT
   upload-to-s3:
     needs: get-accounts
