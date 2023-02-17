@@ -66,8 +66,7 @@ jobs:
           echo $aws_envs | jq -c '.[]' | while read i; do account_id=$(jq -r '.account_id' <<< "$i"); echo "::add-mask::$account_id"; done
           echo "accounts=$aws_envs" >> $GITHUB_OUTPUT
       - run: |
-          echo ${{ steps.accounts.outputs.accounts }}
-          echo ${{ steps.accounts.outputs.accounts }} | jq -c '.[] | select(.env | contains("${{ matrix.env }}"))'
+          echo '${{ steps.accounts.outputs.accounts }}' | jq -c '.[] | select(.env | contains("${{ matrix.env }}"))'
 
 
 
