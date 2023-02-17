@@ -1,4 +1,4 @@
-name: Player And Plugin Release Version QA
+name: Upload to s3
 on:
   workflow_call:
     secrets:
@@ -23,7 +23,7 @@ jobs:
       id-token: write
       contents: read
     outputs:
-      aws_envs: ${{ steps.accounts.outputs.aws_envs }}
+      accounts: ${{ steps.accounts.outputs.accounts }}
     steps:
       - name: Checkout
         uses: actions/checkout@v3
@@ -41,18 +41,18 @@ jobs:
         id: accounts
         run: |
           aws_envs=$(aws secretsmanager get-secret-value --secret-id  arn:aws:secretsmanager:us-east-1:${{ secrets.CENTRAL_ACCOUNT_ID }}:secret:dor-test-github-actions-Q3jQq1 --query SecretString --output text | jq -c)
-          echo $aws_envs | jq -c '.include[]' | while read i; do account_id=$(jq -r '.account_id' <<< "$i"); echo $account_id; done
-          echo "aws_envs=$aws_envs" >> $GITHUB_OUTPUT
+          echo $aws_envs | jq -c '.[]' | while read i; do env=$(jq -r '.env' <<< "$i"); accounts+="$env " ; done
+          echo "accounts=$accounts" >> $GITHUB_OUTPUT
   upload-to-s3:
     needs: get-accounts
     strategy:
-      matrix: ${{fromJson(needs.get-accounts.outputs.aws_envs)}}
+      matrix:
+        accounts: ${{ needs.get-accounts.outputs.accounts }}
     runs-on: ubuntu-latest
     permissions:
       id-token: write
       contents: read
     steps:
-      - run: echo ${{ matrix.env }}
-      - run: echo ${{ matrix.account_id }}
-      - run: echo ${{ matrix.region }}
+      - run: echo ${{ matrix.accounts }}
+
 
