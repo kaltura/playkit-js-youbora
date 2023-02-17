@@ -81,6 +81,7 @@ jobs:
         with:
           role-to-assume: arn:aws:iam::${{ steps.account_id.outputs.account_id }}:role/nvd1-kalt-ovp-apps-role
           role-session-name: githubAction
+          aws-region: "us-east-1"
       - name: S3 list
         run: |
           aws s3 ls s3://nvd1-${{ secrets.S3_BUCKET_APPS }}/
