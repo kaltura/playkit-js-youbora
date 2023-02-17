@@ -35,15 +35,13 @@ jobs:
         id: accounts
         run: |
           aws_envs=$(aws secretsmanager get-secret-value --secret-id  arn:aws:secretsmanager:us-east-1:${{ secrets.CENTRAL_ACCOUNT_ID }}:secret:dor-test-github-actions-Q3jQq1 --query SecretString --output text | jq -c)
-          accounts=$(echo $aws_envs | jq -c '.[]' | while read i; do jq -n --arg env "$(jq -r '.env' <<< "$i")" '{"env": $env}' ; done | jq -s -c)
+          accounts=$(echo $aws_envs | jq -c '.[]' | while read i; do jq -n --arg env "$(jq -r '.env' <<< "$i")" '{"env": $env, "os": [ubuntu-latest], "node-version": [ 17.x ]}' ; done | jq -s -c)
           echo $accounts
           echo "accounts={\"include\":$accounts}" >> $GITHUB_OUTPUT
   upload-to-s3:
     needs: get-accounts
     strategy:
       matrix: ${{fromJSON(needs.get-accounts.outputs.accounts)}}
-        os: [ubuntu-latest]
-        node-version: [ 17.x ]
     runs-on: ${{ matrix.os }}
     permissions:
       id-token: write
