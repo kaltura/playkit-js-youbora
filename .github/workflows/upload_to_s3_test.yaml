@@ -25,12 +25,6 @@ jobs:
     outputs:
       accounts: ${{ steps.accounts.outputs.accounts }}
     steps:
-      - name: Checkout
-        uses: actions/checkout@v3
-      - name: Node.js version ${{ matrix.node-version }}
-        uses: actions/setup-node@v3
-        with:
-          node-version: ${{ matrix.node-version }}
       - name: Configure aws credentials
         uses: aws-actions/configure-aws-credentials@v1
         with:
@@ -48,11 +42,19 @@ jobs:
     needs: get-accounts
     strategy:
       matrix: ${{fromJSON(needs.get-accounts.outputs.accounts)}}
-    runs-on: ubuntu-latest
+        os: [ubuntu-latest]
+        node-version: [ 17.x ]
+    runs-on: ${{ matrix.os }}
     permissions:
       id-token: write
       contents: read
     steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+      - name: Node.js version ${{ matrix.node-version }}
+        uses: actions/setup-node@v3
+        with:
+          node-version: ${{ matrix.node-version }}
       - run: echo ${{ matrix.env }}
 
 
