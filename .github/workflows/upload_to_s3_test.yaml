@@ -69,19 +69,19 @@ jobs:
       - name: Get account id
         id: account_id
         run: |
-          account_id=$(echo '${{ steps.specific_account.outputs.specific_account }}' | jq '.account_id')
+          account_id=$(echo '${{ steps.specific_account.outputs.specific_account }}' | jq -r '.account_id')
           echo "account_id=$account_id" >> $GITHUB_OUTPUT
       - name: Get region
         id: region
         run: |
-          region=$(echo '${{ steps.specific_account.outputs.specific_account }}' | jq '.region')
+          region=$(echo '${{ steps.specific_account.outputs.specific_account }}' | jq -r '.region')
           echo "region=$region" >> $GITHUB_OUTPUT
       - name: Configure aws credentials
         uses: aws-actions/configure-aws-credentials@v1
         with:
           role-to-assume: arn:aws:iam::${{ steps.account_id.outputs.account_id }}:role/nvd1-kalt-ovp-apps-role
           role-session-name: ${{ matrix.env }}
-          aws-region: \"${{ steps.region.outputs.region }}\"
+          aws-region: ${{ steps.region.outputs.region }}
       - name: S3 list
         run: |
           aws s3 ls s3://nvd1-${{ secrets.S3_BUCKET_APPS }}/
