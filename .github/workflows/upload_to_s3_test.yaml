@@ -59,32 +59,9 @@ jobs:
           role-to-assume: arn:aws:iam::${{ secrets.CENTRAL_ACCOUNT_ID }}:role/dor-test-oidc-github-actions
           role-session-name: githubAction
           aws-region: "us-east-1"
-      - name: List s3
-        id: specific_account
+      - name:
         run: |
-          aws_envs=$(aws secretsmanager get-secret-value --secret-id  arn:aws:secretsmanager:us-east-1:${{ secrets.CENTRAL_ACCOUNT_ID }}:secret:dor-test-github-actions-Q3jQq1 --query SecretString --output text | jq -c)
-          echo $aws_envs | jq -c '.[]' | while read i; do account_id=$(jq -r '.account_id' <<< "$i"); echo "::add-mask::$account_id"; done
-          specific_account=$(echo $aws_envs | jq -c '.[] | select(.env | contains("${{ matrix.env }}"))')
-          echo "specific_account=$specific_account" >> $GITHUB_OUTPUT
-      - name: Get account id
-        id: account_id
-        run: |
-          account_id=$(echo '${{ steps.specific_account.outputs.specific_account }}' | jq '.account_id')
-          echo "account_id=$account_id" >> $GITHUB_OUTPUT
-      - name: Get region
-        id: region
-        run: |
-          region=$(echo '${{ steps.specific_account.outputs.specific_account }}' | jq '.region')
-          echo "region=$region" >> $GITHUB_OUTPUT
-      - name: Configure aws credentials
-        uses: aws-actions/configure-aws-credentials@v1
-        with:
-          role-to-assume: arn:aws:iam::${{ steps.account_id.outputs.account_id }}:role/nvd1-kalt-ovp-apps-role
-          role-session-name: githubAction2
-          aws-region: "us-east-1"
-      - name: S3 list
-        run: |
-          aws s3 ls s3://nvd1-${{ secrets.S3_BUCKET_APPS }}/
+          env
 
 
 
