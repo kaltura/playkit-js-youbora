@@ -80,7 +80,7 @@ jobs:
         uses: aws-actions/configure-aws-credentials@v1
         with:
           role-to-assume: arn:aws:iam::${{ steps.account_id.outputs.account_id }}:role/nvd1-kalt-ovp-apps-role
-          role-session-name: githubAction
+          role-session-name: githubAction2
           aws-region: "us-east-1"
       - name: S3 list
         run: |
