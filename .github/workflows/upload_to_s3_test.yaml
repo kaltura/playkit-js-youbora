@@ -48,7 +48,7 @@ jobs:
     needs: get-accounts
     strategy:
       matrix:
-        accounts: ${{ needs.get-accounts.outputs.accounts }}
+        accounts: ${{fromJSON(needs.get-accounts.outputs.accounts)}}
     runs-on: ubuntu-latest
     permissions:
       id-token: write
