@@ -66,13 +66,15 @@ jobs:
           echo $aws_envs | jq -c '.[]' | while read i; do account_id=$(jq -r '.account_id' <<< "$i"); echo "::add-mask::$account_id"; done
           specific_account=$(echo $aws_envs | jq -c '.[] | select(.env | contains("${{ matrix.env }}"))')
           echo "specific_account=$specific_account" >> $GITHUB_OUTPUT
-      - run: |
+      - name: Get account id
         id: account_id
+        run: |
           account_id=$(echo '${{ steps.specific_account.outputs.specific_account }}' | jq '.account_id')
           echo $account_id
           echo "account_id=$account_id" >> $GITHUB_OUTPUT
-      - run: |
+      - name: Get region
         id: region
+        run: |
           region=$(echo '${{ steps.specific_account.outputs.specific_account }}' | jq '.region')
           echo $region
           echo "region=$region" >> $GITHUB_OUTPUT
