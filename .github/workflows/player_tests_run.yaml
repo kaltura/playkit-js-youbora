@@ -9,7 +9,8 @@ on:
 
 jobs:
   running-tests:
-    uses: ./.github/workflows/player_tests.yaml
-    with:
-      yarn-run-to-execute: 'eslint flow'
+    - uses: actions/checkout@v3
+    - uses: kaltura/playkit-js-youbora/.github/workflows/player_tests.yaml@devops-tests
+      with:
+        yarn-run-to-execute: 'eslint flow'
 
