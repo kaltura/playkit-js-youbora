@@ -98,6 +98,7 @@ jobs:
                       --region ${{ steps.region.outputs.region }} \
                       --query "Credentials.[AccessKeyId,SecretAccessKey,SessionToken]" \
                       --output text))
+          aws sts get-caller-identity
       - name: Upload plugin to s3 apps
         if: ${{ inputs.kind == 'plugin' }}
         run: |
