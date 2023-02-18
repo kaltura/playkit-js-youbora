@@ -114,7 +114,6 @@ jobs:
           echo "New version ${newVersion}"
 
           s3Path="s3://${{ matrix.env }}-${{ secrets.S3_BUCKET_APPS }}/bundler/playkit/modules/${pluginName}/${newVersion}"
-          ls -la dist/
           aws s3 cp dist/ ${s3Path}/ --recursive --exclude "*" --include "playkit-youbora.js*"
           aws s3 ls ${s3Path}/
           if [ -d 'translations' ]; then
