@@ -102,9 +102,10 @@ jobs:
         if: ${{ inputs.kind }} == 'plugin'
         run: |
           # plugin name
+          echo ${{ inputs.kind }}
           prefix="@playkit-js/playkit-js-"
           packageName=$(npx -c 'echo "$npm_package_name"')
-          pluginName="playkit-${packageName#$prefix}"
+          pluginName="playkit-airplay"
           echo "Plugin name $pluginName"
 
           # version
@@ -113,12 +114,10 @@ jobs:
           newVersion="${currentVersion}-${sha}"
           echo "New version ${newVersion}"
 
-          s3Path="s3://${{ matrix.env }}-${{ secrets.S3_BUCKET_APPS }}/bundler/playkit/modules/${pluginName}/${newVersion}"
-          aws s3 ls s3://${{ matrix.env }}-${{ secrets.S3_BUCKET_APPS }}/bundler/playkit/modules/
-          aws s3 cp dist/ ${s3Path} --recursive --exclude "*" --include "${pluginName}.js*"
-          if [ -d 'translations' ]; then
-             aws s3 cp translations/ ${s3Path}/translations --recursive --include "*"
-          fi
+          s3Path="s3://${{ matrix.env }}-${{ secrets.S3_BUCKET_APPS }}/bundler/playkit/modules/${pluginName}"
+          aws s3 ls ${s3Path}
+          aws s3 ls ${s3Path}/1.1.1/
+
       - name: Upload player to s3 apps
         if: ${{ inputs.kind }} == 'player'
         run: |
@@ -128,13 +127,9 @@ jobs:
           newVersion="${currentVersion}-${sha}"
           echo "New version ${newVersion}"
 
-          for player in $PLAYERS; do
-            s3Path="s3://${{ matrix.env }}-${{ secrets.S3_BUCKET_APPS }}/bundler/playkit/modules/kaltura-${player}-player/${newVersion}"
-            aws s3 cp dist/ ${s3Path} --recursive --exclude "*" --include "kaltura-${player}-player.js*"
-            if [ -d 'translations' ]; then
-               aws s3 cp translations/ ${s3Path}/translations --recursive --include "*"
-            fi
-          done
+          s3Path="s3://${{ matrix.env }}-${{ secrets.S3_BUCKET_APPS }}/bundler/playkit/modules"
+          aws s3 ls ${s3Path}
+
 
 
 
