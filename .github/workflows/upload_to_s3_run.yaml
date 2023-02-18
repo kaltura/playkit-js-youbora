@@ -1,8 +1,9 @@
-## CI - Release Version
-name: Upload to s3 QA
+## CI - Upload to s3 QA and Dev
+name: Upload to s3 QA and Dev
+run-name: Upload to s3 QA and Dev by @${{ github.actor }}
 
 on:
-  pull_request:
+  push:
     branches:
       - devops-pr
 

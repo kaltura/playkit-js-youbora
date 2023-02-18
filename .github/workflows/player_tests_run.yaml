@@ -1,0 +1,15 @@
+## CI - Player And Plugin Tests
+name: Player And Plugin Tests
+run-name: Player And Plugin Tests by @${{ github.actor }}
+
+on:
+  pull_request:
+    branches:
+      - devops-pr
+
+jobs:
+  running-tests:
+    uses: kaltura/playkit-js-youbora/.github/workflows/player_tests.yml@devops-tests
+    with:
+      yarn-run-to-execute: 'eslint flow'
+
