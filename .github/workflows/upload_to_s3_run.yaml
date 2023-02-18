@@ -8,8 +8,8 @@ on:
       - devops-pr
 
 jobs:
-  upload-to-s3-qa:
-    uses: kaltura/playkit-js-youbora/.github/workflows/upload_to_s3.yaml@devops-tests
+  upload-to-s3-qa-and-dev:
+    uses: ./.github/workflows/upload_to_s3.yaml
     secrets:
       CENTRAL_ACCOUNT_ID: ${{ secrets.CENTRAL_ACCOUNT_ID }}
       S3_BUCKET_APPS: ${{ secrets.S3_BUCKET_APPS }}
