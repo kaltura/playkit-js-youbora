@@ -11,6 +11,13 @@ on:
         description: "secret in central that include all the account ids"
         required: true
         type: string
+      kind:
+        description: "choose player or plugin - example: 'plugin'"
+        required: true
+        type: string
+
+env:
+  PLAYERS: "ovp tv"
 
 jobs:
   get-accounts:
@@ -29,9 +36,9 @@ jobs:
         uses: aws-actions/configure-aws-credentials@v1
         with:
           role-to-assume: arn:aws:iam::${{ secrets.CENTRAL_ACCOUNT_ID }}:role/dor-test-oidc-github-actions
-          role-session-name: githubAction
+          role-session-name: githubAction-${{ github.run_id }}
           aws-region: "us-east-1"
-      - name: List s3
+      - name: Get environments list
         id: accounts
         run: |
           aws_envs=$(aws secretsmanager get-secret-value --secret-id  arn:aws:secretsmanager:us-east-1:${{ secrets.CENTRAL_ACCOUNT_ID }}:secret:dor-test-github-actions-Q3jQq1 --query SecretString --output text | jq -c)
@@ -53,13 +60,17 @@ jobs:
         uses: actions/setup-node@v3
         with:
           node-version: ${{ matrix.node-version }}
+      - name: Yarn run build
+        run: yarn run build
+        env:
+          NODE_OPTIONS: "--openssl-legacy-provider"
       - name: Configure aws credentials
         uses: aws-actions/configure-aws-credentials@v1
         with:
           role-to-assume: arn:aws:iam::${{ secrets.CENTRAL_ACCOUNT_ID }}:role/dor-test-oidc-github-actions
           role-session-name: githubAction
           aws-region: "us-east-1"
-      - name: List s3
+      - name: Get specific account details
         id: specific_account
         run: |
           aws_envs=$(aws secretsmanager get-secret-value --secret-id  arn:aws:secretsmanager:us-east-1:${{ secrets.CENTRAL_ACCOUNT_ID }}:secret:dor-test-github-actions-Q3jQq1 --query SecretString --output text | jq -c)
@@ -85,9 +96,42 @@ jobs:
                       --region ${{ steps.region.outputs.region }} \
                       --query "Credentials.[AccessKeyId,SecretAccessKey,SessionToken]" \
                       --output text))
-      - name: S3 list
+      - name: Upload plugin to s3 apps
+        if: ${{ inputs.kind }} == 'plugin'
         run: |
-          aws s3 ls s3://nvd1-${{ secrets.S3_BUCKET_APPS }}/
+          # plugin name
+          prefix="@playkit-js/playkit-js-"
+          packageName=$(npx -c 'echo "$npm_package_name"')
+          pluginName="playkit-${packageName#$prefix}"
+          echo "Plugin name $pluginName"
+
+          # version
+          sha=$(echo "${GITHUB_SHA::7}")
+          currentVersion=$(npx -c 'echo "$npm_package_version"')
+          newVersion="${currentVersion}-${sha}"
+          echo "New version ${newVersion}"
+
+          s3Path="s3://${{ matrix.env }}-${{ secrets.S3_BUCKET_APPS }}/bundler/playkit/modules/${pluginName}/${newVersion}"
+          aws s3 cp dist/ ${s3Path} --recursive --exclude "*" --include "${pluginName}.js*"
+          if [ -d 'translations' ]; then
+             aws s3 cp translations/ ${s3Path}/translations --recursive --include "*"
+          fi
+      - name: Upload player to s3 apps
+        if: ${{ inputs.kind }} == 'player'
+        run: |
+          # version
+          sha=$(echo "${GITHUB_SHA::7}")
+          currentVersion=$(npx -c 'echo "$npm_package_version"')
+          newVersion="${currentVersion}-${sha}"
+          echo "New version ${newVersion}"
+
+          for player in $PLAYERS; do
+            s3Path="s3://${{ matrix.env }}-${{ secrets.S3_BUCKET_APPS }}/bundler/playkit/modules/kaltura-${player}-player/${newVersion}"
+            aws s3 cp dist/ ${s3Path} --recursive --exclude "*" --include "kaltura-${player}-player.js*"
+            if [ -d 'translations' ]; then
+               aws s3 cp translations/ ${s3Path}/translations --recursive --include "*"
+            fi
+          done
 
 
 

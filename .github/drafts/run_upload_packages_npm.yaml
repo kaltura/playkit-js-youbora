@@ -8,7 +8,7 @@
 #
 #jobs:
 #  release-version-qa:
-#    uses: kaltura/playkit-js-youbora/.github/workflows/upload_packages.yaml@devops-tests
+#    uses: kaltura/playkit-js-youbora/.github/workflows/upload_packages_npm.yaml@devops-tests
 #    secrets:
 #      NPM_JFROG_USER: ${{ secrets.NPM_JFROG_USER }}
 #      NPM_JFROG_PASS: ${{ secrets.NPM_JFROG_PASS }}

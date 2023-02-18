@@ -61,9 +61,5 @@
 #          rm CHANGELOG.mdE
 #      - name: Yarn publish
 #        run: yarn publish
-#      - name: Yarn run build
-#        run: yarn run build
-#        env:
-#          NODE_OPTIONS: "--openssl-legacy-provider"
 #
 #
