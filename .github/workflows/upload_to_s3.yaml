@@ -113,6 +113,7 @@ jobs:
           newVersion="${currentVersion}-${sha}"
           echo "New version ${newVersion}"
 
+          aws sts get-caller-identity
           s3Path="s3://${{ matrix.env }}-${{ secrets.S3_BUCKET_APPS }}/bundler/playkit/modules/${pluginName}/${newVersion}"
           aws s3 cp dist/ ${s3Path}/ --recursive --exclude "*" --include "playkit-youbora.js*"
           aws s3 ls ${s3Path}/
