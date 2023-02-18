@@ -114,8 +114,8 @@ jobs:
           echo "New version ${newVersion}"
 
           s3Path="s3://${{ matrix.env }}-${{ secrets.S3_BUCKET_APPS }}/bundler/playkit/modules/${pluginName}/${newVersion}"
-          aws s3 cp dist/ ${s3Path} --recursive --exclude "*" --include "${pluginName}.js*"
-          aws s3 ls ${s3Path}
+          aws s3 cp dist/ ${s3Path}/ --recursive --exclude "*" --include "${pluginName}.js*"
+          aws s3 ls ${s3Path}/
           if [ -d 'translations' ]; then
             aws s3 cp translations/ ${s3Path}/translations/ --recursive --include "*"
             aws s3 ls ${s3Path}/translations/
@@ -131,7 +131,7 @@ jobs:
 
           for player in $PLAYERS; do
             s3Path="s3://${{ matrix.env }}-${{ secrets.S3_BUCKET_APPS }}/bundler/playkit/modules/kaltura-${player}-player/${newVersion}"
-            aws s3 cp dist/ ${s3Path} --recursive --exclude "*" --include "kaltura-${player}-player.js*"
+            aws s3 cp dist/ ${s3Path}/ --recursive --exclude "*" --include "kaltura-${player}-player.js*"
             aws s3 ls ${s3Path}/
             if [ -d 'translations' ]; then
               aws s3 cp translations/ ${s3Path}/translations --recursive --include "*"
