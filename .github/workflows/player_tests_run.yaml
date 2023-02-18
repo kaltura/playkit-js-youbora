@@ -9,7 +9,7 @@ on:
 
 jobs:
   running-tests:
-    uses: ./.github/workflows/player_tests.yaml@devops-tests
+    uses: ./.github/workflows/player_tests.yaml
     with:
       yarn-run-to-execute: 'eslint flow'
 
