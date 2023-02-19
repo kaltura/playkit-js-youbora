@@ -6,7 +6,7 @@ on:
     inputs:
       yarn-upgrade-list:
         description: "list of packages to overwrite in package.json - example: 'playkit-js/playkit-js@canary @playkit-js/playkit-js-dash@canary'"
-        required: flase
+        required: false
         type: string
       yarn-run-to-execute:
         description: "list of package.json scripts - example: 'eslint flow test'"
