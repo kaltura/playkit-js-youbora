@@ -3,7 +3,7 @@ name: Upload packages to NPM
 run-name: Upload packages to NPM by @${{ github.actor }}
 
 on:
-  pull_request:
+  push:
     branches:
       - devops-pr
 
