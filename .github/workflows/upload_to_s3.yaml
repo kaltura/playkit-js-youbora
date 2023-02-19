@@ -1,5 +1,5 @@
 name: Upload to s3 QA and Dev
-run-name: Upload to s3 QA and Dev by @${{ github.actor }}
+run-name: Upload to s3 QA and Dev
 
 on:
   workflow_call:

@@ -1,5 +1,5 @@
 name: Upload packages to NPM
-run-name: Upload packages to NPM by @${{ github.actor }}
+run-name: Upload packages to NPM
 
 on:
   workflow_call:
