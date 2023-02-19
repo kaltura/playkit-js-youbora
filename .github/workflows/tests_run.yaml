@@ -1,6 +1,6 @@
 ## CI - Player And Plugin Tests
 name: Player And Plugin Tests
-run-name: Player And Plugin Tests by @${{ github.actor }}
+run-name: Player And Plugin Tests by
 
 on:
   pull_request:
