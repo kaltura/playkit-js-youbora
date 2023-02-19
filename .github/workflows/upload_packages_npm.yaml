@@ -9,6 +9,10 @@ on:
       NPM_JFROG_PASS:
         required: true
     inputs:
+      yarn-upgrade-list:
+        description: "list of packages to overwrite in package.json - example: 'playkit-js/playkit-js@canary @playkit-js/playkit-js-dash@canary'"
+        required: flase
+        type: string
       yarn-run-to-execute:
         description: "list of package.json scripts - example: 'eslint flow test'"
         required: true
@@ -42,6 +46,12 @@ jobs:
         env:
           NPM_JFROG_USER: ${{ secrets.NPM_JFROG_USER }}
           NPM_JFROG_PASS: ${{ secrets.NPM_JFROG_PASS }}
+      - name: Yarn upgrade ${{ inputs.yarn-upgrade-list }}
+        if: ${{ inputs.yarn-upgrade-list }}
+        run: |
+          for command in ${{ inputs.yarn-upgrade-list }}; do
+            yarn upgrade $command
+          done
       - name: Yarn install
         run: yarn install
       - name: Yarn run ${{ inputs.yarn-run-to-execute }}
