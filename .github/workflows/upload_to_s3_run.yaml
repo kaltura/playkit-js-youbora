@@ -3,12 +3,12 @@ name: Upload to s3 QA and Dev
 run-name: Upload to s3 QA and Dev by @${{ github.actor }}
 
 on:
-  push:
+  pull_request:
     branches:
       - devops-pr
 
 jobs:
-  upload-to-s3-qa:
+  upload-to-s3-qa-and-dev:
     uses: kaltura/playkit-js-youbora/.github/workflows/upload_to_s3.yaml@devops-tests
     secrets:
       CENTRAL_ACCOUNT_ID: ${{ secrets.CENTRAL_ACCOUNT_ID }}

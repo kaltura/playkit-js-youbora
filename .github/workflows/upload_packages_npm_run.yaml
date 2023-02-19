@@ -3,12 +3,12 @@ name: Upload packages to NPM
 run-name: Upload packages to NPM by @${{ github.actor }}
 
 on:
-  push:
+  pull_request:
     branches:
       - devops-pr
 
 jobs:
-  release-version-qa:
+  upload-packages-to-npm:
     uses: kaltura/playkit-js-youbora/.github/workflows/upload_packages_npm.yaml@devops-tests
     secrets:
       NPM_JFROG_USER: ${{ secrets.NPM_JFROG_USER }}
