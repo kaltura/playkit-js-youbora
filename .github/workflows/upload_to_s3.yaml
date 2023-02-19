@@ -9,6 +9,10 @@ on:
       S3_BUCKET_APPS:
         required: true
     inputs:
+      yarn-upgrade-list:
+        description: "list of packages to overwrite in package.json - example: 'playkit-js/playkit-js@canary @playkit-js/playkit-js-dash@canary'"
+        required: false
+        type: string
       aws-secret-central:
         description: "secret in central that include all the account ids"
         required: true
@@ -62,6 +66,12 @@ jobs:
         uses: actions/setup-node@v3
         with:
           node-version: ${{ matrix.node-version }}
+      - name: Yarn upgrade ${{ inputs.yarn-upgrade-list }}
+        if: ${{ inputs.yarn-upgrade-list }}
+        run: |
+          for command in ${{ inputs.yarn-upgrade-list }}; do
+            yarn upgrade $command
+          done
       - name: Yarn install
         run: yarn install
       - name: Yarn run build
