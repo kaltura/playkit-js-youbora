@@ -71,6 +71,10 @@ jobs:
           sed -iE "s/${currentVersion}/${newVersion}/g" CHANGELOG.md
           rm package.jsonE
           rm CHANGELOG.mdE
+      - name: Yarn run build
+        run: yarn run build
+        env:
+          NODE_OPTIONS: "--openssl-legacy-provider"
       - name: Yarn publish
         run: yarn publish
 
