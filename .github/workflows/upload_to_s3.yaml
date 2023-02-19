@@ -141,9 +141,7 @@ jobs:
           echo "Plugin name $pluginName"
 
           # version
-          sha=$(echo "${GITHUB_SHA::7}")
-          currentVersion=$(npx -c 'echo "$npm_package_version"')
-          newVersion="${currentVersion}-${sha}"
+          newVersion=$(npx -c 'echo "$npm_package_version"')
           echo "New version ${newVersion}"
 
           s3Path="s3://${{ matrix.env }}-${{ secrets.S3_BUCKET_APPS }}/bundler/playkit/modules/${pluginName}/${newVersion}"
@@ -166,9 +164,7 @@ jobs:
                       --output text))
 
           # version
-          sha=$(echo "${GITHUB_SHA::7}")
-          currentVersion=$(npx -c 'echo "$npm_package_version"')
-          newVersion="${currentVersion}-${sha}"
+          newVersion=$(npx -c 'echo "$npm_package_version"')
           echo "New version ${newVersion}"
 
           for player in ${{ env.PLAYERS }}; do
