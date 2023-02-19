@@ -13,6 +13,7 @@ jobs:
     with:
       yarn-run-to-execute: 'eslint flow'
   upload-packages-to-npm:
+    needs: running-tests
     uses: ./.github/workflows/upload_to_npm.yaml
     secrets:
       NPM_JFROG_USER: ${{ secrets.NPM_JFROG_USER }}
@@ -21,6 +22,7 @@ jobs:
       yarn-run-to-execute: '"release"'
       npm-registry-url: 'https://kalturaa.jfrog.io/artifactory/api/npm/dor-test-nodejs-virtual/'
   upload-to-s3-qa-and-dev:
+    needs: running-tests
     uses: ./.github/workflows/upload_to_s3.yaml
     secrets:
       CENTRAL_ACCOUNT_ID: ${{ secrets.CENTRAL_ACCOUNT_ID }}
