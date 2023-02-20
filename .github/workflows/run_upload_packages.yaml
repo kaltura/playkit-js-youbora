@@ -19,15 +19,16 @@ jobs:
       NPM_JFROG_USER: ${{ secrets.NPM_JFROG_USER }}
       NPM_JFROG_PASS: ${{ secrets.NPM_JFROG_PASS }}
     with:
-      yarn-run-to-execute: '"release"'
-      npm-registry-url: 'https://kalturaa.jfrog.io/artifactory/api/npm/dor-test-nodejs-virtual/'
+      prod: "false"
   upload-to-s3-qa-and-dev:
-    needs: running-tests
+    needs: upload-packages-to-npm
     uses: ./.github/workflows/upload_to_s3.yaml
     secrets:
       CENTRAL_ACCOUNT_ID: ${{ secrets.CENTRAL_ACCOUNT_ID }}
       S3_BUCKET_APPS: ${{ secrets.S3_BUCKET_APPS }}
     with:
-      yarn-run-to-execute: '"release"'
       aws-secret-central: '"dor-test-github-actions"'
       kind: "plugin"
+      full-npm-name: ${{ needs.upload-packages-to-npm.outputs.full_npm_name }}
+      version: ${{ needs.upload-packages-to-npm.outputs.version }}
+      name: ${{ needs.upload-packages-to-npm.outputs.name }}
