@@ -17,7 +17,7 @@ on:
         type: string
 
 jobs:
-  release-version-qa:
+  upload-to-npm:
     strategy:
       matrix:
         os: [ubuntu-latest]
