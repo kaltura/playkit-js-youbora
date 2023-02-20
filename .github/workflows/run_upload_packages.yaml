@@ -16,8 +16,7 @@ jobs:
     needs: running-tests
     uses: ./.github/workflows/upload_to_npm.yaml
     secrets:
-      NPM_JFROG_USER: ${{ secrets.NPM_JFROG_USER }}
-      NPM_JFROG_PASS: ${{ secrets.NPM_JFROG_PASS }}
+      NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
     with:
       prod: "false"
   upload-to-s3-qa-and-dev:
