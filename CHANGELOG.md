@@ -2,6 +2,10 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [10.10.11](https://github.com/kaltura/playkit-js-youbora/compare/v200.0.2...v10.10.11) (2023-02-20)
+
+
+
 ### [2.3.5](https://github.com/kaltura/playkit-js-youbora/compare/v200.0.2...v2.3.5) (2023-02-20)
 
 
