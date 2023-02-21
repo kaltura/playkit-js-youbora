@@ -75,6 +75,13 @@ jobs:
         with:
           node-version: ${{ matrix.node-version }}
 
+      - name: Download plugin package
+        if: ${{ inputs.kind == 'plugin' }}
+        run: |
+          download_url=$(yarn info --silent ${{ inputs.full-npm-name }} dist.tarball)
+          curl -L ${download_url} -o package.tgz
+          tar -xzf package.tgz
+
       - name: Configure aws credentials
         uses: aws-actions/configure-aws-credentials@v1
         with:
@@ -115,7 +122,12 @@ jobs:
                       --output text))
 
           s3Path="s3://${{ matrix.env }}-${{ secrets.S3_BUCKET_APPS }}/bundler/playkit/modules/${{ inputs.name }}/${{ inputs.version }}"
-          echo "${s3Path}"
+          aws s3 cp package/dist/ ${s3Path}/ --recursive --exclude "*" --include "${{ inputs.name }}.js*"
+          aws s3 ls ${s3Path}/
+          if [ -d 'translations' ]; then
+            aws s3 cp translations/ ${s3Path}/translations/ --recursive --include "*"
+            aws s3 ls ${s3Path}/translations/
+          fi
 
       - name: Upload player to s3 apps by assuming role
         if: ${{ inputs.kind == 'player' }}
@@ -131,6 +143,11 @@ jobs:
 
           for player in ${{ env.PLAYERS }}; do
             s3Path="s3://${{ matrix.env }}-${{ secrets.S3_BUCKET_APPS }}/bundler/playkit/modules/kaltura-${player}-player/${{ inputs.version }}"
-            echo "${s3Path}"
+            aws s3 cp package/dist/ ${s3Path}/ --recursive --exclude "*" --include "kaltura-${player}-player.js*"
+            aws s3 ls ${s3Path}/
+            if [ -d 'translations' ]; then
+              aws s3 cp translations/ ${s3Path}/translations --recursive --include "*"
+              aws s3 ls ${s3Path}/translations/
+            fi
           done
 
