@@ -17,16 +17,8 @@ on:
         description: "choose player or plugin - example: 'plugin'"
         required: true
         type: string
-      full-npm-name:
-        description: "name package with version example: '@playkit-js/xxx@xxx'"
-        required: true
-        type: string
-      version:
-        description: "name example: '@playkit-js/xxx@xxx'"
-        required: true
-        type: string
-      name:
-        description: "name package with version example: '@playkit-js/xxx@xxx'"
+      prod:
+        description: "prod or not boolean - example: 'false/true'"
         required: true
         type: string
 

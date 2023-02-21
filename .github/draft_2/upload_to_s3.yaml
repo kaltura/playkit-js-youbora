@@ -17,16 +17,8 @@ on:
         description: "choose player or plugin - example: 'plugin'"
         required: true
         type: string
-      full-npm-name:
-        description: "name package with version example: '@playkit-js/xxx@xxx'"
-        required: true
-        type: string
-      version:
-        description: "name example: '@playkit-js/xxx@xxx'"
-        required: true
-        type: string
-      name:
-        description: "name package with version example: '@playkit-js/xxx@xxx'"
+      prod:
+        description: "prod or not boolean - example: 'false/true'"
         required: true
         type: string
 
@@ -34,11 +26,75 @@ env:
   PLAYERS: "ovp tv"
 
 jobs:
+  get-package-details:
+    strategy:
+      matrix:
+        os: [ ubuntu-latest ]
+        node-version: [ 17.x ]
+    runs-on: ${{ matrix.os }}
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+
+      - name: Node.js version ${{ matrix.node-version }}
+        uses: actions/setup-node@v3
+        with:
+          node-version: ${{ matrix.node-version }}
+
+      - name: Setup Git
+        run: |
+          git config --global user.email "ovp.cp@kaltura.com"
+          git config --global user.name "ovp-github-actions"
+
+      - name: Yarn run release
+        run: |
+          if [ ${{ inputs.prod }} = "true" ]; then
+            yarn run release
+          else
+            yarn run release --prerelease canary --skip.commit=true --skip.tag=true
+          fi
+
+      - name: Update version in package.json file
+        run: |
+          sha=$(echo "${GITHUB_SHA::7}")
+          currentVersion=$(npx -c 'echo "$npm_package_version"')
+          commitNumberAfterTag=$(git rev-list  `git rev-list --tags --no-walk --max-count=1`..HEAD --count)
+          newVersion=$(echo ${currentVersion} | sed -e "s/canary\.[[:digit:]]/canary.${commitNumberAfterTag}-${sha}/g")
+          echo "New version ${newVersion}"
+          sed -iE "s/${currentVersion}/${newVersion}/g" package.json
+          sed -iE "s/${currentVersion}/${newVersion}/g" CHANGELOG.md
+          rm package.jsonE
+          rm CHANGELOG.mdE
+
+      - name: Output name
+        id: name
+        run: |
+          packageName=$(npx -c 'echo "$npm_package_name"')
+          shortName=$(echo "${packageName}"| sed -e 's/@playkit-js\///g' -e 's/playkit-js-//g')
+          name="playkit-${shortName}"
+          echo $name
+          echo "name=${name}" >> $GITHUB_OUTPUT
+
+      - name: Output version
+        id: version
+        run: |
+          version=$(npx -c 'echo "$npm_package_version"')
+          echo $version
+          echo "version=${version}" >> $GITHUB_OUTPUT
+
+      - name: Output full package name and version
+        id: full_npm_name
+        run: |
+          packageName=$(npx -c 'echo "$npm_package_name"')
+          currentVersion=$(npx -c 'echo "$npm_package_version"')
+          full_npm_name="${packageName}@${currentVersion}"
+          echo $full_npm_name
+          echo "full_npm_name=${full_npm_name}" >> $GITHUB_OUTPUT
+
   get-accounts:
     strategy:
       matrix:
         os: [ubuntu-latest]
-        node-version: [ 17.x ]
     runs-on: ${{ matrix.os }}
     permissions:
       id-token: write
@@ -62,7 +118,7 @@ jobs:
           echo "accounts={\"include\":$accounts}" >> $GITHUB_OUTPUT
 
   upload-to-s3:
-    needs: get-accounts
+    needs: [get-package-details, get-accounts]
     strategy:
       matrix: ${{fromJSON(needs.get-accounts.outputs.accounts)}}
     runs-on: ${{ matrix.os }}
@@ -78,7 +134,7 @@ jobs:
       - name: Download plugin package
         if: ${{ inputs.kind == 'plugin' }}
         run: |
-          download_url=$(yarn info --silent ${{ inputs.full-npm-name }} dist.tarball)
+          download_url=$(yarn info --silent ${{ needs.get-package-details.outputs.full-npm-name }} dist.tarball)
           curl -L ${download_url} -o package.tgz
           tar -xzf package.tgz
 
@@ -121,8 +177,8 @@ jobs:
                       --query "Credentials.[AccessKeyId,SecretAccessKey,SessionToken]" \
                       --output text))
 
-          s3Path="s3://${{ matrix.env }}-${{ secrets.S3_BUCKET_APPS }}/bundler/playkit/modules/${{ inputs.name }}/${{ inputs.version }}"
-          aws s3 cp package/dist/ ${s3Path}/ --recursive --exclude "*" --include "${{ inputs.name }}.js*"
+          s3Path="s3://${{ matrix.env }}-${{ secrets.S3_BUCKET_APPS }}/bundler/playkit/modules/${{ needs.get-package-details.outputs.name }}/${{ needs.get-package-details.outputs.version }}"
+          aws s3 cp package/dist/ ${s3Path}/ --recursive --exclude "*" --include "${{ needs.get-package-details.outputs.name }}.js*"
           aws s3 ls ${s3Path}/
           if [ -d 'translations' ]; then
             aws s3 cp translations/ ${s3Path}/translations/ --recursive --include "*"
@@ -142,7 +198,7 @@ jobs:
                       --output text))
 
           for player in ${{ env.PLAYERS }}; do
-            s3Path="s3://${{ matrix.env }}-${{ secrets.S3_BUCKET_APPS }}/bundler/playkit/modules/kaltura-${player}-player/${{ inputs.version }}"
+            s3Path="s3://${{ matrix.env }}-${{ secrets.S3_BUCKET_APPS }}/bundler/playkit/modules/kaltura-${player}-player/${{ needs.get-package-details.outputs.version }}"
             aws s3 cp package/dist/ ${s3Path}/ --recursive --exclude "*" --include "kaltura-${player}-player.js*"
             aws s3 ls ${s3Path}/
             if [ -d 'translations' ]; then
