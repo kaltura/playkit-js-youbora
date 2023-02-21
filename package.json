@@ -32,7 +32,7 @@
     "flow": "flow check",
     "precommit": "lint-staged",
     "prettier:fix": "prettier --write .",
-    "pushTaggedRelease": "git push --follow-tags --no-verify origin master",
+    "pushTaggedRelease": "git push --follow-tags --no-verify origin devops-tests",
     "release": "standard-version",
     "test": "NODE_ENV=test karma start --color --mode development",
     "test:ubuntu": "NODE_ENV=test karma start --color --mode development --browsers ChromeHeadless,FirefoxHeadless",
