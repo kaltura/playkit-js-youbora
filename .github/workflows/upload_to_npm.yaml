@@ -119,7 +119,7 @@ jobs:
             yarn publish --tag canary
           fi
         env:
-          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
+          NPM_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
 
       - name: Output name
         id: name
