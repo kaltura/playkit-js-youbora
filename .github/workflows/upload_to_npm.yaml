@@ -32,6 +32,30 @@ jobs:
         with:
           node-version: ${{ matrix.node-version }}
           always-auth: true
+          token: ${{ secrets.NPM_TOKEN }}
+
+      - name: Setup Git
+        run: |
+          git config --global user.email "ovp.cp@kaltura.com"
+          git config --global user.name "ovp-github-actions"
+
+      - name: Yarn upgrade ${{ inputs.yarn-upgrade-list }}
+        if: ${{ inputs.yarn-upgrade-list }}
+        run: |
+          for command in ${{ inputs.yarn-upgrade-list }}; do
+            yarn upgrade $command
+          done
+
+      - name: Yarn install
+        run: yarn install
+
+      - name: Yarn run release
+        run: |
+          if [ ${{ inputs.prod }} = "true" ]; then
+            yarn run release
+          else
+            yarn run release --prerelease canary --skip.commit=true --skip.tag=true
+          fi
 
       - name: Update version in package.json file
         run: |
@@ -45,27 +69,10 @@ jobs:
           rm package.jsonE
           rm CHANGELOG.mdE
 
-      - name: Output name
-        id: name
-        run: |
-          packageName=$(npx -c 'echo "$npm_package_name"')
-          shortName=$(echo "${packageName}"| sed -e 's/@playkit-js\///g' -e 's/playkit-js-//g')
-          name="playkit-${shortName}"
-          echo $name
-          echo "name=${name}" >> $GITHUB_OUTPUT
+      - name: Yarn run build
+        run: yarn run build
+        env:
+          NODE_OPTIONS: "--openssl-legacy-provider"
 
-      - name: Output version
-        id: version
-        run: |
-          version=$(npx -c 'echo "$npm_package_version"')
-          echo $version
-          echo "version=${version}" >> $GITHUB_OUTPUT
-
-      - name: Output full package name and version
-        id: full_npm_name
-        run: |
-          packageName=$(npx -c 'echo "$npm_package_name"')
-          currentVersion=$(npx -c 'echo "$npm_package_version"')
-          full_npm_name="${packageName}@${currentVersion}"
-          echo $full_npm_name
-          echo "full_npm_name=${full_npm_name}" >> $GITHUB_OUTPUT
+      - name: Yarn publish
+        run: yarn publish
