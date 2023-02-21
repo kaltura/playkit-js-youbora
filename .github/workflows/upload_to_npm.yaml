@@ -71,6 +71,29 @@ jobs:
             yarn run release --prerelease canary --skip.commit=true --skip.tag=true
           fi
 
+      - name: Setup Git
+        run: |
+          git config --global user.email "ovp.cp@kaltura.com"
+          git config --global user.name "ovp-github-actions"
+
+      - name: Yarn upgrade ${{ inputs.yarn-upgrade-list }}
+        if: ${{ inputs.yarn-upgrade-list }}
+        run: |
+          for command in ${{ inputs.yarn-upgrade-list }}; do
+            yarn upgrade $command
+          done
+
+      - name: Yarn install
+        run: yarn install
+
+      - name: Yarn run release
+        run: |
+          if [ "${{ inputs.prod }}" = "true" ]; then
+            yarn run release
+          else
+            yarn run release --prerelease canary --skip.commit=true --skip.tag=true
+          fi
+
       - name: Update version in package.json file
         run: |
           sha=$(echo "${GITHUB_SHA::7}")
@@ -95,6 +118,8 @@ jobs:
           else
             yarn publish --tag canary
           fi
+        env:
+          NPM_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
 
       - name: Output name
         id: name
