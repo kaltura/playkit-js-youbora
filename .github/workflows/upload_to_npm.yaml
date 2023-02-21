@@ -51,7 +51,7 @@ jobs:
 
       - name: Yarn run release
         run: |
-          if [ ${{ inputs.prod }} = "true" ]; then
+          if [ "${{ inputs.prod }}" = "true" ]; then
             yarn run release
           else
             yarn run release --prerelease canary --skip.commit=true --skip.tag=true

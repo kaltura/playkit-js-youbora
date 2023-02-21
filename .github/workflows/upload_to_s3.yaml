@@ -32,6 +32,10 @@ jobs:
         os: [ ubuntu-latest ]
         node-version: [ 17.x ]
     runs-on: ${{ matrix.os }}
+    outputs:
+      name: ${{ steps.accounts.outputs.name }}
+      version: ${{ steps.accounts.outputs.version }}
+      full_npm_name: ${{ steps.accounts.outputs.full_npm_name }}
     steps:
       - name: Checkout
         uses: actions/checkout@v3
@@ -51,7 +55,7 @@ jobs:
 
       - name: Yarn run release
         run: |
-          if [ ${{ inputs.prod }} = "true" ]; then
+          if [ "${{ inputs.prod }}" = "true" ]; then
             yarn run release
           else
             yarn run release --prerelease canary --skip.commit=true --skip.tag=true
@@ -137,7 +141,7 @@ jobs:
       - name: Download plugin package
         if: ${{ inputs.kind == 'plugin' }}
         run: |
-          echo "${{ needs.get-package-details.outputs.full-npm-name }}"
+          echo "${{ needs.get-package-details.outputs.full_npm_name }}"
 
       - name: Configure aws credentials
         uses: aws-actions/configure-aws-credentials@v1
