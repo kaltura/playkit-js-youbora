@@ -76,28 +76,3 @@ jobs:
 
       - name: Yarn publish
         run: yarn publish
-
-      - name: Output name
-        id: name
-        run: |
-          packageName=$(npx -c 'echo "$npm_package_name"')
-          shortName=$(echo "${packageName}"| sed -e 's/@playkit-js\///g' -e 's/playkit-js-//g')
-          name="playkit-${shortName}"
-          echo $name
-          echo "name=${name}" >> $GITHUB_OUTPUT
-
-      - name: Output version
-        id: version
-        run: |
-          version=$(npx -c 'echo "$npm_package_version"')
-          echo $version
-          echo "version=${version}" >> $GITHUB_OUTPUT
-
-      - name: Output full package name and version
-        id: full_npm_name
-        run: |
-          packageName=$(npx -c 'echo "$npm_package_name"')
-          currentVersion=$(npx -c 'echo "$npm_package_version"')
-          full_npm_name="${packageName}@${currentVersion}"
-          echo $full_npm_name
-          echo "full_npm_name=${full_npm_name}" >> $GITHUB_OUTPUT
