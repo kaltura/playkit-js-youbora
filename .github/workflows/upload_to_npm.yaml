@@ -34,7 +34,7 @@ jobs:
         node-version: [ 17.x ]
     runs-on: ${{ matrix.os }}
     outputs:
-      : ${{ steps.name.outputs.name }}
+      name: ${{ steps.name.outputs.name }}
       version: ${{ steps.version.outputs.version }}
       full-npm-name: ${{ steps.full_npm_name.outputs.full_npm_name }}
     steps:
