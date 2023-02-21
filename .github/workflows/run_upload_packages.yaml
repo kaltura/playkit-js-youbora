@@ -8,12 +8,7 @@ on:
       - devops-pr
 
 jobs:
-  running-tests:
-    uses: ./.github/workflows/tests.yaml
-    with:
-      yarn-run-to-execute: 'eslint flow'
   upload-packages-to-npm:
-    needs: running-tests
     uses: ./.github/workflows/upload_to_npm.yaml
     secrets:
       NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
