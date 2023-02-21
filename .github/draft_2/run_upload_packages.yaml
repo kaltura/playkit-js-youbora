@@ -28,6 +28,4 @@ jobs:
     with:
       aws-secret-central: '"dor-test-github-actions"'
       kind: "plugin"
-      full-npm-name: ${{ needs.upload-packages-to-npm.outputs.full_npm_name }}
-      version: ${{ needs.upload-packages-to-npm.outputs.version }}
-      name: ${{ needs.upload-packages-to-npm.outputs.name }}
+      prod: "false"
