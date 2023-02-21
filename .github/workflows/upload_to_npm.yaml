@@ -46,7 +46,6 @@ jobs:
         with:
           node-version: ${{ matrix.node-version }}
           always-auth: true
-          token: ${{ secrets.NPM_TOKEN }}
 
       - name: Setup Git
         run: |
@@ -95,6 +94,8 @@ jobs:
           else
             yarn publish --tag canary
           fi
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
 
       - name: Output name
         id: name
