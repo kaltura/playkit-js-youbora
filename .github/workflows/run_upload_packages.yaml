@@ -3,12 +3,17 @@ name: Upload packages to NPM and S3
 run-name: Upload packages to NPM and S3
 
 on:
-  pull_request:
+  push:
     branches:
       - devops-pr
 
 jobs:
+  running-tests:
+    uses: ./.github/workflows/tests.yaml
+    with:
+      yarn-run-to-execute: 'eslint flow'
   upload-packages-to-npm:
+    needs: running-tests
     uses: ./.github/workflows/upload_to_npm.yaml
     secrets:
       NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
@@ -21,7 +26,7 @@ jobs:
       CENTRAL_ACCOUNT_ID: ${{ secrets.CENTRAL_ACCOUNT_ID }}
       S3_BUCKET_APPS: ${{ secrets.S3_BUCKET_APPS }}
     with:
-      aws-secret-central: '"dor-test-github-actions"'
+      aws-secret-central: '"dor-test-github-actions-Q3jQq1"'
       kind: "plugin"
       prod: "false"
       name: ${{ needs.upload-packages-to-npm.outputs.name }}

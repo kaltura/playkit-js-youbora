@@ -89,7 +89,12 @@ jobs:
           NODE_OPTIONS: "--openssl-legacy-provider"
 
       - name: Yarn publish
-        run: echo "good"
+        run: |
+          if [ "${{ inputs.prod }}" = "true" ]; then
+            yarn publish
+          else
+            yarn publish --tag canary
+          fi
 
       - name: Output name
         id: name
