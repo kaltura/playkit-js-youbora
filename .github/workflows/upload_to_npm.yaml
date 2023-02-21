@@ -74,5 +74,6 @@ jobs:
         env:
           NODE_OPTIONS: "--openssl-legacy-provider"
 
-      - name: Yarn publish
-        run: yarn publish
+      - name: ls -l dist folder
+        run: |
+          ls -l dist/
