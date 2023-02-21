@@ -9,7 +9,6 @@ on:
 
 jobs:
   upload-packages-to-npm:
-    needs: running-tests
     uses: ./.github/workflows/upload_to_npm.yaml
     secrets:
       NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
