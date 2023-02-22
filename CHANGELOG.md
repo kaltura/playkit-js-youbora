@@ -2,6 +2,15 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [2.3.5](https://github.com/kaltura/playkit-js-youbora/compare/v2.3.4...v2.3.5) (2023-02-22)
+
+
+### Bug Fixes
+
+* **FEC-12952:** Image and Youbora integration ([#108](https://github.com/kaltura/playkit-js-youbora/issues/108)) ([a39b920](https://github.com/kaltura/playkit-js-youbora/commit/a39b920)), closes [kaltura/playkit-js-image-player#5](https://github.com/kaltura/playkit-js-youbora/issues/5) [kaltura/playkit-js#702](https://github.com/kaltura/playkit-js-youbora/issues/702)
+
+
+
 ### [2.3.4](https://github.com/kaltura/playkit-js-youbora/compare/v2.3.3...v2.3.4) (2022-07-06)
 
 
