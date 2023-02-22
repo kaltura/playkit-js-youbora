@@ -66,6 +66,9 @@ jobs:
           tmp=$(mktemp)
           aws s3 cp ${s3Path}/${jsonName} .
 
+          # echo ${jsonName} before the changes
+          echo ${jsonName}
+
           if [ "${{ inputs.type }}" = "plugin" ]; then
             jq '."'"${{ inputs.name }}"'" = "'"${{ inputs.version }}"'"' ${jsonName} > "$tmp" && mv "$tmp" ${jsonName}
           elif [ "${{ inputs.type }}" = "player" ]; then
@@ -76,5 +79,8 @@ jobs:
             echo "wrong type..."
             exit 1
           fi
+
+          # echo ${jsonName} after the changes
+          echo ${jsonName}
 
           aws s3 cp ${jsonName} ${s3Path}/
