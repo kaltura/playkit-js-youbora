@@ -60,13 +60,9 @@ jobs:
                       --query "Credentials.[AccessKeyId,SecretAccessKey,SessionToken]" \
                       --output text))
 
-          if [ "${{ inputs.stage }}" = "dor-test" ]; then
-            jsonName="player-${{ inputs.stage }}-${{ inputs.schema-type }}.json"
-          else
-            jsonName="player-dor-test-${{ inputs.schema-type }}.json"
-          fi
+          jsonName="player-${{ inputs.stage }}-${{ inputs.schema-type }}.json"
 
-          s3Path="s3://nvp1-${{ secrets.S3_BUCKET_DEPLOYMENT }}/player/schema/"
+          s3Path="s3://nvp1-${{ secrets.S3_BUCKET_DEPLOYMENT }}/player/schema"
           tmp=$(mktemp)
           aws s3 cp ${s3Path}/${jsonName} .
 
@@ -81,4 +77,4 @@ jobs:
             exit 1
           fi
 
-          aws s3 cp ${jsonName} ${s3Path}
+          aws s3 cp ${jsonName} ${s3Path}/
