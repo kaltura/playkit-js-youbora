@@ -68,7 +68,7 @@ jobs:
 
           if [ "${{ inputs.type }}" = "plugin" ]; then
             jq '."'"${{ inputs.name }}"'" = "'"${{ inputs.version }}"'"' ${jsonName} > "$tmp" && mv "$tmp" ${jsonName}
-          elif [ "${{ inputs.type }}" = "player" ]
+          elif [ "${{ inputs.type }}" = "player" ]; then
             for player in ${{ env.PLAYERS }}; do
               jq '."'"kaltura-${player}-player"'" = "'"${{ inputs.version }}"'"' ${jsonName} > "$tmp" && mv "$tmp" ${jsonName}
             done
