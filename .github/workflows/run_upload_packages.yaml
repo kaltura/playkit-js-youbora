@@ -22,7 +22,20 @@ jobs:
       S3_BUCKET_APPS: ${{ secrets.S3_BUCKET_APPS }}
     with:
       aws-secret-central: '"dor-test-github-actions-Q3jQq1"'
-      kind: "plugin"
+      type: "plugin"
       name: ${{ needs.upload-packages-to-npm.outputs.name }}
       version: ${{ needs.upload-packages-to-npm.outputs.version }}
       full-npm-name: ${{ needs.upload-packages-to-npm.outputs.full-npm-name }}
+  update-schema:
+    needs: [upload-to-s3-qa-and-dev, upload-packages-to-npm]
+    uses: ./.github/workflows/update_schema.yaml
+    secrets:
+      CENTRAL_ACCOUNT_ID: ${{ secrets.CENTRAL_ACCOUNT_ID }}
+      SERVICES_ACCOUNT_ID: ${{ secrets.SERVICES_ACCOUNT_ID }}
+      S3_BUCKET_DEPLOYMENT: ${{ secrets.S3_BUCKET_DEPLOYMENT }}
+    with:
+      type: "plugin"
+      stage: "dor-test"
+      schema-type: "playerV3Versions"
+      name: ${{ needs.upload-packages-to-npm.outputs.name }}
+      version: ${{ needs.upload-packages-to-npm.outputs.version }}

@@ -1,0 +1,84 @@
+name: Update schema
+run-name: Update schema
+
+on:
+  workflow_call:
+    secrets:
+      CENTRAL_ACCOUNT_ID:
+        required: true
+      SERVICES_ACCOUNT_ID:
+        required: true
+      S3_BUCKET_DEPLOYMENT:
+        required: true
+    inputs:
+      type:
+        description: "choose player or plugin - example: 'plugin'"
+        required: true
+        type: string
+      stage:
+        description: "stage - example: 'canary/qa/prod'"
+        required: true
+        type: string
+      schema-type:
+        description: "schema-type - example: 'playerV3Versions/playerV3OvpVersions'"
+        required: true
+        type: string
+      name:
+        description: "name - example: 'playkit-youbora'"
+        required: true
+        type: string
+      version:
+        description: "version - example: '2.3.5-canary.5-39e87cf'"
+        required: true
+        type: string
+
+env:
+  PLAYERS: "ovp tv"
+
+jobs:
+  update-schema:
+    runs-on: [ ubuntu-latest ]
+    permissions:
+      id-token: write
+      contents: read
+    steps:
+      - name: Configure aws credentials
+        uses: aws-actions/configure-aws-credentials@v1
+        with:
+          role-to-assume: arn:aws:iam::${{ secrets.CENTRAL_ACCOUNT_ID }}:role/dor-test-oidc-github-actions
+          role-session-name: githubAction
+          aws-region: "us-east-1"
+
+      - name: Update schema s3 deployment
+        run: |
+          # Assume role
+          export $(printf "AWS_ACCESS_KEY_ID=%s AWS_SECRET_ACCESS_KEY=%s AWS_SESSION_TOKEN=%s" \
+                      $(aws sts assume-role \
+                      --role-arn arn:aws:iam::${{ secrets.SERVICES_ACCOUNT_ID }}:role/nvp1-deployment-role \
+                      --role-session-name "nvp1-${{ github.run_id }}" \
+                      --region "us-east-1" \
+                      --query "Credentials.[AccessKeyId,SecretAccessKey,SessionToken]" \
+                      --output text))
+
+          if [ "${{ inputs.stage }}" = "dor-test" ]; then
+            jsonName="player-${{ inputs.stage }}-${{ inputs.schema-type }}.json"
+          else
+            jsonName="player-dor-test-${{ inputs.schema-type }}.json"
+          fi
+
+          s3Path="s3://nvp1-${{ secrets.S3_BUCKET_DEPLOYMENT }}/player/schema/"
+          tmp=$(mktemp)
+          aws s3 cp ${s3Path}/${jsonName} .
+
+          if [ "${{ inputs.type }}" = "plugin" ]; then
+            jq '."'"${{ inputs.name }}"'" = "'"${{ inputs.version }}"'"' ${jsonName} > "$tmp" && mv "$tmp" ${jsonName}
+          elif [ "${{ inputs.type }}" = "player" ]
+            for player in ${{ env.PLAYERS }}; do
+              jq '."'"kaltura-${player}-player"'" = "'"${{ inputs.version }}"'"' ${jsonName} > "$tmp" && mv "$tmp" ${jsonName}
+            done
+          else
+            echo "wrong type..."
+            exit 1
+          fi
+
+          aws s3 cp ${jsonName} ${s3Path}
