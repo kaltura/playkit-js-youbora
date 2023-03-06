@@ -45,8 +45,8 @@ jobs:
                       --query "Credentials.[AccessKeyId,SecretAccessKey,SessionToken]" \
                       --output text))
 
-          from=$(echo ${{ inputs.promotion-type }} | awk -F ' --> ' '{print $1}')
-          to=$(echo ${{ inputs.promotion-type }} | awk -F ' --> ' '{print $2}')
+          from=$(echo "${{ inputs.promotion-type }}" | awk -F ' --> ' '{print $1}')
+          to=$(echo "${{ inputs.promotion-type }}" | awk -F ' --> ' '{print $2}')
           
           echo "${{ inputs.promotion-type }}"
           echo "${from}"
