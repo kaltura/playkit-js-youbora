@@ -98,6 +98,12 @@ jobs:
         env:
           NPM_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
 
+      - name: Yarn run pushTaggedRelease and create github release
+        if: ${{ inputs.prod == 'true' }}
+        run: |
+          yarn run pushTaggedRelease
+          conventional-github-releaser -p angular -t ${{ secrets.GITHUB_TOKEN }} || true
+
       - name: Output name
         id: name
         run: |

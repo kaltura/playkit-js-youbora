@@ -1,0 +1,30 @@
+## CD - Promote schema
+name: Promote schema
+run-name: Promote schema
+
+on:
+  workflow_dispatch:
+    inputs:
+      promotion-type:
+        type: choice
+        required: true
+        description: "from - to"
+        options:
+          - "qa-dor-test --> qa-beta-dor-test"
+      schema-type:
+        type: choice
+        required: true
+        description: "schema-type - example: 'playerV3Versions/playerV3OvpVersions'"
+        options:
+          - "playerV3Versions"
+
+jobs:
+  promote-schema:
+    uses: ./.github/workflows/promote_schema.yaml
+    secrets:
+      CENTRAL_ACCOUNT_ID: ${{ secrets.CENTRAL_ACCOUNT_ID }}
+      SERVICES_ACCOUNT_ID: ${{ secrets.SERVICES_ACCOUNT_ID }}
+      S3_BUCKET_DEPLOYMENT: ${{ secrets.S3_BUCKET_DEPLOYMENT }}
+    with:
+      promotion-type: ${{ inputs.promotion-type }}
+      schema-type: ${{ inputs.schema-type }}

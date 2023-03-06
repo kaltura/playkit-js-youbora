@@ -11,12 +11,12 @@ on:
       S3_BUCKET_DEPLOYMENT:
         required: true
     inputs:
-      type:
-        description: "choose player or plugin - example: 'plugin'"
+      prod:
+        description: "prod or not boolean - example: 'false/true'"
         required: true
         type: string
-      stage:
-        description: "stage - example: 'canary/qa/prod'"
+      type:
+        description: "choose player or plugin - example: 'plugin'"
         required: true
         type: string
       schema-type:
@@ -60,13 +60,17 @@ jobs:
                       --query "Credentials.[AccessKeyId,SecretAccessKey,SessionToken]" \
                       --output text))
 
-          jsonName="player-${{ inputs.stage }}-${{ inputs.schema-type }}.json"
+          if [ "${{ inputs.prod }}" = "true" ]; then
+            jsonName="player-qa-dor-test-${{ inputs.schema-type }}.json"
+          else
+            jsonName="player-dor-test-${{ inputs.schema-type }}.json"
+          fi
 
           s3Path="s3://nvp1-${{ secrets.S3_BUCKET_DEPLOYMENT }}/player/schema"
           tmp=$(mktemp)
           aws s3 cp ${s3Path}/${jsonName} .
 
-          # cat ${jsonName} before the changes
+          echo "${jsonName} before the changes:"
           cat ${jsonName}
 
           if [ "${{ inputs.type }}" = "plugin" ]; then
@@ -80,7 +84,7 @@ jobs:
             exit 1
           fi
 
-          # cat ${jsonName} after the changes
+          echo "${jsonName} after the changes:"
           cat ${jsonName}
 
           aws s3 cp ${jsonName} ${s3Path}/

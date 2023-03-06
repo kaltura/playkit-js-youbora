@@ -87,7 +87,7 @@ jobs:
       - name: Get specific account details
         id: specific_account
         run: |
-          aws_envs=$(aws secretsmanager get-secret-value --secret-id  arn:aws:secretsmanager:us-east-1:${{ secrets.CENTRAL_ACCOUNT_ID }}:secret:dor-test-github-actions-Q3jQq1 --query SecretString --output text | jq -c)
+          aws_envs=$(aws secretsmanager get-secret-value --secret-id  arn:aws:secretsmanager:us-east-1:${{ secrets.CENTRAL_ACCOUNT_ID }}:secret:${{ inputs.aws-secret-central }} --query SecretString --output text | jq -c)
           echo $aws_envs | jq -c '.[]' | while read i; do account_id=$(jq -r '.account_id' <<< "$i"); echo "::add-mask::$account_id"; done
           specific_account=$(echo $aws_envs | jq -c '.[] | select(.env | contains("${{ matrix.env }}"))')
           echo "specific_account=$specific_account" >> $GITHUB_OUTPUT

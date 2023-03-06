@@ -7,13 +7,19 @@ on:
     branches:
       - devops-pr
 
+env:
+  prod: "false"
+  type: "plugin"
+  schema-type: "playerV3Versions"
+  aws-secret-central: "dor-test-github-actions-Q3jQq1"
+
 jobs:
   upload-packages-to-npm:
     uses: ./.github/workflows/upload_to_npm.yaml
     secrets:
       NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
     with:
-      prod: "false"
+      prod: ${{ env.prod }}
   upload-to-s3-qa-and-dev:
     needs: upload-packages-to-npm
     uses: ./.github/workflows/upload_to_s3.yaml
@@ -21,8 +27,8 @@ jobs:
       CENTRAL_ACCOUNT_ID: ${{ secrets.CENTRAL_ACCOUNT_ID }}
       S3_BUCKET_APPS: ${{ secrets.S3_BUCKET_APPS }}
     with:
-      aws-secret-central: '"dor-test-github-actions-Q3jQq1"'
-      type: "plugin"
+      aws-secret-central: ${{ env.aws-secret-central }}
+      type: ${{ env.type }}
       name: ${{ needs.upload-packages-to-npm.outputs.name }}
       version: ${{ needs.upload-packages-to-npm.outputs.version }}
       full-npm-name: ${{ needs.upload-packages-to-npm.outputs.full-npm-name }}
@@ -34,8 +40,8 @@ jobs:
       SERVICES_ACCOUNT_ID: ${{ secrets.SERVICES_ACCOUNT_ID }}
       S3_BUCKET_DEPLOYMENT: ${{ secrets.S3_BUCKET_DEPLOYMENT }}
     with:
-      type: "plugin"
-      stage: "dor-test"
-      schema-type: "playerV3Versions"
+      prod: ${{ env.prod }}
+      type: ${{ env.type }}
+      schema-type: ${{ env.schema-type }}
       name: ${{ needs.upload-packages-to-npm.outputs.name }}
       version: ${{ needs.upload-packages-to-npm.outputs.version }}
