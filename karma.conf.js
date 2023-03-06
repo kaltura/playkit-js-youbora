@@ -44,7 +44,7 @@ module.exports = function (config) {
     karmaConf.browsers.push('Safari');
   } else if (isUbuntu) {
     karmaConf.browsers.push('Chrome');
-    karmaConf.browsers.push('Firefox);
+    karmaConf.browsers.push('Firefox');
   }
 
   config.set(karmaConf);
