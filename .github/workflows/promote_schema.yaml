@@ -47,17 +47,9 @@ jobs:
 
           from=$(echo ${{ inputs.promotion-type }} | awk -F ' --> ' '{print $1}')
           to=$(echo ${{ inputs.promotion-type }} | awk -F ' --> ' '{print $2}')
+          
+          echo "${{ inputs.promotion-type }}"
+          echo "${from}"
+          echo "${to}"
 
-          jsonNameFrom="player-${from}-${{ inputs.schema-type }}.json"
-          jsonNameTo="player-${to}-${{ inputs.schema-type }}.json"
-
-          s3Path="s3://nvp1-${{ secrets.S3_BUCKET_DEPLOYMENT }}/player/schema"
-          aws s3 cp ${s3Path}/${jsonNameFrom} .
-          cat ${jsonNameFrom} > ${jsonNameTo}
-
-          echo "copy from file ${jsonNameFrom}:"
-          cat ${jsonNameFrom}
-
-          echo "copy to file ${jsonNameTo}:"
-          cat ${jsonNameTo}
 
