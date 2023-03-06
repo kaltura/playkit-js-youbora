@@ -1,0 +1,63 @@
+name: Promote schema
+run-name: Promote schema
+
+on:
+  workflow_call:
+    secrets:
+      CENTRAL_ACCOUNT_ID:
+        required: true
+      SERVICES_ACCOUNT_ID:
+        required: true
+      S3_BUCKET_DEPLOYMENT:
+        required: true
+    inputs:
+      promotion-type:
+        description: "from --> to"
+        required: true
+        type: string
+      schema-type:
+        description: "schema-type - example: 'playerV3Versions/playerV3OvpVersions'"
+        required: true
+        type: string
+
+jobs:
+  promote-schema:
+    runs-on: [ ubuntu-latest ]
+    permissions:
+      id-token: write
+      contents: read
+    steps:
+      - name: Configure aws credentials
+        uses: aws-actions/configure-aws-credentials@v1
+        with:
+          role-to-assume: arn:aws:iam::${{ secrets.CENTRAL_ACCOUNT_ID }}:role/dor-test-oidc-github-actions
+          role-session-name: githubAction
+          aws-region: "us-east-1"
+
+      - name: Promote schema from ${{ inputs.from }} to ${{ inputs.to }} on schema-type ${{ inputs.schema-type }}
+        run: |
+          # Assume role
+          export $(printf "AWS_ACCESS_KEY_ID=%s AWS_SECRET_ACCESS_KEY=%s AWS_SESSION_TOKEN=%s" \
+                      $(aws sts assume-role \
+                      --role-arn arn:aws:iam::${{ secrets.SERVICES_ACCOUNT_ID }}:role/nvp1-deployment-role \
+                      --role-session-name "nvp1-${{ github.run_id }}" \
+                      --region "us-east-1" \
+                      --query "Credentials.[AccessKeyId,SecretAccessKey,SessionToken]" \
+                      --output text))
+
+          from=$(echo ${{ inputs.promotion-type }} | awk -F ' --> ' '{print $1}')
+          to=$(echo ${{ inputs.promotion-type }} | awk -F ' --> ' '{print $2}')
+
+          jsonNameFrom="player-${from}-${{ inputs.schema-type }}.json"
+          jsonNameTo="player-${to}-${{ inputs.schema-type }}.json"
+
+          s3Path="s3://nvp1-${{ secrets.S3_BUCKET_DEPLOYMENT }}/player/schema"
+          aws s3 cp ${s3Path}/${jsonNameFrom} .
+          cat ${jsonNameFrom} > ${jsonNameTo}
+
+          echo "copy from file ${jsonNameFrom}:"
+          cat ${jsonNameFrom}
+
+          echo "copy to file ${jsonNameTo}:"
+          cat ${jsonNameTo}
+
