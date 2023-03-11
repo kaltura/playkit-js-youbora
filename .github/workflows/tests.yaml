@@ -46,5 +46,6 @@ jobs:
           for command in ${{ inputs.yarn-run-to-execute }}; do
             yarn run $command
           done
-
+        env:
+          NODE_OPTIONS: "--openssl-legacy-provider"
 
