@@ -5,6 +5,7 @@ const isUbuntu = /^linux/.test(process.platform);
 module.exports = function (config) {
   let karmaConf = {
     logLevel: config.LOG_INFO,
+    browsers: [],
     concurrency: 1,
     singleRun: true,
     colors: true,
