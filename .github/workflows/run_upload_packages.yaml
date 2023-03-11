@@ -21,7 +21,7 @@ jobs:
       CENTRAL_ACCOUNT_ID: ${{ secrets.CENTRAL_ACCOUNT_ID }}
       S3_BUCKET_APPS: ${{ secrets.S3_BUCKET_APPS }}
     with:
-      aws-secret-central: "dor-test-github-actions-Q3jQq1"
+      aws-secret-central: "github-aws-dev-qa-accounts-8iI9eS"
       type: "plugin"
       name: ${{ needs.upload-packages-to-npm.outputs.name }}
       version: ${{ needs.upload-packages-to-npm.outputs.version }}
@@ -39,3 +39,13 @@ jobs:
       schema-type: "playerV3Versions"
       name: ${{ needs.upload-packages-to-npm.outputs.name }}
       version: ${{ needs.upload-packages-to-npm.outputs.version }}
+  build-uiconf:
+    needs: [update-schema, upload-to-s3-qa-and-dev, upload-packages-to-npm]
+    uses: ./.github/workflows/build_uiconf.yaml
+    secrets:
+      CENTRAL_ACCOUNT_ID: ${{ secrets.CENTRAL_ACCOUNT_ID }}
+      SERVICES_ACCOUNT_ID: ${{ secrets.SERVICES_ACCOUNT_ID }}
+      S3_BUCKET_DEPLOYMENT: ${{ secrets.S3_BUCKET_DEPLOYMENT }}
+    with:
+      build-for: "canary"
+      schema-type: "playerV3Versions"

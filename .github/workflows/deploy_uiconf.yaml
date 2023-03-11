@@ -1,5 +1,5 @@
-name: Promote schema
-run-name: Promote schema
+name: Deploy uiconf
+run-name: Deploy uiconf
 
 on:
   workflow_call:
@@ -11,8 +11,16 @@ on:
       S3_BUCKET_DEPLOYMENT:
         required: true
     inputs:
-      promotion-type:
-        description: "from - to"
+      stage:
+        description: "stage - example: 'canary/beta/latest'"
+        required: true
+        type: string
+      env:
+        description: "env - example: 'qa/prod/all'"
+        required: true
+        type: string
+      version:
+        description: "version - example: '1.00.000'"
         required: true
         type: string
       schema-type:
@@ -21,7 +29,7 @@ on:
         type: string
 
 jobs:
-  promote-schema:
+  deploy-uiconf:
     runs-on: [ ubuntu-latest ]
     permissions:
       id-token: write
@@ -30,11 +38,11 @@ jobs:
       - name: Configure aws credentials
         uses: aws-actions/configure-aws-credentials@v1
         with:
-          role-to-assume: arn:aws:iam::${{ secrets.CENTRAL_ACCOUNT_ID }}:role/dor-test-oidc-github-actions
+          role-to-assume: arn:aws:iam::${{ secrets.CENTRAL_ACCOUNT_ID }}:role/central-oidc-github-actions
           role-session-name: githubAction
-          aws-region: "us-east-1"
+          aws-region: "eu-central-1"
 
-      - name: Promote schema from ${{ inputs.from }} to ${{ inputs.to }} on schema-type ${{ inputs.schema-type }}
+      - name: Download config ini from S3
         run: |
           # Assume role
           export $(printf "AWS_ACCESS_KEY_ID=%s AWS_SECRET_ACCESS_KEY=%s AWS_SESSION_TOKEN=%s" \
@@ -45,20 +53,12 @@ jobs:
                       --query "Credentials.[AccessKeyId,SecretAccessKey,SessionToken]" \
                       --output text))
 
-          from=$(echo "${{ inputs.promotion-type }}" | awk -F ' --> ' '{print $1}')
-          to=$(echo "${{ inputs.promotion-type }}" | awk -F ' --> ' '{print $2}')
+          jsonName="playkit_dor_test_${{ inputs.schema-type }}_${{ steps.version.outputs.version }}_${{ inputs.build-for }}.json"
 
-          jsonNameFrom="player-${from}-${{ inputs.schema-type }}.json"
-          jsonNameTo="player-${to}-${{ inputs.schema-type }}.json"
+          s3Path="s3://nvp1-${{ secrets.S3_BUCKET_DEPLOYMENT }}/player/uiconf"
 
-          s3Path="s3://nvp1-${{ secrets.S3_BUCKET_DEPLOYMENT }}/player/schema"
-          aws s3 cp ${s3Path}/${jsonNameFrom} .
-          cat ${jsonNameFrom} > ${jsonNameTo}
+          aws s3 cp ${s3Path}/${jsonName} ${jsonName}
 
-          echo "copy from file ${jsonNameFrom}:"
-          cat ${jsonNameFrom}
 
-          echo "copy to file ${jsonNameTo}:"
-          cat ${jsonNameTo}
 
-          aws s3 cp ${jsonNameTo} ${s3Path}/
+

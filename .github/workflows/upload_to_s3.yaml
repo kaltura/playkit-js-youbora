@@ -45,9 +45,9 @@ jobs:
       - name: Configure aws credentials
         uses: aws-actions/configure-aws-credentials@v1
         with:
-          role-to-assume: arn:aws:iam::${{ secrets.CENTRAL_ACCOUNT_ID }}:role/dor-test-oidc-github-actions
+          role-to-assume: arn:aws:iam::${{ secrets.CENTRAL_ACCOUNT_ID }}:role/central-oidc-github-actions
           role-session-name: githubAction-${{ github.run_id }}
-          aws-region: "us-east-1"
+          aws-region: "eu-central-1"
 
       - name: Get environments list
         id: accounts
@@ -80,9 +80,9 @@ jobs:
       - name: Configure aws credentials
         uses: aws-actions/configure-aws-credentials@v1
         with:
-          role-to-assume: arn:aws:iam::${{ secrets.CENTRAL_ACCOUNT_ID }}:role/dor-test-oidc-github-actions
+          role-to-assume: arn:aws:iam::${{ secrets.CENTRAL_ACCOUNT_ID }}:role/central-oidc-github-actions
           role-session-name: githubAction-${{ github.run_id }}
-          aws-region: "us-east-1"
+          aws-region: "eu-central-1"
 
       - name: Get specific account details
         id: specific_account
