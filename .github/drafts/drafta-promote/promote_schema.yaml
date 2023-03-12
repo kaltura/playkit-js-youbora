@@ -20,9 +20,9 @@ on:
         required: true
         type: string
     outputs:
-      build-for:
-        description: "build-for - example: 'beta/latest'"
-        value: ${{ jobs.promote-schema.outputs.build-for }}
+      stage:
+        description: "stage - example: 'beta/latest'"
+        value: ${{ jobs.promote-schema.outputs.stage }}
 
 jobs:
   promote-schema:
@@ -31,7 +31,7 @@ jobs:
       id-token: write
       contents: read
     outputs:
-      build-for: ${{ steps.build-for.outputs.build-for }}
+      stage: ${{ steps.stage.outputs.stage }}
     steps:
       - name: Configure aws credentials
         uses: aws-actions/configure-aws-credentials@v1
@@ -70,18 +70,18 @@ jobs:
           aws s3 cp ${jsonNameTo} ${s3Path}/
 
       - name: Build for beta/latest
-        id: build-for
+        id: stage
         run: |
           to=$(echo "${{ inputs.promotion-type }}" | awk -F ' --> ' '{print $2}')
 
           if [[ $to =~ "beta" ]]; then
-            build-for="beta"
+            stage="beta"
           elif [[ $to =~ "latest" ]]; then
-            build-for="latest"
+            stage="latest"
           else
             echo "Wrong destination"
             exit 1
           fi
 
-          echo "build for ${build-for}"
-          echo "build-for=${build-for}" >> $GITHUB_OUTPUT
+          echo "build for ${stage}"
+          echo "stage=${stage}" >> $GITHUB_OUTPUT

@@ -4,11 +4,7 @@ run-name: Deploy uiconf
 on:
   workflow_call:
     secrets:
-      CENTRAL_ACCOUNT_ID:
-        required: true
-      SERVICES_ACCOUNT_ID:
-        required: true
-      S3_BUCKET_DEPLOYMENT:
+      JENKINS_TOKEN:
         required: true
     inputs:
       stage:
@@ -17,7 +13,7 @@ on:
         type: string
       env:
         description: "env - example: 'qa/prod/all'"
-        required: true
+        required: false
         type: string
       version:
         description: "version - example: '1.00.000'"
@@ -35,30 +31,15 @@ jobs:
       id-token: write
       contents: read
     steps:
-      - name: Configure aws credentials
-        uses: aws-actions/configure-aws-credentials@v1
-        with:
-          role-to-assume: arn:aws:iam::${{ secrets.CENTRAL_ACCOUNT_ID }}:role/central-oidc-github-actions
-          role-session-name: githubAction
-          aws-region: "eu-central-1"
-
-      - name: Download config ini from S3
+      - name: Trigger jenkins job for uiconf deployment
         run: |
-          # Assume role
-          export $(printf "AWS_ACCESS_KEY_ID=%s AWS_SECRET_ACCESS_KEY=%s AWS_SESSION_TOKEN=%s" \
-                      $(aws sts assume-role \
-                      --role-arn arn:aws:iam::${{ secrets.SERVICES_ACCOUNT_ID }}:role/nvp1-deployment-role \
-                      --role-session-name "nvp1-${{ github.run_id }}" \
-                      --region "us-east-1" \
-                      --query "Credentials.[AccessKeyId,SecretAccessKey,SessionToken]" \
-                      --output text))
+          if [ "${{ inputs.stage }}" = "canary" ]; then
+            generate_post_data='{"stage": "${{ inputs.stage }}", "version": "${{ inputs.version }}", "schema_type": "${{ inputs.schema-type }}"}'
+          else
+            generate_post_data='{"stage": "${{ inputs.stage }}", "env": "${{ inputs.env }}", "version": "${{ inputs.version }}", "schema_type": "${{ inputs.schema-type }}"}'
+          fi
 
-          jsonName="playkit_dor_test_${{ inputs.schema-type }}_${{ steps.version.outputs.version }}_${{ inputs.build-for }}.json"
+          echo "${generate_post_data}"
 
-          s3Path="s3://nvp1-${{ secrets.S3_BUCKET_DEPLOYMENT }}/player/uiconf"
-
-          aws s3 cp ${s3Path}/${jsonName} ${jsonName}
-
-
-
+          echo "${generate_post_data}" | jq -r '.'
 

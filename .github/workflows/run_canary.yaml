@@ -47,5 +47,15 @@ jobs:
       SERVICES_ACCOUNT_ID: ${{ secrets.SERVICES_ACCOUNT_ID }}
       S3_BUCKET_DEPLOYMENT: ${{ secrets.S3_BUCKET_DEPLOYMENT }}
     with:
-      build-for: "canary"
+      stage: "canary"
       schema-type: "playerV3Versions"
+  deploy-uiconf:
+    needs: [ build-uiconf, update-schema, upload-to-s3-qa-and-dev, upload-packages-to-npm ]
+    uses: ./.github/workflows/deploy_uiconf.yaml
+    secrets:
+      JENKINS_TOKEN: ${{ secrets.JENKINS_TOKEN }}
+    with:
+      stage: "canary"
+      version: ${{ needs.build-uiconf.outputs.version }}
+      schema-type: "playerV3Versions"
+
