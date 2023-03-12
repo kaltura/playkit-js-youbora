@@ -7,16 +7,13 @@ on:
     branches:
       - devops-pr
 
-env:
-  PROD: "false"
-
 jobs:
   upload-packages-to-npm:
     uses: ./.github/workflows/upload_to_npm.yaml
     secrets:
       NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
     with:
-      prod: ${{ env.PROD }}
+      prod: "false"
   upload-to-s3-qa-and-dev:
     needs: upload-packages-to-npm
     uses: ./.github/workflows/upload_to_s3.yaml
@@ -37,7 +34,7 @@ jobs:
       SERVICES_ACCOUNT_ID: ${{ secrets.SERVICES_ACCOUNT_ID }}
       S3_BUCKET_DEPLOYMENT: ${{ secrets.S3_BUCKET_DEPLOYMENT }}
     with:
-      prod: ${{ env.PROD }}
+      prod: "false"
       type: "plugin"
       schema-type: "playerV3Versions"
       name: ${{ needs.upload-packages-to-npm.outputs.name }}

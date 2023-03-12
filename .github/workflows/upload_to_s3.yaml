@@ -123,6 +123,8 @@ jobs:
             aws s3 cp translations/ ${s3Path}/translations/ --recursive --include "*"
             aws s3 ls ${s3Path}/translations/
           fi
+          jq '{version} + .kaltura' < package/package.json > package/manifest.json
+          aws s3 cp package/manifest.json ${s3Path}/manifest.json
 
       - name: Upload player to s3 apps by assuming role
         if: ${{ inputs.type == 'player' }}
