@@ -31,7 +31,7 @@ jobs:
       id-token: write
       contents: read
     outputs:
-      stage: ${{ steps.version.outputs.version }}
+      version: ${{ steps.version.outputs.version }}
     steps:
       - name: Configure aws credentials
         uses: aws-actions/configure-aws-credentials@v1
