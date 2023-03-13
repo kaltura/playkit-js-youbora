@@ -9,7 +9,7 @@ on:
 
 jobs:
   running-tests:
-    uses: kaltura/ovp-pipelines/.github/workflows/tests.yaml
+    uses: kaltura/ovp-pipelines/.github/workflows/tests.yaml@master
     with:
       yarn-run-to-execute: 'eslint flow'
 
