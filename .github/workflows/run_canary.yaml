@@ -18,9 +18,8 @@ jobs:
       NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
       JENKINS_TOKEN: ${{ secrets.JENKINS_TOKEN }}
     with:
-      prod: "false"
       type: "plugin"
       stage: "canary"
       schema-type: "playerV3Versions"
-
+      aws-secret-central: "github-aws-dev-qa-accounts-8iI9eS"
 
