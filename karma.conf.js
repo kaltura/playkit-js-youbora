@@ -39,15 +39,7 @@ module.exports = function (config) {
     }
   };
 
-  if (isWindows) {
-    karmaConf.browsers.push('IE');
-  } else if (isMacOS) {
-    karmaConf.browsers.push('ChromeHeadless');
-  } else if (isUbuntu) {
-    karmaConf.browsers.push('ChromeHeadless');
-  } else {
-    karmaConf.browsers.push('ChromeHeadless');
-  }
+  karmaConf.browsers.push('ChromeHeadless');
 
   config.set(karmaConf);
 };
