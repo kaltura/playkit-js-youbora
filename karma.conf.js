@@ -44,9 +44,9 @@ module.exports = function (config) {
   } else if (isMacOS) {
     karmaConf.browsers.push('Safari');
   } else if (isUbuntu) {
-    karmaConf.browsers.push('ChromeHeadless', 'FirefoxHeadless');
+    karmaConf.browsers.push('ChromeHeadless');
   } else {
-    karmaConf.browsers.push('ChromeHeadless', 'FirefoxHeadless');
+    karmaConf.browsers.push('ChromeHeadless');
   }
 
   config.set(karmaConf);
