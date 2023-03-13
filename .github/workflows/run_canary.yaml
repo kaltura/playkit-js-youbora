@@ -9,7 +9,7 @@ on:
 
 jobs:
   canary-full-flow:
-    uses: kaltura/ovp-pipelines-pub/.github/workflows/player_canary.yaml@v1.0.0
+    uses: kaltura/ovp-pipelines-pub/.github/workflows/player_canary.yaml@master
     secrets:
       CENTRAL_ACCOUNT_ID: ${{ secrets.CENTRAL_ACCOUNT_ID }}
       SERVICES_ACCOUNT_ID: ${{ secrets.SERVICES_ACCOUNT_ID }}
@@ -22,5 +22,6 @@ jobs:
       stage: "canary"
       schema-type: "playerV3Versions"
       aws-secret-central: "github-aws-dev-qa-accounts-8iI9eS"
+      tests-yarn-run-to-execute: 'eslint flow test'
 
 
