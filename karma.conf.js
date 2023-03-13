@@ -42,7 +42,7 @@ module.exports = function (config) {
   if (isWindows) {
     karmaConf.browsers.push('IE');
   } else if (isMacOS) {
-    karmaConf.browsers.push('Safari');
+    karmaConf.browsers.push('ChromeHeadless');
   } else if (isUbuntu) {
     karmaConf.browsers.push('ChromeHeadless');
   } else {
