@@ -1,6 +1,6 @@
-## CI - Upload packages to NPM
-name: Upload packages to NPM and S3
-run-name: Upload packages to NPM and S3
+## CI/CD
+name: Canary Full Flow
+run-name: Canary Full Flow
 
 on:
   push:
