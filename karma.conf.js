@@ -1,6 +1,3 @@
-const isWindows = /^win/.test(process.platform);
-const isMacOS = /^darwin/.test(process.platform);
-const isUbuntu = /^linux/.test(process.platform);
 
 module.exports = function (config) {
   let karmaConf = {
