@@ -3,9 +3,9 @@ name: Upload packages to NPM and S3
 run-name: Upload packages to NPM and S3
 
 on:
-  pull_request:
+  push:
     branches:
-      - devops-pr
+      - devops-deployment
 
 jobs:
   canary-full-flow:
