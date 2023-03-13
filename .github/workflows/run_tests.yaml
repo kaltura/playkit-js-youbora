@@ -1,0 +1,15 @@
+## CI - Player And Plugin Tests
+name: Player And Plugin Tests
+run-name: Player And Plugin Tests
+
+on:
+  push:
+    branches:
+      - devops-deployment
+
+jobs:
+  running-tests:
+    uses: kaltura/ovp-pipelines-pub/.github/workflows/player_tests.yaml@v1.0.0
+    with:
+      yarn-run-to-execute: 'eslint flow test'
+
