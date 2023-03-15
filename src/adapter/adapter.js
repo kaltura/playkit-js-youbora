@@ -155,7 +155,7 @@ let YouboraAdapter = youbora.Adapter.extend({
 
   /** @returns {void} - Listener for 'load_start' event. */
   loadListener: function () {
-    if (this.player.sources.image.length > 0) {
+    if (this.player.isImage()) {
       this.plugin.options['content.playbackType'] = MediaType.IMAGE;
     }
     if (this.player.config.playback.preload !== 'auto') {
