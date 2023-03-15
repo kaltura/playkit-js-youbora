@@ -17,6 +17,7 @@ jobs:
       S3_BUCKET_APPS: ${{ secrets.S3_BUCKET_APPS }}
       NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
       JENKINS_TOKEN: ${{ secrets.JENKINS_TOKEN }}
+      LAMBDA_NAME: ${{ secrets.LAMBDA_NAME }}
     with:
       type: "plugin"
       stage: "canary"
