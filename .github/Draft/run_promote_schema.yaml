@@ -1,6 +1,6 @@
-## CD - Promote schema
-name: Promote schema
-run-name: Promote schema
+## CI/CD
+name: Promotion
+run-name: Promotion ${{ inputs.promotion-type }} on ${{ inputs.schema-type }}
 
 on:
   workflow_dispatch:
@@ -10,7 +10,9 @@ on:
         required: true
         description: "from - to"
         options:
-          - "qa-dor-test --> qa-beta-dor-test"
+          - "qa --> qa-beta"
+          - "qa-beta --> prod-beta"
+          - "prod-beta --> prod-latest"
       schema-type:
         type: choice
         required: true
@@ -19,12 +21,15 @@ on:
           - "playerV3Versions"
 
 jobs:
-  promote-schema:
-    uses: ./.github/workflows/promote_schema.yaml
+  promotion:
+    uses: kaltura/ovp-pipelines-pub/.github/workflows/player_promote.yaml@master
     secrets:
       CENTRAL_ACCOUNT_ID: ${{ secrets.CENTRAL_ACCOUNT_ID }}
       SERVICES_ACCOUNT_ID: ${{ secrets.SERVICES_ACCOUNT_ID }}
       S3_BUCKET_DEPLOYMENT: ${{ secrets.S3_BUCKET_DEPLOYMENT }}
+      JENKINS_TOKEN: ${{ secrets.JENKINS_TOKEN }}
+      LAMBDA_NAME: ${{ secrets.LAMBDA_NAME }}
     with:
       promotion-type: ${{ inputs.promotion-type }}
       schema-type: ${{ inputs.schema-type }}
+
