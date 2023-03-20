@@ -20,10 +20,9 @@ jobs:
             {
               "@type": "message",
               "@context": "http://schema.org/extensions",
-              "themeColor": "0076D7",
               "summary": "Larry Bryant created a new task",
               "sections": [ {
-                "activityTitle": "Larry Bryant created a new task",
+                "activityTitle": "created a new pull_request in ${{ github.event.repository.name }} - Build Errored",
                 "activitySubtitle": "On Project Tango",
                 "activityImage": "https://teamsnodesample.azurewebsites.net/static/img/image5.png",
                 "facts": [ {
