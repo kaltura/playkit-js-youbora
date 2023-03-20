@@ -22,12 +22,12 @@ jobs:
               "@context": "http://schema.org/extensions",
               "summary": "Larry Bryant created a new task",
               "sections": [ {
-                "activityTitle": "created a new pull_request in ${{ github.event.repository.name }} - Build Errored",
+                "activityTitle": "created a new pull_request in ${{ github.event.repository.name }}@ - Build Errored",
                 "activitySubtitle": "On Project Tango",
                 "activityImage": "https://teamsnodesample.azurewebsites.net/static/img/image5.png",
                 "facts": [ {
                   "name": "Assigned to",
-                  "value": "Unassigned"
+                  "value": "${{ github.event.payload }}"
                 }, {
                   "name": "Due date",
                   "value": "Mon May 01 2017 17:07:18 GMT-0700 (Pacific Daylight Time)"
