@@ -27,7 +27,7 @@ jobs:
                 "activityImage": "https://teamsnodesample.azurewebsites.net/static/img/image5.png",
                 "facts": [ {
                   "name": "Assigned to",
-                  "value": "${{ github.event.payload }}"
+                  "value": "${{ github.event.payload.CreateEvent }}"
                 }, {
                   "name": "Due date",
                   "value": "Mon May 01 2017 17:07:18 GMT-0700 (Pacific Daylight Time)"
