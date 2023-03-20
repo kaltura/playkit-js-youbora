@@ -22,7 +22,7 @@ jobs:
               "@context": "http://schema.org/extensions",
               "summary": "Larry Bryant created a new task",
               "sections": [ {
-                "activityTitle": "created a new pull_request in ${{ github.event.repository.name }} - Build Errored",
+                "activityTitle": "created a new pull_request in ${{ github.event.repository.name }}@${{ github.event.payload.ref }} - Build Errored",
                 "activitySubtitle": "On Project Tango",
                 "activityImage": "https://teamsnodesample.azurewebsites.net/static/img/image5.png",
                 "facts": [ {
