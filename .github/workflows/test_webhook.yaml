@@ -18,7 +18,7 @@ jobs:
           webhook_url: ${{ secrets.MSTEAMS_WEBHOOK }}
           raw: >-
             {
-              "@type": "MessageCard",
+              "@type": "message",
               "@context": "http://schema.org/extensions",
               "themeColor": "0076D7",
               "summary": "Larry Bryant created a new task",
