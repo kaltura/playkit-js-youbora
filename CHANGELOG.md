@@ -2,6 +2,17 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [2.3.7](https://github.com/kaltura/playkit-js-youbora/compare/v2.3.6...v2.3.7) (2023-03-22)
+
+
+### Bug Fixes
+
+* **FEC-12963:** upgrade youboralib to 6.8.42 ([#135](https://github.com/kaltura/playkit-js-youbora/issues/135)) ([ca62a0f](https://github.com/kaltura/playkit-js-youbora/commit/ca62a0f))
+* **FEC-13038:** Add image track type only if player sources with image is populated ([#136](https://github.com/kaltura/playkit-js-youbora/issues/136)) ([9a1b6b9](https://github.com/kaltura/playkit-js-youbora/commit/9a1b6b9))
+* **FEC-13038:** fix wrong media type reported as Image  on change media cont. ([#137](https://github.com/kaltura/playkit-js-youbora/issues/137)) ([67cce4c](https://github.com/kaltura/playkit-js-youbora/commit/67cce4c))
+
+
+
 ### [2.3.6](https://github.com/kaltura/playkit-js-youbora/compare/v2.3.5...v2.3.6) (2023-02-23)
 
 
