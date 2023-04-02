@@ -1,0 +1,16 @@
+## Notification
+name: Notification pull_request
+run-name: Notification pull_request
+
+on:
+  pull_request:
+    branches:
+      - "*"
+
+jobs:
+  notification:
+    if: always()
+    uses: ./.github/workflows/test_webhook.yaml
+    secrets:
+      MSTEAMS_WEBHOOK: ${{ secrets.MSTEAMS_WEBHOOK }}
+
