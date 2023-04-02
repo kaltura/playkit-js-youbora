@@ -10,7 +10,7 @@ on:
 jobs:
   notification:
     if: always()
-    uses: .kaltura/ovp-pipelines-pub/.github/workflows/notification.yaml@v2.0.0
+    uses: .kaltura/ovp-pipelines-pub/.github/workflows/notification.yaml@master
     secrets:
       MSTEAMS_WEBHOOK: ${{ secrets.MSTEAMS_WEBHOOK }}
 
