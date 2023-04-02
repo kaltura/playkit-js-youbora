@@ -29,6 +29,7 @@ jobs:
       S3_BUCKET_DEPLOYMENT: ${{ secrets.S3_BUCKET_DEPLOYMENT }}
       JENKINS_TOKEN: ${{ secrets.JENKINS_TOKEN }}
       LAMBDA_NAME: ${{ secrets.LAMBDA_NAME }}
+      MSTEAMS_WEBHOOK: ${{ secrets.MSTEAMS_WEBHOOK }}
     with:
       promotion-type: ${{ inputs.promotion-type }}
       schema-type: ${{ inputs.schema-type }}
