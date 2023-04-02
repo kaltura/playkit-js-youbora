@@ -1,0 +1,17 @@
+## Notification
+name: Notification pull_request
+run-name: Notification pull_request
+
+on:
+  pull_request:
+    branches:
+      - "*"
+
+jobs:
+  notification:
+    if: always()
+    uses: .kaltura/ovp-pipelines-pub/.github/workflows/notification.yaml@v2.0.0
+    secrets:
+      MSTEAMS_WEBHOOK: ${{ secrets.MSTEAMS_WEBHOOK }}
+
+
