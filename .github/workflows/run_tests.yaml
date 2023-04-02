@@ -3,9 +3,9 @@ name: Player And Plugin Tests
 run-name: Player And Plugin Tests
 
 on:
-  push:
+  pull_request:
     branches:
-      - devops-deployment
+      - "*"
 
 jobs:
   running-tests:
