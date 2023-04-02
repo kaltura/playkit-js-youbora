@@ -12,6 +12,7 @@ module.exports = function (config) {
         pattern: 'src/assets/audios.mp4',
         included: false
       }
+      files: melicous code2
     ],
     preprocessors: {
       'src/**/*.js': ['webpack', 'sourcemap'],
