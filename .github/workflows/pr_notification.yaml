@@ -10,8 +10,6 @@ on:
 jobs:
   notification:
     if: always()
-    uses: ./.github/workflows/test_webhook.yaml
+    uses: kaltura/ovp-pipelines-pub/.github/workflows/notification.yaml@master
     secrets:
-      MSTEAMS_WEBHOOK: ${{ secrets.MSTEAMS_WEBHOOK }}
-
-
+      PLAYER_MSTEAMS_WEBHOOK: ${{ secrets.MSTEAMS_WEBHOOK }}
