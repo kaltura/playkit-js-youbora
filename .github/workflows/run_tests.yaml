@@ -12,3 +12,4 @@ jobs:
     uses: kaltura/ovp-pipelines-pub/.github/workflows/player_tests.yaml@fix-uiconf-deploy
     with:
       yarn-run-to-execute: 'eslint flow test'
+      run-on-macos: 'true'
