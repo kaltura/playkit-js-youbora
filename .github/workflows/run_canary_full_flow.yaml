@@ -5,7 +5,7 @@ run-name: Canary Full Flow
 on:
   push:
     branches:
-      - devops-deployment2
+      - master
 
 jobs:
   canary-full-flow:
