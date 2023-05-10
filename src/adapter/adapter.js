@@ -1,6 +1,6 @@
 // @flow
 import youbora from 'youboralib';
-import {core} from 'kaltura-player-js';
+import {core} from '@playkit-js/kaltura-player-js';
 const {Error, MediaType, DrmScheme} = core;
 
 const DrmSchemeTitle = {
