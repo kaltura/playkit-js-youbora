@@ -1,5 +1,5 @@
 //@flow
-import {BasePlugin} from 'kaltura-player-js';
+import {BasePlugin} from '@playkit-js/kaltura-player-js';
 import youbora from 'youboralib';
 import {YouboraAdapter} from './adapter/adapter';
 import {NativeAdsAdapter} from './adapter/ads/nativeads';
