@@ -1,7 +1,7 @@
 //eslint-disable-next-line no-unused-vars
 import youbora from '../../src';
 import youboralib from 'youboralib';
-import {setup} from 'kaltura-player-js';
+import {setup} from '@playkit-js/kaltura-player-js';
 import * as TestUtils from './utils/test-utils';
 
 const targetId = 'player-placeholder_youbora.spec';
