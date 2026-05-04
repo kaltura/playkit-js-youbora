@@ -1,0 +1,159 @@
+{
+  "repositoryName": "playkit-js-youbora",
+  "version": "1.0.0",
+  "lastUpdated": "2026-05-04",
+
+  "coreResponsibility": {
+    "summary": "A Kaltura Player plugin that integrates NPAW Youbora analytics SDK for Quality of Experience (QoE) and Quality of Service (QoS) video analytics tracking.",
+    "type": "plugin",
+    "category": "analytics"
+  },
+
+  "domainAndLogicOwnership": {
+    "featureOwnership": [
+      "Youbora/NPAW analytics integration",
+      "Video playback analytics tracking (start, play, pause, seek, buffer, stop)",
+      "Ad analytics tracking (preroll, midroll, postroll, quartiles, clicks, skips)",
+      "DRM scheme reporting (FairPlay, PlayReady, Widevine)",
+      "Playback quality metrics (bitrate, rendition, playhead position)",
+      "Session analytics and custom event tracking",
+      "Live vs VOD content type detection",
+      "Error event tracking and reporting",
+      "Player metadata enrichment (entryId, sessionId, uiConfId)"
+    ],
+    "dataHandling": [
+      "Player state events (play, pause, seeking, buffering, ended)",
+      "Video track metrics (bitrate, resolution, rendition)",
+      "Ad break and individual ad events",
+      "Playback errors with category and code mapping",
+      "DRM information and scheme detection",
+      "Content metadata (title, duration, live/VOD, resource URL)",
+      "Kaltura-specific metadata (entryId, sessionId, uiConfId)"
+    ]
+  },
+
+  "integrationPoints": {
+    "upstream": [
+      {
+        "name": "@playkit-js/kaltura-player-js",
+        "description": "Kaltura Player core that provides player instance, events, and plugin registration"
+      },
+      {
+        "name": "@playkit-js/playkit-js",
+        "description": "Core playback engine providing BasePlugin, MediaType, DrmScheme, and Error classes"
+      }
+    ],
+    "downstream": [
+      {
+        "name": "NPAW Youbora Dashboard",
+        "description": "Analytics data is sent to Youbora/NPAW backend for visualization and reporting"
+      }
+    ],
+    "externalAPIs": [
+      {
+        "name": "youboralib",
+        "version": "6.8.42",
+        "description": "NPAW Youbora SDK for HTML5 - core analytics library for video intelligence"
+      }
+    ]
+  },
+
+  "technicalStack": {
+    "primaryLanguages": ["JavaScript", "Flow"],
+    "frameworks": ["Webpack", "Babel", "Karma", "Mocha"],
+    "buildTools": ["yarn", "webpack", "babel"],
+    "testingFrameworks": ["Karma", "Mocha", "Chai", "Sinon"],
+    "entryPoints": [
+      {
+        "path": "src/index.js",
+        "description": "Main entry point - registers the Youbora plugin with Kaltura Player"
+      },
+      {
+        "path": "src/youbora.js",
+        "description": "Core Youbora plugin class extending BasePlugin"
+      },
+      {
+        "path": "src/adapter/adapter.js",
+        "description": "YouboraAdapter - bridges Kaltura Player events to Youbora SDK"
+      },
+      {
+        "path": "src/adapter/ads/nativeads.js",
+        "description": "NativeAdsAdapter - handles ad analytics events"
+      }
+    ],
+    "outputArtifact": "dist/playkit-youbora.js"
+  },
+
+  "triageKeywords": [
+    "youbora",
+    "NPAW",
+    "QoE",
+    "QoS",
+    "video analytics",
+    "playback analytics",
+    "analytics tracking",
+    "youboralib",
+    "accountCode",
+    "content.metadata",
+    "fireStart",
+    "fireStop",
+    "fireJoin",
+    "firePause",
+    "fireError",
+    "fireBufferBegin",
+    "fireBufferEnd",
+    "fireSeekBegin",
+    "fireSeekEnd",
+    "ad quartile",
+    "rendition tracking",
+    "bitrate tracking",
+    "playhead monitor",
+    "session analytics",
+    "infinity",
+    "fireEvent",
+    "fireNav"
+  ],
+
+  "errorPatterns": [
+    "Youbora plugin not sending analytics",
+    "Youbora accountCode missing or invalid",
+    "Analytics events not firing",
+    "Youbora fireStart not called",
+    "Youbora fireJoin not triggered",
+    "Buffering events not tracked",
+    "Seek events not reported to Youbora",
+    "Ad analytics not tracked",
+    "Rendition data showing as undefined",
+    "DRM scheme not reported correctly",
+    "Playhead position incorrect",
+    "Live vs VOD detection wrong",
+    "content.metadata override issues",
+    "kalturaInfo metadata missing",
+    "Youbora session not ending properly",
+    "Change media not resetting analytics"
+  ],
+
+  "configurationOptions": {
+    "pluginName": "youbora",
+    "keyOptions": [
+      "options.accountCode",
+      "options.username",
+      "options.content.metadata",
+      "options.extraparam.*",
+      "options.content.playbackType",
+      "options.content.isLive.noSeek",
+      "options.content.drm",
+      "options.session.context",
+      "playerVersion",
+      "playerName",
+      "householdId",
+      "entryId",
+      "entryName",
+      "entryType",
+      "sessionId",
+      "uiConfId",
+      "playheadMonitorInterval",
+      "customAdsAdapter"
+    ]
+  }
+}
